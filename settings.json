@@ -1,0 +1,11 @@
+{
+  "baseUrl": "http://localhost:3000",
+  "baseApiURL": "http://localhost:10010/",
+  "defaultRegion": "HUBLD",
+
+  "adfsDevUser": {
+    "samaccountname": "adm9360_a",
+    "displayname": "Default Developer",
+    "email": "gareth.baker@bendigoadelaide.com.au"
+  }
+}

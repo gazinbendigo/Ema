@@ -1,0 +1,90 @@
+<template name="configuration">
+    <div class="component-spacer sm">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12">
+                <div class="form-title"><h2>Manage Environment Configuration</h2></div>
+            </div>
+        </div>
+        <div class="component-spacer sm"></div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12">
+                <div class="form-title"><h3>Configuration Type</h3></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <select id="configOptions" class="form-control">
+                    {{#if Template.subscriptionsReady}}
+                        <option value="0">-- Select --</option>
+                        {{#each getConfigurations}}
+                            {{> option configurationsOptions CONFIGURATION_ID CONFIGURATION_NME }}
+                        {{/each}}
+                    {{/if}}
+                </select>
+            </div>
+        </div>
+        <div class="component-spacer sm"></div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="configName">Name:&nbsp;(VMV or HUB)</label>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="text" name="configName" value="{{configName}}" class="input-full-width" id="configName" placeholder="Name"></div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="databaseServer">Database Server:&nbsp;</label>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="text" name="databaseServer" value="{{databaseServer}}" class="input-full-width" id="databaseServer" placeholder="Database Server"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="database">Database:&nbsp;</label>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="text" name="database" value="{{database}}" class="input-full-width" id="database" placeholder="Database"></div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="userName">Db User name:&nbsp;</label>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="text" name="userName" value="{{userName}}" class="input-full-width" id="userName" placeholder="User name"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="password">Password:&nbsp;</label>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="password" name="password" value="{{password}}" class="input-full-width" id="password"></div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="datasource">Datasource:&nbsp;</label>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="text" name="datasource" value="{{datasource}}" class="input-full-width" id="datasource" placeholder="Datasource"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="prefHours">Preferred Hours:&nbsp;</label>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="text" name="prefHours" value="{{prefHours}}" class="input-full-width" id="prefHours" placeholder="Preferred Hours"></div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 filter-input">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="component-spacer sm"></div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="button-container">
+                    <ul class="list-inline">
+                        <li><button type="reset" class="btn btn-default btn-sm" id="clearBttn">Clear</button></li>
+                        <li><button type="button" class="btn btn-default btn-sm" id="updateConfigBttn">Update</button></li>
+                        <li><button type="button" class="btn btn-default btn-sm" id="addConfigBttn">Add</button></li>
+                        <li><button type="button" class="btn btn-default btn-sm" id="removeConfigBttn">Remove</button></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

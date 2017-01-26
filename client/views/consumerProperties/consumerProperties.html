@@ -1,0 +1,45 @@
+<template name="manageConsumerProperties">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12">
+                <div class="page-title-container">
+                    <h2>Consumer Properties</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-3">
+
+                <div class="dropdown">
+                    <a href="#" data-toggle="dropdown" class="dropdown-toggle">Select Environment<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        {{#if isEnvironmentsLoaded}}
+                            {{#each environments}}
+                                {{> dropdownItem dropDownElements ENVIRONMENT_NME}}
+                            {{/each}}
+                        {{else}}
+                            {{> spinner}}
+                        {{/if}}
+                    </ul>
+                </div>
+        </div>
+
+
+
+            <div class="col-xs-12 col-sm-9">
+                <div class="dropdown">
+                    <a href="#" data-toggle="dropdown" class="dropdown-toggle">Select Consumer<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        {{#each consumers}}
+                            {{> consumer}}
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {{#if hasConsumerPropertiesLoaded }}
+        {{> consumerPropertiesForm }}
+    {{/if}}
+    </div>
+</template>

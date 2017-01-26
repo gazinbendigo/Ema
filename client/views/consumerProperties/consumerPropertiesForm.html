@@ -1,0 +1,50 @@
+<template name="consumerPropertiesForm">
+
+        <div class="component-spacer sm">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Property Name</th>
+                            <th>Property Value</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{#each propertyRow}}
+                            <tr>
+                                <td>{{propertyName}}</td>
+                                <td>{{propertyValue}}{{> imageLink linkData consumerPropertyId}}</td>
+                            </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12 col-sm-12">
+                    <div class="form-title"><h3>Manage Properties</h3></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-lg-6">
+                    <input type="text" id="name" placeholder="Property Name" class="input-full-width">
+                </div>
+                <div class="col-xs-12 col-sm-6">
+                    <input type="text" id="value" placeholder="Property Value" class="input-full-width">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12 col-md-4">
+                    <p class="bs-component">
+                        <button type="submit" class="btn btn btn-default" id="addProperty">Add</button>
+                        <button type="submit" class="btn btn btn-default" id="updateProperty">Update</button>
+                        <button type="submit" class="btn btn btn-default" id="deleteProperty">Delete</button>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+</template>

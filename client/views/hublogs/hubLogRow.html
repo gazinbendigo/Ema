@@ -1,0 +1,63 @@
+<template name="hubLogRow">
+    <tr>
+        <!--<td><input type="hidden" text="{{RowNum}}"><a href="/ema/hublog/requestId/{{REQUEST_ID}}" class="req">{{REQUEST_ID}}</a></td>-->
+        <td><a href="" class="req">{{REQUEST_ID}}</a></td>
+        <td>{{formatDateTime REQUEST_DTE}}</td>
+        <td><a href="{{performancePath REQUEST_ID}}" id="performance">Performance</a></td>
+        <td>{{BRAND_NME}}</td>
+        <td><a href="" class="appCode">{{APPLICATION_CDE}}</a></td>
+        <td>{{APPLICATION_NME}}</td>
+        <td>{{INSTANCE_NME}}</td>
+        <td>{{USERID}}</td>
+        {{#if isEmpty MESSAGE_TXT}}
+            <td>&nbsp;</td>
+        {{else}}
+            <td>
+                <div class="panel-group" id="accordion{{RowNum}}">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion{{RowNum}}" href="#collapse{{RowNum}}" class="msg-panel">Request Message</a>
+                            </h4>
+                        </div>
+                        <div id="collapse{{RowNum}}" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <pre>{{formatText MESSAGE_TXT}}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        {{/if}}
+        <td><a href="" class="srvcId">{{SERVICE_ID}}</a></td>
+        <td>{{SERVICE_NME}}</td>
+        <td>{{SEVERITY_CDE}}</td>
+        <td>{{LOG_CDE}}</td>
+        <td><div style="word-wrap: break-word;">{{LOG_TXT}}</div></td>
+        <td><a href="" class="srcName">{{SOURCE_NME}}</a></td>
+        <td>{{APPLICATION_NAME}}</td>
+        {{#if isEmpty MESSAGE_TEXT}}
+            <td>&nbsp;</td>
+        {{else}}
+            <td>
+                <div class="panel-group" id="log_mess_accord{{RowNum}}">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#log_mess_accord{{RowNum}}" href="#collapse_log{{RowNum}}" class="msg-panel">Response Message</a>
+                            </h4>
+                        </div>
+                        <div id="collapse_log{{RowNum}}" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <pre>{{formatText MESSAGE_TEXT}}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        {{/if}}
+        <td>{{MESSAGE_ID}}</td>
+        <td>{{REQUEST_SERVICE_ID}}</td>
+        <td>{{THUNDERHEAD_CONTENT}}</td>
+    </tr>
+</template>
