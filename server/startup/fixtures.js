@@ -197,12 +197,6 @@ Meteor.startup(() => {
     UserRoles.insert({USER_ROLE_ID: 16, USER_ID:11, ROLE_ID: 2});
 });
 
-Meteor.startup(() => {
-    // Accounts.callLoginMethod({
-    //     methodArguments: [{type: 'adfs', id: Injected.meta('adfs-auth')}],
-    //     userCallback(error, result) {
-    //
-    //     }
-    // });
-});
+
+
 

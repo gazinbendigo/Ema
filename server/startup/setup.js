@@ -36,12 +36,24 @@ Meteor.startup(function(){
 
         console.log('Creating users: ');
 
-        //TODO: Add email:"admin@example.com"
+        //Meteor requires the user must have a username field.
         var users = [
-            {name: "Normal User", username: "adm9360", password: "user1", email:"normal@example.com", roles: [], group: "Analyst"},
-            {name: "Installer User", username: "adm9360", password: "user2", email:"installer@example.com", roles: ['manage-apps', 'manage-versions', 'manage-routing', 'manage-roles'], group: "Installer"},
-            {name: "Operator User", username: "adm9360", password: "user3", email:"operator@example.com", roles: ['manage-apps', 'manage-versions', 'manage-routing', 'manage-roles'], group: "Operator"},
-            {name: "Admin User", username: "adm9360", password: "user4", email:"admin@example.com", roles: ['admin', 'super-user'], group: Roles.GLOBAL_GROUP}
+            {firstName: "Normal", lastName: "User", username: "adm0001", password: "12345678", email:"normal@example.com", roles: ApplicationRoles.Analyst, group: "Analyst"},
+            {firstName: "Installer", lastName: "User", username: "adm0002", password: "12345678", email:"installer@example.com", roles: ApplicationRoles.Installer, group: "Installer"},
+            {firstName: "Operator", lastName: "User", username: "adm0003", password: "12345678", email:"operator@example.com", roles: ApplicationRoles.Operator, group: "Operator"},
+            {firstName: "Admin", lastName: "User", username: "adm0004", password: "12345678", email:"admin@example.com", roles: ApplicationRoles.SuperUser, group: Roles.GLOBAL_GROUP},
+            {firstName: "James", lastName: "Brown", username: "adm1112", password: "12345678", email:"User1@hotmail.com", roles: ApplicationRoles.Analyst, group: "Analyst"},
+            {firstName: "James", lastName: "Henry", username: "adm1122", password: "12345678", email:"aUser2@hotmail.com", roles: ApplicationRoles.Installer, group: "Installer"},
+            {firstName: "Joe", lastName: "Brown", username: "adm1133", password: "12345678", email:"User3@hotmail.com", roles: ApplicationRoles.Operator, group: "Operator"},
+            {firstName: "Fred", lastName: "Flintstone", username: "adm1144", password: "12345678", email:"User4@hotmail.com", roles: ApplicationRoles.SuperUser, group: Roles.GLOBAL_GROUP},
+            {firstName: "Barney", lastName: "Rubble", username: "adm1155", password: "12345678", email:"User5@hotmail.com", roles: ApplicationRoles.Analyst, group: "Analyst"},
+            {firstName: "Stevie", lastName: "Wonder", username: "adm1166", password: "12345678", email:"User6@hotmail.com", roles: ApplicationRoles.Installer, group: "Installer"},
+            {firstName: "LL", lastName: "Kool J", username: "adm1177", password: "12345678", email:"User7@hotmail.com", roles: ApplicationRoles.Operator, group: "Operator"},
+            {firstName: "Harry", lastName: "Potter", username: "adm1188", password: "12345678", email:"User8@hotmail.com", roles: ApplicationRoles.SuperUser, group: Roles.GLOBAL_GROUP},
+            {firstName: "Elizabeth", lastName: "Turner", username: "adm1199", password: "12345678", email:"User9@hotmail.com", roles: ApplicationRoles.Analyst, group: "Analyst"},
+            {firstName: "Mario", lastName: "Wally", username: "adm1100", password: "12345678", email:"User10@hotmail.com", roles: ApplicationRoles.Installer, group: "Installer"},
+            {firstName: "Kate", lastName: "Oslow", username: "adm0011", password: "12345678", email:"User11@hotmail.com", roles: ApplicationRoles.Operator, group: "Operator"},
+            {firstName: "Wheres", lastName: "Wally", username: "adm0012", password: "12345678", email:"User12@hotmail.com", roles: ApplicationRoles.SuperUser, group: Roles.GLOBAL_GROUP}
 
 
             //Roles.addUsersToRoles(joesUserId, 'super-admin', Roles.GLOBAL_GROUP)
@@ -56,13 +68,19 @@ Meteor.startup(function(){
             id = Accounts.createUser({
                 username: userData.username,
                 password: userData.password,
-                profile: { name: userData.name }
+                profile: {
+                    firstName: userData.firstName,
+                    lastName: userData.lastName
+                },
+                email: userData.email
             });
 
             // name verification
             Meteor.users.update({_id: id}, {$set:{'name.0.verified': true}});
-
-            Roles.addUsersToRoles(id, userData.roles);
+            // Accounts.onCreateUser((options, user) => {
+            //
+            // });
+            Roles.addUsersToRoles(id, userData.roles, userData.group);
 
         });
     }

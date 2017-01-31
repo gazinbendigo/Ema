@@ -14,6 +14,25 @@ Meteor.methods({
             PASSWD: String
         });
         UserProfilesCollection.insert(userProfile);
+    },
+
+    addUserToRole(userProfile, role){
+
+    },
+
+    /**
+     * Delete a User from a specific Group
+     * @method deleteUserFromGroup
+     * @param userId
+     * @param group
+     */
+    deleteUserFromGroup(userId, group){
+        let loggedInUser = Meteor.user();
+        if(!loggedInUser || !Roles.userIsInRole(loggedInUser, [''], group)){
+            throw new Meteor.Error(403, "Access Denied");
+        }
+        //remove permissions for target group
+        Roles.setUserRoles(userId, [], group);
     }
 
 });

@@ -41,7 +41,7 @@
 // });
 
 Meteor.publish("Users", function(){
-    return Users.find({});
+    return Meteor.users.find();
 });
 
 Meteor.publish("ApplicationRoles", function(){
