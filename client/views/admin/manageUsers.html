@@ -9,10 +9,12 @@
         </div>
         <div class="row">
             <div class="col-xs-4 col-sm-4">
-                <select id="teamUsers" class="form-control">
-                    <option value="inst">Installer</option>
-                    <option value="admin">Admin</option>
-                    <option value="spu">Super User</option>
+                <select id="selectedRole" class="form-control">
+                    <option value="default">-- Select --</option>
+                    <option value="Installer">Installer</option>
+                    <option value="Analyst">Analyst</option>
+                    <option value="Operator">Operator</option>
+                    <option value="SuperUser">Super User</option>
                 </select>
             </div>
             <div class="col-xs-2 col-sm-1">
@@ -56,8 +58,8 @@
         <div class="row">
             <div class="col-md-12 col-lg-12">
                 <div class="list-group">
-                    {{#each user}}
-                        <a href="{{userProfilePath username}}" class="list-group-item">{{username}}:&nbsp;&nbsp;&nbsp;&nbsp;{{profile.firstName}}&nbsp;{{profile.lastName}}</a>
+                    {{#each getUsers}}
+                        <a href="{{userProfilePath username}}" class="list-group-item">{{username}}:&nbsp;&nbsp;&nbsp;&nbsp;{{userProfile.firstName}}&nbsp;{{userProfile.lastName}}</a>
                     {{/each}}
                 </div>
             </div>

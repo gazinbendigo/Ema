@@ -34,7 +34,7 @@ Template.menu.helpers({
     },
 
     manageUsers: () => {
-        return FlowRouter.path("manageusers");
+        return FlowRouter.path("userprofiles");
     },
 
     loginPath: () => {

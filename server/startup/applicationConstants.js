@@ -12,3 +12,17 @@ ApplicationRoles.Installer = ['manage-apps', 'manage-versions', 'manage-routing'
 ApplicationRoles.Operator = ['manage-apps', 'manage-versions', 'manage-routing', 'manage-roles'];
 
 ApplicationRoles.SuperUser = ['admin', 'super-user'];
+
+UserEnvironments = {
+    dev: "DEV",
+    dtl: "DTL",
+    prod: "PROD"
+};
+
+ApplicationFunctions = {
+    Installer: "Installer",
+    Operator: "Operator",
+    Analyst: "Analyst",
+    SuperUser: Roles.GLOBAL_GROUP
+};
+

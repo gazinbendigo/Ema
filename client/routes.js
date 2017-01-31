@@ -84,16 +84,16 @@ FlowRouter.route('/configuration', {
 
 
 //TODO: Change to private
-FlowRouter.route( '/manageusers', {
-    name: 'manageusers',
+FlowRouter.route( '/userprofiles', {
+    name: 'userprofiles',
     action() {
         BlazeLayout.render("baseLayout", {content: "manageUsers", menu: "menu"});
     }
 });
 
 //TODO: Change to private
-FlowRouter.route('/editUserProfile/:adm', {
-    name: 'editUserProfile',
+FlowRouter.route('/userProfile/:adm', {
+    name: 'updateUserProfile',
     action(){
         BlazeLayout.render("baseLayout", {content: "editUserProfile", menu: "menu"});
     }

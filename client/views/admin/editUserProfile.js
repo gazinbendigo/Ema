@@ -4,10 +4,10 @@
 
 Template.editUserProfile.onCreated(function() {
     let template = Template.instance();
-    template.subscribe("Users");
+    //template.subscribe("Users");
 
     let adm = FlowRouter.getParam("adm");
-    let profile = Users.findOne({ADM: adm});
+    let profile = Meteor.users.findOne({username: adm});
     console.log(profile);
     this.userProfile = new ReactiveVar(profile);
     this.installerRoleChkbx = new ReactiveVar(false);
@@ -47,7 +47,7 @@ Template.editUserProfile.events({
 
     "click #cancelProfile": function(event, template){
         event.preventDefault();
-        FlowRouter.go("manageusers");
+        FlowRouter.go("userprofiles");
     },
 
     'click #installerRoleChkbx': (event, template) => {

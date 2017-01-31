@@ -40,8 +40,12 @@
 //     return Applications.find({});
 // });
 
+Meteor.publish("userEnvironments", function() {
+    return UserEnvironments.find({});
+});
+
 Meteor.publish("Users", function(){
-    return Meteor.users.find();
+    return Meteor.users.find({});
 });
 
 Meteor.publish("ApplicationRoles", function(){
