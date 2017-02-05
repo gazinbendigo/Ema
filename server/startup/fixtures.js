@@ -101,52 +101,5 @@ Meteor.startup(() => {
     // }
 });
 
-Meteor.startup(() => {
-    Users.remove({});
-    Users.insert({USER_ID: 1, ADM: "Adm1111", FIRST_NME: "James", LAST_NME: "Brown", EMAIL: "User1@hotmail.com", PASSWD: "12345678"});
-    Users.insert({USER_ID: 2, ADM: "Adm1112", FIRST_NME: "James", LAST_NME: "Henry",  EMAIL: "User2@hotmail.com", PASSWD: "12345678"});
-    Users.insert({USER_ID: 3, ADM: "Adm1122", FIRST_NME: "Joe", LAST_NME: "Brown",  EMAIL: "User3@hotmail.com", PASSWD: "12345678"});
-    Users.insert({USER_ID: 4, ADM: "Adm1133", FIRST_NME: "Fred", LAST_NME: "Flintstone", EMAIL: "User4@hotmail.com", PASSWD: "12345678"});
-    Users.insert({USER_ID: 5, ADM: "Adm1144", FIRST_NME: "Barney", LAST_NME: "Rubble",  EMAIL: "User5@hotmail.com", PASSWD: "12345678"});
-    Users.insert({USER_ID: 6, ADM: "Adm1155", FIRST_NME: "Stevie", LAST_NME: "Wonder",  EMAIL: "User6@hotmail.com", PASSWD: "12345678"});
-    Users.insert({USER_ID: 7, ADM: "Adm1166", FIRST_NME: "LL", LAST_NME: "Kool J",  EMAIL: "User7@hotmail.com", PASSWD: "12345678"});
-    Users.insert({USER_ID: 8, ADM: "Adm1177", FIRST_NME: "Harry", LAST_NME: "Potter",  EMAIL: "User8@hotmail.com", PASSWD: "12345678"});
-    Users.insert({USER_ID: 9, ADM: "Adm1188", FIRST_NME: "Elizabeth", LAST_NME: "Turner",  EMAIL: "User9@hotmail.com", PASSWD: "12345678"});
-    Users.insert({USER_ID: 10, ADM: "Adm1199", FIRST_NME: "Mario", LAST_NME: "Wally",  EMAIL: "User10@hotmail.com", PASSWD: "12345678"});
-    Users.insert({USER_ID: 11, ADM: "Adm1100", FIRST_NME: "Kate", LAST_NME: "Oslow",  EMAIL: "User11@hotmail.com", PASSWD: "12345678"});
-    Users.insert({USER_ID: 12, ADM: "Adm0011", FIRST_NME: "Wheres", LAST_NME: "Wally", EMAIL: "User11@hotmai2.com", PASSWD: "12345678"});
 
-    ApplicationRoles.remove({});
-    ApplicationRoles.insert({ROLE_ID: 1, ROLE_NME: "ReadOnly", ROLE_DESC: "Allows User readonly access"});
-    ApplicationRoles.insert({ROLE_ID: 2, ROLE_NME: "Admin", ROLE_DESC: "Allows User Full access"});
-    ApplicationRoles.insert({ROLE_ID: 3, ROLE_NME: "DynamicRouting", ROLE_DESC: "Allows User to manage Dynamic Routing"});
-    ApplicationRoles.insert({ROLE_ID: 4, ROLE_NME: "ServiceVersion", ROLE_DESC: "Allows User to manage Service Versioning"});
-
-    UserRoles.remove({});
-    UserRoles.insert({USER_ROLE_ID: 1, USER_ID:1, ROLE_ID: 1});
-    UserRoles.insert({USER_ROLE_ID: 2, USER_ID:2, ROLE_ID: 3});
-    UserRoles.insert({USER_ROLE_ID: 3, USER_ID:2, ROLE_ID: 4});
-    UserRoles.insert({USER_ROLE_ID: 4, USER_ID:3, ROLE_ID: 2});
-    UserRoles.insert({USER_ROLE_ID: 5, USER_ID:4, ROLE_ID: 1});
-    UserRoles.insert({USER_ROLE_ID: 6, USER_ID:4, ROLE_ID: 3});
-    UserRoles.insert({USER_ROLE_ID: 7, USER_ID:4, ROLE_ID: 4});
-    UserRoles.insert({USER_ROLE_ID: 8, USER_ID:5, ROLE_ID: 2});
-    UserRoles.insert({USER_ROLE_ID: 9, USER_ID:6, ROLE_ID: 1});
-    UserRoles.insert({USER_ROLE_ID: 10, USER_ID:7, ROLE_ID: 1});
-    UserRoles.insert({USER_ROLE_ID: 11, USER_ID:2, ROLE_ID: 1});
-    UserRoles.insert({USER_ROLE_ID: 12, USER_ID:8, ROLE_ID: 2});
-    UserRoles.insert({USER_ROLE_ID: 13, USER_ID:9, ROLE_ID: 1});
-    UserRoles.insert({USER_ROLE_ID: 14, USER_ID:10, ROLE_ID: 1});
-    UserRoles.insert({USER_ROLE_ID: 15, USER_ID:10, ROLE_ID: 4});
-    UserRoles.insert({USER_ROLE_ID: 16, USER_ID:11, ROLE_ID: 2});
-});
-
-Meteor.startup(() => {
-    // Accounts.callLoginMethod({
-    //     methodArguments: [{type: 'adfs', id: Injected.meta('adfs-auth')}],
-    //     userCallback(error, result) {
-    //
-    //     }
-    // });
-});
 

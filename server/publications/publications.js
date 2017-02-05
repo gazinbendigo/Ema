@@ -2,7 +2,6 @@
  * Created by adm9360 on 10/12/2015.
  */
 
-
 // Meteor.publish('ServicePerformanceStats', function(requestId){
 //     if(requestId){
 //         return ServicePerformanceStats.find({'requestId': requestId});
@@ -40,18 +39,9 @@
 //     return Applications.find({});
 // });
 
-Meteor.publish("userEnvironments", function() {
-    return UserEnvironments.find({});
-});
 
-Meteor.publish("Users", function(){
+Meteor.publish("Users", function usersPublication(){
     return Meteor.users.find({});
 });
 
-Meteor.publish("ApplicationRoles", function(){
-    return ApplicationRoles.find({});
-});
 
-Meteor.publish(("UserRoles"), function(){
-    return UserRoles.find({});
-});

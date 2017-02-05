@@ -16,6 +16,9 @@ Template.addUserProfile.onCreated(function(){
     this.installerRoleChkbx = new ReactiveVar(false);
     this.adminRoleChkbx = new ReactiveVar(false);
     this.superuserRoleChkbx = new ReactiveVar(false);
+    this.devInstallerRoleChkbx = new ReactiveVar(false);
+    this.devAdminRoleChkbx = new ReactiveVar(false);
+    this.devSuperuserRoleChkbx = new ReactiveVar(false);
 });
 
 Template.addUserProfile.helpers({
@@ -45,15 +48,7 @@ Template.addUserProfile.helpers({
     },
 
     isDeveloper: function() {
-        console.log("abc");
         if(Template.instance().isDeveloperChkbx.get() === true) {
-            return 'checked';
-        }
-        return null;
-    },
-
-    isNotDeveloper: () => {
-        if(Template.instance().isNotDeveloperChkbx.get() === true) {
             return 'checked';
         }
         return null;
@@ -75,6 +70,27 @@ Template.addUserProfile.helpers({
 
     applySuperuserRole: function(){
         if(Template.instance().superuserRoleChkbx.get() === true){
+            return 'checked';
+        }
+        return null;
+    },
+
+    isDevInstallerRole: () => {
+        if(Template.instance().devInstallerRoleChkbx.get() === true) {
+            return 'checked';
+        }
+        return null;
+    },
+
+    isDevAdminRole: () => {
+        if(Template.instance().devAdminRoleChkbx.get() === true){
+            return 'checked';
+        }
+        return null;
+    },
+
+    isDevSuperuserRole: () => {
+        if(Template.instance().devSuperuserRoleChkbx.get() === true){
             return 'checked';
         }
         return null;
@@ -138,13 +154,6 @@ Template.addUserProfile.events({
         updateUserProfile("team", 'D');
     },
 
-    'click #isNotDeveloper': (event, template) => {
-        event.preventDefault();
-        template.isDeveloperChkbx.set(false);
-        template.isNotDeveloperChkbx.set(true);
-        updateUserProfile("team", 'O');
-    },
-
     'click #submitProfile': (event, template) => {
         event.preventDefault();
         console.log("submitProfile");
@@ -193,6 +202,27 @@ Template.addUserProfile.events({
         console.log("superuserRoleChkbx");
         let isChecked = $('#superuserRoleChkbx').is(":checked");
         template.superuserRoleChkbx.set(isChecked);
+    },
+
+    'click #isDevInstallerChkbx': (event, template) => {
+        event.preventDefault();
+        console.log("isDevInstallerChkbx");
+        let isChecked = $('#isDevInstallerChkbx').is(":checked");
+        template.devInstallerRoleChkbx.set(isChecked);
+    },
+
+    'click #isDevAdminRoleChkbx': (event, template) => {
+        event.preventDefault();
+        console.log("devAdminRoleChkbx");
+        let isChecked = $('#isDevAdminRoleChkbx').is(":checked");
+        template.devAdminRoleChkbx.set(isChecked);
+    },
+
+    'click #isDevSuperuserRoleChkbx': (event, template) => {
+        event.preventDefault();
+        console.log("devSuperuserRoleChkbx");
+        let isChecked = $('#isDevSuperuserRoleChkbx').is(":checked");
+        template.devSuperuserRoleChkbx.set(isChecked);
     }
 
 });
