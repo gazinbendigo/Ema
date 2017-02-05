@@ -5,13 +5,12 @@
 ////////////////////////////////////////////
 /// Application Roles: These are the roles a user can be assigned.
 
-ApplicationRoles.Analyst = [];
-
-ApplicationRoles.Installer = ['manage-apps', 'manage-versions', 'manage-routing', 'manage-roles'];
-
-ApplicationRoles.Operator = ['manage-apps', 'manage-versions', 'manage-routing', 'manage-roles'];
-
-ApplicationRoles.SuperUser = ['admin', 'super-user'];
+ApplicationRoles = {
+    Analyst: [],
+    Installer: ['manage-apps', 'manage-versions', 'manage-routing', 'manage-roles'],
+    Administrator: ['manage-roles'],
+    SuperUser: ['super-user']
+}
 
 UserEnvironments = {
     dev: "DEV",
@@ -21,7 +20,7 @@ UserEnvironments = {
 
 ApplicationFunctions = {
     Installer: "Installer",
-    Operator: "Operator",
+    Administrator: "Admin",
     Analyst: "Analyst",
     SuperUser: Roles.GLOBAL_GROUP
 };
