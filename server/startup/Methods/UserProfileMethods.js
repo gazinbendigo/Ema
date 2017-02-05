@@ -5,18 +5,34 @@
 
 Meteor.methods({
 
-    insertUserProfile(userProfile){
-        check(userProfile, {
-            ADM: String,
-            FIRST_NME: String,
-            LAST_NME: String,
-            EMAIL: String,
-            PASSWD: String
-        });
-        UserProfilesCollection.insert(userProfile);
-    },
+    createUserProfile: function(userAccount){
+        console.log("called createUserProfile");
+        console.log(JSON.stringify(userAccount));
 
-    addUserToRole(userProfile, role){
+        // check(userProfile, {
+        //     ADM: String,
+        //     FIRST_NME: String,
+        //     LAST_NME: String,
+        //     EMAIL: String,
+        //     PASSWD: String
+        // });
+        // id = Accounts.createUser({
+        //     username: userAccount.user.username,
+        //     password: userAccount.user.password,
+        //     email: userAccount.email
+        // });
+
+        // const userProfile = {
+        //     firstName: userAccount.userDetails.firstName,
+        //     lastName: userAccount.userDetails.lastName,
+        //     team: userAccount.userDetails.team,
+        //     userGroup: (userData.group === "__global_roles__") ? "SuperUser": userData.group
+        // }
+        //
+        // let userProfile = {firstName: "hi", lastName: "", team: "", userGroup: ""};
+        // let user = {username: "", password: "", emails: ""};
+        // let roles = [];
+        // return {profile: {user, userProfile, roles}};
 
     },
 
