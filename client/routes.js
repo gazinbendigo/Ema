@@ -32,6 +32,13 @@ FlowRouter.route('/chart', {
     }
 });
 
+FlowRouter.route('/searchHublogs', {
+    name: 'searchHublogs',
+    action: function() {
+        BlazeLayout.render("hubLogsLayout", {content: "hubLogsView", menu: 'menu'})
+    }
+});
+
 FlowRouter.route('/:env/requestservices/requestId/:requestId', {
     name: 'requestServiceAveragesByRequestId',
     action: function(params) {
