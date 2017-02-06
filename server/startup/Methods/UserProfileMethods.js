@@ -8,6 +8,33 @@ Meteor.methods({
     createUserProfile: function(userAccount){
         console.log("called createUserProfile");
         console.log(JSON.stringify(userAccount));
+        console.log(userAccount.profile.user.username);
+        console.log(userAccount.profile.userProfile.firstName);
+        console.log(userAccount.profile.roles);
+        let user = userAccount.profile.user;
+        check(user, {
+            username: String,
+            password: String,
+            emails: String
+        });
+
+        let userProfile = userAccount.profile.userProfile;
+        check(userProfile, {
+            firstName: String,
+            lastName: String,
+            team: String,
+            userGroup: Match.Maybe([String])
+        });
+
+        let roles = userAccount.profile.userRoles;
+        check(roles, {
+            roles: [String]
+        });
+
+        let devRoles = userAccount.profile.developerRoles;
+        check(devRoles, {
+            devRoles: Match.Maybe([String])
+        });
 
         // check(userProfile, {
         //     ADM: String,

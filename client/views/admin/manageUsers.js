@@ -3,8 +3,7 @@
  */
 
 Template.manageUsers.onCreated(function(){
-    let template = Template.instance();
-    template.subscribe("Users");
+    Meteor.subscribe('Users');
     this.envRole = new ReactiveVar("default");
 
 });

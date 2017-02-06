@@ -2,6 +2,18 @@
  * Created by adm9360 on 16/02/2016.
  */
 
+userGroups = {
+    Installer: "Installer",
+    Administrator: "Admin",
+    Analyst: "Analyst",
+    SuperUser: "SuperUser"
+}
+
+Template.registerHelper('getUserGroup', (value) => {
+    return userGroups[value];
+});
+
+
 Template.registerHelper('formatText', function(text){
     if(text !== null && text !== undefined){
         if(text.startsWith("<NS1:") || text.startsWith("<?xml") || text.toUpperCase().startsWith("<SOAP")){

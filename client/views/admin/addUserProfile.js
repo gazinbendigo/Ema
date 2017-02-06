@@ -2,10 +2,12 @@
  * Created by adm9360 on 20/01/2017.
  */
 
+const DEFAULT_TEAM = "OTHER";
+
 Template.addUserProfile.onCreated(function(){
 
-    this.userProfile = new ReactiveVar(getEmptyProfile());
-    this.admNumber = new ReactiveVar(null);
+    this.newUserProfile = new ReactiveVar(getEmptyProfile());
+    this.username = new ReactiveVar(null);
     this.firstName = new ReactiveVar(null);
     this.lastName = new ReactiveVar(null);
     this.email = new ReactiveVar(null);
@@ -19,12 +21,15 @@ Template.addUserProfile.onCreated(function(){
     this.devInstallerRoleChkbx = new ReactiveVar(false);
     this.devAdminRoleChkbx = new ReactiveVar(false);
     this.devSuperuserRoleChkbx = new ReactiveVar(false);
+    this.isDevRolesEnabled = new ReactiveVar(false);
+    this.errorMsg = new ReactiveVar(null);
+    this.arePasswordsSame = new ReactiveVar(null);
 });
 
 Template.addUserProfile.helpers({
 
     getAdmNumber: () => {
-        return Template.instance().admNumber.get();
+        return Template.instance().username.get();
     },
 
     getFirstName: () => {
@@ -95,6 +100,22 @@ Template.addUserProfile.helpers({
         }
         return null;
     },
+
+    isDevRolesEnabled: () => {
+        if(Template.instance().isDevRolesEnabled.get() === true){
+            return '';
+        }
+        else {
+            Template.instance().devInstallerRoleChkbx.set(false);
+            Template.instance().devAdminRoleChkbx.set(false);
+            Template.instance().devSuperuserRoleChkbx.set(false);
+        }
+        return  'disabled';
+    },
+
+    errorMsg: function() {
+        return Template.instance().errorMsg.get();
+    }
 });
 
 Template.addUserProfile.events({
@@ -102,9 +123,9 @@ Template.addUserProfile.events({
     'keyup #adm': (event, template) => {
         event.preventDefault();
         let adm = $('#adm').val();
-        template.admNumber.set(adm);
-        updateUserProfile("adm", adm);
-        console.log(adm);
+        template.username.set(adm);
+        template.newUserProfile.get().profile.user.username = adm;
+        console.log(template.newUserProfile.get());
     },
 
     'keyup #firstname': (event, template) => {
@@ -112,7 +133,7 @@ Template.addUserProfile.events({
         let firstName = $('#firstname').val();
         console.log(firstName);
         template.firstName.set(firstName);
-        updateUserProfile("firstName", firstName);
+        template.newUserProfile.get().profile.userProfile.firstName = firstName;
     },
 
     'keyup #lastname': (event, template) => {
@@ -120,7 +141,7 @@ Template.addUserProfile.events({
         let lastName = $('#lastname').val();
         console.log(lastName);
         template.lastName.set(lastName);
-        updateUserProfile("lastName", lastName);
+        template.newUserProfile.get().profile.userProfile.lastName = lastName;
     },
 
     'keyup #email': (event, template) => {
@@ -128,59 +149,58 @@ Template.addUserProfile.events({
         let email = $('#email').val();
         console.log(email);
         template.email.set(email);
-        updateUserProfile("email", email);
+        template.newUserProfile.get().profile.user.emails = email
     },
 
     'keyup #password': (event, template) => {
         event.preventDefault();
         let pwd = $('#password').val();
         console.log(pwd);
-        template.password.set(pwd);
-        updateUserProfile("password", pwd);
+        template.newUserProfile.get().profile.user.password = pwd;
     },
 
     'keyup #confirmPassword': (event, template) => {
         event.preventDefault();
+        let pwd = template.newUserProfile.get().profile.user.passwrod;
         let confpwd = $('#confirmPassword').val();
         console.log(confpwd);
+        // let passwordsMatch = confpwd === pwd ? true: false;
+        // template.arePasswordsSame.set(passwordsMatch);
         template.confirmPassword.set(confpwd);
     },
 
 
-    'click #isDeveloper': (event, template) => {
+    'click #isDeveloperChkbx': (event, template) => {
         event.preventDefault();
-        template.isNotDeveloperChkbx.set(false);
-        template.isDeveloperChkbx.set(true);
-        updateUserProfile("team", 'D');
+        let isChecked = $('#isDeveloperChkbx').is(":checked");
+        template.isDeveloperChkbx.set(isChecked);
+        template.isDevRolesEnabled.set(isChecked);
+        let team = isChecked == true ? "DEV":DEFAULT_TEAM;
+        template.newUserProfile.get().profile.userProfile.team = team;
+        if(isChecked === false){
+            template.newUserProfile.get().profile.devRoles = [];
+        }
     },
 
-    'click #submitProfile': (event, template) => {
+    'click #addUserProfile': (event, template) => {
         event.preventDefault();
-        console.log("submitProfile");
-        console.log(JSON.stringify(Template.instance().userProfile.get()));
+        console.log(JSON.stringify(template.newUserProfile.get()));
+        let profile = template.newUserProfile.get();
+        Meteor.call('createUserProfile', profile, function(err, res){
+
+        });
     },
 
-    'click #cancelProfile': (event, template) => {
+    'click #cancelAddUserProfile': (event, template) => {
         event.preventDefault();
-        template.admNumber.set('');
+        template.username.set('');
         template.firstName.set('');
         template.lastName.set('');
         template.email.set('');
         template.isDeveloperChkbx.set(false);
-        template.isNotDeveloperChkbx.set(false);
         template.password.set('');
         template.confirmPassword.set('');
         template.userProfile.set(getEmptyProfile());
-    },
-
-    'click #submitProfileRoles': (event, template) => {
-        event.preventDefault();
-        console.log("submitProfileRoles");
-    },
-
-    'click #cancelProfileRoles': (event, template) => {
-        event.preventDefault();
-        console.log("cancelProfileRoles");
     },
 
     'click #installerRoleChkbx': (event, template) => {
@@ -188,6 +208,8 @@ Template.addUserProfile.events({
         console.log("installerRoleChkbx");
         let isChecked = $('#installerRoleChkbx').is(":checked");
         template.installerRoleChkbx.set(isChecked);
+        addOrRemoveRole('Installer', isChecked, false, template);
+
     },
 
     'click #adminRoleChkbx': (event, template) => {
@@ -195,6 +217,7 @@ Template.addUserProfile.events({
         console.log("adminRoleChkbx");
         let isChecked = $('#adminRoleChkbx').is(":checked");
         template.adminRoleChkbx.set(isChecked);
+        addOrRemoveRole('Admin', isChecked, false, template);
     },
 
     'click #superuserRoleChkbx': (event, template) => {
@@ -202,6 +225,8 @@ Template.addUserProfile.events({
         console.log("superuserRoleChkbx");
         let isChecked = $('#superuserRoleChkbx').is(":checked");
         template.superuserRoleChkbx.set(isChecked);
+        addOrRemoveRole('SuperUser', isChecked, false, template);
+        addOrRemoveGroup(userGroups.SuperUser, isChecked, template);
     },
 
     'click #isDevInstallerChkbx': (event, template) => {
@@ -209,6 +234,8 @@ Template.addUserProfile.events({
         console.log("isDevInstallerChkbx");
         let isChecked = $('#isDevInstallerChkbx').is(":checked");
         template.devInstallerRoleChkbx.set(isChecked);
+        console.log("bbbb" + isChecked);
+        addOrRemoveRole('Installer', isChecked, true, template);
     },
 
     'click #isDevAdminRoleChkbx': (event, template) => {
@@ -216,6 +243,7 @@ Template.addUserProfile.events({
         console.log("devAdminRoleChkbx");
         let isChecked = $('#isDevAdminRoleChkbx').is(":checked");
         template.devAdminRoleChkbx.set(isChecked);
+        addOrRemoveRole('Admin', isChecked, true, template);
     },
 
     'click #isDevSuperuserRoleChkbx': (event, template) => {
@@ -223,24 +251,68 @@ Template.addUserProfile.events({
         console.log("devSuperuserRoleChkbx");
         let isChecked = $('#isDevSuperuserRoleChkbx').is(":checked");
         template.devSuperuserRoleChkbx.set(isChecked);
+        addOrRemoveRole('SuperUser', isChecked, true, template);
     }
 
 });
 
-function updateUserProfile(key, value){
-    if(value){
-        Template.instance().userProfile.get()[key] = value;
-    }
-    else {
-        delete Template.instance().userProfile.get()[key];
-    }
+function getEmptyProfile(){
+    let userProfile = {firstName: "hi", lastName: "", team: DEFAULT_TEAM, userGroup: []};
+    let user = {username: "", password: "", emails: ""};
+    let roles = [];
+    let devRoles = [];
+    return {profile:{user: user, userProfile: userProfile, userRoles: roles, developerRoles: devRoles}};
 }
 
-function getEmptyProfile(){
-    return {adm: '', firstName: '', lastName: '', email: '', team: '', password: '', roles:{}};
+function addOrRemoveRole(role, action, isDevRole, template){
+    let roles = [];
+    if(isDevRole){
+        roles = template.newUserProfile.get().profile.developerRoles.devRoles;
+    }
+    else {
+        roles = template.newUserProfile.get().profile.userRoles.roles;
+    }
+    if(action){
+        if(!_.contains(roles, role)){
+            roles.push(role);
+        }
+    }
+    else {
+        if(_.contains(roles, role)){
+            let pos = _.indexOf(roles, role);
+            roles.splice(pos, 1);
+        }
+    }
+    if(isDevRole){
+        template.newUserProfile.get().profile.developerRoles.devRoles = roles;
+    }
+    else {
+        template.newUserProfile.get().profile.userRoles.roles = roles;
+    }
+    console.log(JSON.stringify(template.newUserProfile.get()));
+}
+
+
+function addOrRemoveGroup(group, action, template){
+    let groups = template.newUserProfile.get().profile.userProfile.userGroup;
+    //If true add the group
+    if(action){
+        if(!_.contains(groups, group)){
+            groups.push(group);
+        }
+    }
+    else {
+        if(_.contains(groups, group)){
+            let pos = _.indexOf(groups, group);
+            groups.splice(pos, 1);
+        }
+    }
+    console.log(JSON.stringify(groups));
 }
 
 function isValidAdm(adm){
-    return adm.length() === 7;
+    if(_.isString(adm)){
+        return adm.length() === 7;
+    }
+    return false;
 }
-

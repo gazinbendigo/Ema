@@ -136,11 +136,11 @@ Template.hubLogsView.helpers({
     },
 
     areLogsLoaded: function(){
-        return true;//HubLogs.isLoaded.get();
+        return HubLogs.isLoaded.get();
     },
 
     isEnvsLoaded: function(){
-        return true;//Environments.isLoaded.get();
+        return Environments.isLoaded.get();
     },
 
     isApplicationsLoaded: function() {
@@ -457,7 +457,7 @@ Template.hubLogsView.events({
         event.preventDefault();
         let index = template.pageCursor.get();
         let pageRows = template.rowsPerPage.get();
-        if((index + pageRows) == HubLogs.find({}).count()){
+        if((index + pageRows) <= HubLogs.find({}).count()){
             let env = {"env": getEnvironment()};
             let params = {"start": (index + pageRows), "noRecords": pageRows};
             HubLogs.insertFromServer(env, params);

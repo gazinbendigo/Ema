@@ -32,9 +32,9 @@ FlowRouter.route('/chart', {
     }
 });
 
-FlowRouter.route('/searchHublogs', {
+FlowRouter.route('/searchHublogs/:env', {
     name: 'searchHublogs',
-    action: function() {
+    action: function(params) {
         BlazeLayout.render("hubLogsLayout", {content: "hubLogsView", menu: 'menu'})
     }
 });

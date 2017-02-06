@@ -46,7 +46,7 @@
                                                     <label class="control-label col-sm-2" for="team">Team:</label>
                                                     <div class="col-sm-10">
                                                         <div class="checkbox">
-                                                            <label><input type="checkbox" id="isDeveloper" {{isDeveloper}}> Developer</label>
+                                                            <label><input type="checkbox" id="isDeveloperChkbx" {{isDeveloper}}> Developer</label>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -60,14 +60,6 @@
                                                     <label class="control-label col-sm-2" for="confirmPassword">Confirm Password:</label>
                                                     <div class="col-sm-10">
                                                         <input type="password" class="form-control" id="confirmPassword" value="{{getConfirmPassword}}" placeholder="Confirm password">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="col-xs-12 col-ms-12">
-                                                        <div class="text-right">
-                                                            <button type="button" class="btn btn-default" id="submitProfile">Submit</button>
-                                                            <button type="button" class="btn btn-default" id="cancelProfile">Cancel</button>
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </form>
@@ -141,7 +133,7 @@
                                                 <td>Manages general Hub configuration i.e. versions, routing, properties</td>
                                                 <td>
                                                     <div class="checkbox md">
-                                                        <label><input type="checkbox" id="isDevInstallerChkbx" {{isDevInstallerRole}}></label>
+                                                        <label><input type="checkbox" id="isDevInstallerChkbx" {{isDevInstallerRole}} {{isDevRolesEnabled}}></label>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -150,7 +142,7 @@
                                                 <td>Apply Roles to Users</td>
                                                 <td>
                                                     <div class="checkbox md">
-                                                        <label><input type="checkbox" id="isDevAdminRoleChkbx" {{isDevAdminRole}}></label>
+                                                        <label><input type="checkbox" id="isDevAdminRoleChkbx" {{isDevAdminRole}} {{isDevRolesEnabled}}></label>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -159,7 +151,7 @@
                                                 <td>Manage all functions</td>
                                                 <td>
                                                     <div class="checkbox md">
-                                                        <label><input type="checkbox" id="isDevSuperuserRoleChkbx" {{isDevSuperuserRole}}></label>
+                                                        <label><input type="checkbox" id="isDevSuperuserRoleChkbx" {{isDevSuperuserRole}} {{isDevRolesEnabled}}></label>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -171,8 +163,8 @@
                             </div>
                             <div class="col-xs-12 col-ms-12">
                                 <div class="text-right">
-                                    <button type="button" class="btn btn-default" id="submitProfileRoles">Submit</button>
-                                    <button type="button" class="btn btn-default" id="cancelProfileRoles">Cancel</button>
+                                    <button type="button" class="btn btn-default" id="addUserProfile">Submit</button>
+                                    <button type="button" class="btn btn-default" id="cancelAddUserProfile">Cancel</button>
                                 </div>
                             </div>
                         </div>

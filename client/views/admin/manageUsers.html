@@ -11,10 +11,10 @@
             <div class="col-xs-4 col-sm-4">
                 <select id="selectedRole" class="form-control">
                     <option value="default">-- Select --</option>
-                    <option value="Installer">Installer</option>
-                    <option value="Analyst">Analyst</option>
-                    <option value="Operator">Operator</option>
-                    <option value="SuperUser">Super User</option>
+                    <option value="{{getUserGroup 'Installer'}}">Installer</option>
+                    <option value="{{getUserGroup 'Analyst'}}">Analyst</option>
+                    <option value="{{getUserGroup 'Administrator'}}">Administrator</option>
+                    <option value="{{getUserGroup 'SuperUser'}}">Super User</option>
                 </select>
             </div>
             <div class="col-xs-2 col-sm-1">
