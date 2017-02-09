@@ -4,27 +4,43 @@
 
 ////////////////////////////////////////////
 /// Application Roles: These are the roles a user can be assigned.
+/// The Ultimate God role is Roles.GLOBAL_GROUP, but is not used here
+
 
 ApplicationRoles = {
-    Analyst: [],
-    Installer: ['manage-apps', 'manage-versions', 'manage-routing', 'manage-roles'],
-    Administrator: ['manage-roles'],
-    SuperUser: ['super-user']
-}
-
-UserEnvironments = {
-    dev: "DEV",
-    dtl: "DTL",
-    prod: "PROD"
+    Analyst: 1,
+    Installer: 2,
+    Administrator: 3,
+    SuperUser: 4,
+    properties: {
+        1: {roles: ['read-only'], group: 'Analyst'},
+        2: {roles: ['manage-apps', 'manage-versions', 'manage-routing', 'manage-roles'], group: 'Installer'},
+        3: {roles: ['manage-roles'], group: 'Administrator'},
+        4: {roles: ['super-user'], group: 'SuperUser'}
+    }
 };
 
-ApplicationFunctions = {
-    Installer: "Installer",
-    Administrator: "Admin",
-    Analyst: "Analyst",
-    SuperUser: Roles.GLOBAL_GROUP
-};
-
-EmailAddressRegex = {
-    emailRegex: "/^(([^<>()\[\]\\.,;:\s@\"]+(\.[^<>()\[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/"
+ApplicationRoles.getApplicationRolesByGroup = function(role){
+    if(role === ApplicationRoles.properties[ApplicationRoles.Analyst].group){
+        return ApplicationRoles.properties[ApplicationRoles.Analyst].roles;
+    }
+    else if(role === ApplicationRoles.properties[ApplicationRoles.Installer].group){
+        return ApplicationRoles.properties[ApplicationRoles.Installer].roles;
+    }
+    else if(role === ApplicationRoles.properties[ApplicationRoles.Administrator].group){
+        return ApplicationRoles.properties[ApplicationRoles.Administrator].roles;
+    }
+    else if(role === ApplicationRoles.properties[ApplicationRoles.SuperUser].group){
+        return ApplicationRoles.properties[ApplicationRoles.SuperUser].roles;
+    }
 }
+
+EnvironmentGroups = {
+    VMV: "VMV",
+    DEV: "DEV",
+    DTL: "DTL",
+    PROD: "PROD"
+}
+
+
+

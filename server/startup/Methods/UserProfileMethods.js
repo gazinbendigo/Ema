@@ -5,66 +5,80 @@
 
 Meteor.methods({
 
-    createUserProfile: function(userAccount){
+    createUserProfile: function(userAccount, cb){
         console.log("called createUserProfile");
         console.log(JSON.stringify(userAccount));
-        console.log(userAccount.profile.user.username);
-        console.log(userAccount.profile.userProfile.firstName);
-        console.log(userAccount.profile.roles);
-        let user = userAccount.profile.user;
-        check(user, {
-            username: String,
-            password: String,
-            emails: Match.Where(function(emails){
-                check(emails, String);
-                var regexp = "/^(([^<>()\[\]\\.,;:\s@\"]+(\.[^<>()\[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/";
-                return regexp.test(emails);
-            })
-        });
-
-        let userProfile = userAccount.profile.userProfile;
-        check(userProfile, {
-            firstName: String,
-            lastName: String,
-            team: String,
-            userGroup: Match.Maybe([String])
-        });
-
-        let roles = userAccount.profile.userRoles;
-        check(roles, {
-            roles: [String]
-        });
-
-        let devRoles = userAccount.profile.developerRoles;
-        check(devRoles, {
-            devRoles: Match.Maybe([String])
-        });
-
-        // check(userProfile, {
-        //     ADM: String,
-        //     FIRST_NME: String,
-        //     LAST_NME: String,
-        //     EMAIL: String,
-        //     PASSWD: String
-        // });
-        // id = Accounts.createUser({
-        //     username: userAccount.user.username,
-        //     password: userAccount.user.password,
-        //     email: userAccount.email
-        // });
-
-        // const userProfile = {
-        //     firstName: userAccount.userDetails.firstName,
-        //     lastName: userAccount.userDetails.lastName,
-        //     team: userAccount.userDetails.team,
-        //     userGroup: (userData.group === "__global_roles__") ? "SuperUser": userData.group
+        //Check rubbish is not being parsed from the front end.
+        // try{
+            check(userAccount, {
+                profile: {
+                    user: {
+                        username: String,
+                        password: String,
+                        emails: String
+                    },
+                    userProfile: {
+                        firstName: String,
+                        lastName: String
+                    },
+                    userRoles: {
+                        common: Match.Maybe([String]),
+                        devRoles: Match.Maybe([String])
+                    }
+                }
+            });
         // }
-        //
-        // let userProfile = {firstName: "hi", lastName: "", team: "", userGroup: ""};
-        // let user = {username: "", password: "", emails: ""};
-        // let roles = [];
-        // return {profile: {user, userProfile, roles}};
+        // catch (err){
+        //     return cb(err, null);
+        // }
 
+        console.log("Passed!! Maybe??");
+
+        let id = Accounts.createUser({
+            username: userAccount.profile.user.username,
+            password: userAccount.profile.user.password,
+            emails: userAccount.profile.user.emails
+        });
+
+        let isDeveloper = userAccount.profile.userRoles.devRoles.length() > 0;
+
+        const userProfile = {
+            firstName: userAccount.profile.userProfile.firstName,
+            lastName: userAccount.profile.userProfile.lastName,
+            isDeveloper: isDeveloper
+        }
+
+        Meteor.users.update({_id: id}, {$set:{'name.0.verified': true}});
+        Meteor.users.update({_id: id}, {$set:{userProfile: userProfile}});
+
+        // {"profile":
+        //     {"user":
+        //         {
+        //             "username":"","password":"","emails":""},
+        //             "userProfile":{"firstName":"","lastName":""},
+        //             "userRoles":{"common":[],"devRoles":[]
+        //         }
+        //     }
+        // }
+
+        if(userAccount.profile.user.userRoles.devRoles.length > 0){
+            _.each(userAccount.profile.user.userRoles.devRoles, function(role){
+                Roles.addUsersToRoles(id, ApplicationRoles.getApplicationRolesByGroup(role));
+            });
+            // By default a Developer should always have read-only access to DTL environments.
+            if(userAccount.profile.user.userRoles.common.length === 0){
+                Roles.addUsersToRoles(id, ApplicationRoles.getApplicationRolesByGroup(ApplicationRoles.properties[ApplicationRoles.Analyst].group));
+            }
+        }
+        if(userAccount.profile.user.userRoles.common.length > 0){
+            _.each(userAccount.profile.userRoles.common, function(role){
+                Roles.addUsersToRoles(id, ApplicationRoles.getApplicationRolesByGroup(role));
+            });
+        }
+
+        console.log(Accounts.findUserByEmail(userAccount.profile.user.username));
+        // return cb(null, "Profile Added.");
+        return new String("Profile Added.");
     },
 
     /**

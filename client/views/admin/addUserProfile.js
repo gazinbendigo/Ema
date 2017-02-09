@@ -2,7 +2,6 @@
  * Created by adm9360 on 20/01/2017.
  */
 
-const DEFAULT_TEAM = "OTHER";
 
 Template.addUserProfile.onCreated(function(){
 
@@ -14,7 +13,6 @@ Template.addUserProfile.onCreated(function(){
     this.password = new ReactiveVar(null);
     this.confirmPassword = new ReactiveVar(null);
     this.isDeveloperChkbx = new ReactiveVar(false);
-    this.isNotDeveloperChkbx = new ReactiveVar(false);
     this.installerRoleChkbx = new ReactiveVar(false);
     this.adminRoleChkbx = new ReactiveVar(false);
     this.superuserRoleChkbx = new ReactiveVar(false);
@@ -22,7 +20,7 @@ Template.addUserProfile.onCreated(function(){
     this.devAdminRoleChkbx = new ReactiveVar(false);
     this.devSuperuserRoleChkbx = new ReactiveVar(false);
     this.isDevRolesEnabled = new ReactiveVar(false);
-    this.errorMsg = new ReactiveVar(null);
+    this.responseMsg = new ReactiveVar(null);
     this.arePasswordsSame = new ReactiveVar(null);
 });
 
@@ -113,14 +111,14 @@ Template.addUserProfile.helpers({
         return  'disabled';
     },
 
-    errorMsg: function() {
-        return Template.instance().errorMsg.get();
+    responseMsg: function() {
+        return Template.instance().responseMsg.get();
     }
 });
 
 Template.addUserProfile.events({
 
-    'keyup #adm': (event, template) => {
+    'change #adm': (event, template) => {
         event.preventDefault();
         let adm = $('#adm').val();
         template.username.set(adm);
@@ -128,7 +126,7 @@ Template.addUserProfile.events({
         console.log(template.newUserProfile.get());
     },
 
-    'keyup #firstname': (event, template) => {
+    'change #firstname': (event, template) => {
         event.preventDefault();
         let firstName = $('#firstname').val();
         console.log(firstName);
@@ -136,7 +134,7 @@ Template.addUserProfile.events({
         template.newUserProfile.get().profile.userProfile.firstName = firstName;
     },
 
-    'keyup #lastname': (event, template) => {
+    'change #lastname': (event, template) => {
         event.preventDefault();
         let lastName = $('#lastname').val();
         console.log(lastName);
@@ -144,7 +142,7 @@ Template.addUserProfile.events({
         template.newUserProfile.get().profile.userProfile.lastName = lastName;
     },
 
-    'keyup #email': (event, template) => {
+    'change #email': (event, template) => {
         event.preventDefault();
         let email = $('#email').val();
         console.log(email);
@@ -152,16 +150,16 @@ Template.addUserProfile.events({
         template.newUserProfile.get().profile.user.emails = email
     },
 
-    'keyup #password': (event, template) => {
+    'change #password': (event, template) => {
         event.preventDefault();
         let pwd = $('#password').val();
         console.log(pwd);
         template.newUserProfile.get().profile.user.password = pwd;
     },
 
-    'keyup #confirmPassword': (event, template) => {
+    'change #confirmPassword': (event, template) => {
         event.preventDefault();
-        let pwd = template.newUserProfile.get().profile.user.passwrod;
+        let pwd = template.newUserProfile.get().profile.user.password;
         let confpwd = $('#confirmPassword').val();
         console.log(confpwd);
         // let passwordsMatch = confpwd === pwd ? true: false;
@@ -175,8 +173,6 @@ Template.addUserProfile.events({
         let isChecked = $('#isDeveloperChkbx').is(":checked");
         template.isDeveloperChkbx.set(isChecked);
         template.isDevRolesEnabled.set(isChecked);
-        let team = isChecked == true ? "DEV":DEFAULT_TEAM;
-        template.newUserProfile.get().profile.userProfile.team = team;
         if(isChecked === false){
             template.newUserProfile.get().profile.devRoles = [];
         }
@@ -187,7 +183,12 @@ Template.addUserProfile.events({
         console.log(JSON.stringify(template.newUserProfile.get()));
         let profile = template.newUserProfile.get();
         Meteor.call('createUserProfile', profile, function(err, res){
-
+            if(err){
+                template.responseMsg.set("Invalid Input.");
+            }
+            else {
+                template.responseMsg.set(res);
+            }
         });
     },
 
@@ -208,7 +209,7 @@ Template.addUserProfile.events({
         console.log("installerRoleChkbx");
         let isChecked = $('#installerRoleChkbx').is(":checked");
         template.installerRoleChkbx.set(isChecked);
-        addOrRemoveRole('Installer', isChecked, false, template);
+        addOrRemoveRole('Installer', isChecked, 'DTL', template);
 
     },
 
@@ -217,7 +218,7 @@ Template.addUserProfile.events({
         console.log("adminRoleChkbx");
         let isChecked = $('#adminRoleChkbx').is(":checked");
         template.adminRoleChkbx.set(isChecked);
-        addOrRemoveRole('Admin', isChecked, false, template);
+        addOrRemoveRole('Admin', isChecked, 'DTL', template);
     },
 
     'click #superuserRoleChkbx': (event, template) => {
@@ -225,8 +226,7 @@ Template.addUserProfile.events({
         console.log("superuserRoleChkbx");
         let isChecked = $('#superuserRoleChkbx').is(":checked");
         template.superuserRoleChkbx.set(isChecked);
-        addOrRemoveRole('SuperUser', isChecked, false, template);
-        addOrRemoveGroup(userGroups.SuperUser, isChecked, template);
+        addOrRemoveRole('SuperUser', isChecked, 'DTL', template);
     },
 
     'click #isDevInstallerChkbx': (event, template) => {
@@ -235,7 +235,7 @@ Template.addUserProfile.events({
         let isChecked = $('#isDevInstallerChkbx').is(":checked");
         template.devInstallerRoleChkbx.set(isChecked);
         console.log("bbbb" + isChecked);
-        addOrRemoveRole('Installer', isChecked, true, template);
+        addOrRemoveRole('Installer', isChecked, 'DEV', template);
     },
 
     'click #isDevAdminRoleChkbx': (event, template) => {
@@ -243,7 +243,7 @@ Template.addUserProfile.events({
         console.log("devAdminRoleChkbx");
         let isChecked = $('#isDevAdminRoleChkbx').is(":checked");
         template.devAdminRoleChkbx.set(isChecked);
-        addOrRemoveRole('Admin', isChecked, true, template);
+        addOrRemoveRole('Admin', isChecked, 'DEV', template);
     },
 
     'click #isDevSuperuserRoleChkbx': (event, template) => {
@@ -251,63 +251,50 @@ Template.addUserProfile.events({
         console.log("devSuperuserRoleChkbx");
         let isChecked = $('#isDevSuperuserRoleChkbx').is(":checked");
         template.devSuperuserRoleChkbx.set(isChecked);
-        addOrRemoveRole('SuperUser', isChecked, true, template);
+        addOrRemoveRole('SuperUser', isChecked, 'DEV', template);
     }
 
 });
 
 function getEmptyProfile(){
-    let userProfile = {firstName: "hi", lastName: "", team: DEFAULT_TEAM, userGroup: []};
-    let user = {username: "", password: "", emails: ""};
-    let roles = [];
-    let devRoles = [];
-    return {profile:{user: user, userProfile: userProfile, userRoles: roles, developerRoles: devRoles}};
+    let userProfile = {firstName: null, lastName: null};
+    let user = {username: null, password: null, emails: null};
+    let roles = {common: [], devRoles: []};
+    return {profile:{user: user, userProfile: userProfile, userRoles: roles}};
 }
+//firstName: "James", lastName: "Brown", username: "adm1112", password: "12345678", email:"User1@hotmail.com", roles: [], group: agroup
 
-function addOrRemoveRole(role, action, isDevRole, template){
-    let roles = [];
-    if(isDevRole){
-        roles = template.newUserProfile.get().profile.developerRoles.devRoles;
-    }
-    else {
-        roles = template.newUserProfile.get().profile.userRoles.roles;
-    }
+function addOrRemoveRole(role, action, roleType, template){
+    let userRoles = template.newUserProfile.get().profile.userRoles;
     if(action){
-        if(!_.contains(roles, role)){
-            roles.push(role);
+        if(roleType === 'DEV'){
+            if(!_.contains(userRoles.devRoles, role)){
+                userRoles.devRoles.push(role);
+            }
+        }
+        else {
+            if(!_.contains(userRoles.common, role)){
+                userRoles.common.push(role);
+            }
         }
     }
     else {
-        if(_.contains(roles, role)){
-            let pos = _.indexOf(roles, role);
-            roles.splice(pos, 1);
+        if(roleType === 'DEV'){
+            if(_.contains(userRoles.devRoles, role)){
+                let pos = _.indexOf(userRoles.devRoles, role);
+                userRoles.devRoles.splice(pos, 1);
+            }
+        }
+        else {
+            if(_.contains(userRoles.common, role)){
+                let pos = _.indexOf(userRoles.common, role);
+                userRoles.common.splice(pos, 1);
+            }
         }
     }
-    if(isDevRole){
-        template.newUserProfile.get().profile.developerRoles.devRoles = roles;
-    }
-    else {
-        template.newUserProfile.get().profile.userRoles.roles = roles;
-    }
+
+    template.newUserProfile.get().profile.userRoles = userRoles;
     console.log(JSON.stringify(template.newUserProfile.get()));
-}
-
-
-function addOrRemoveGroup(group, action, template){
-    let groups = template.newUserProfile.get().profile.userProfile.userGroup;
-    //If true add the group
-    if(action){
-        if(!_.contains(groups, group)){
-            groups.push(group);
-        }
-    }
-    else {
-        if(_.contains(groups, group)){
-            let pos = _.indexOf(groups, group);
-            groups.splice(pos, 1);
-        }
-    }
-    console.log(JSON.stringify(groups));
 }
 
 function isValidAdm(adm){
