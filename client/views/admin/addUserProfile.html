@@ -86,7 +86,7 @@
                                                 <td>Manages general Hub configuration i.e. versions, routing, properties</td>
                                                 <td>
                                                     <div class="checkbox md">
-                                                        <label><input type="checkbox" id="installerRoleChkbx" {{applyInstallerRole}}></label>
+                                                        <label><input type="checkbox" id="installerRoleChkbx" {{isInstaller}}></label>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -95,7 +95,7 @@
                                                 <td>Apply Roles to Users</td>
                                                 <td>
                                                     <div class="checkbox md">
-                                                        <label><input type="checkbox" id="adminRoleChkbx" {{applyAdminRole}}></label>
+                                                        <label><input type="checkbox" id="adminRoleChkbx" {{isAdmin}}></label>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -104,7 +104,7 @@
                                                 <td>Manage all functions</td>
                                                 <td>
                                                     <div class="checkbox md">
-                                                        <label><input type="checkbox" id="superuserRoleChkbx" {{applySuperuserRole}}></label>
+                                                        <label><input type="checkbox" id="superuserRoleChkbx" {{isSuperuser}}></label>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -133,7 +133,7 @@
                                                 <td>Manages general Hub configuration i.e. versions, routing, properties</td>
                                                 <td>
                                                     <div class="checkbox md">
-                                                        <label><input type="checkbox" id="isDevInstallerChkbx" {{isDevInstallerRole}} {{isDevRolesEnabled}}></label>
+                                                        <label><input type="checkbox" id="isDevInstallerChkbx" {{isDevInstaller}} {{areDevRolesEnabled}}></label>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -142,7 +142,7 @@
                                                 <td>Apply Roles to Users</td>
                                                 <td>
                                                     <div class="checkbox md">
-                                                        <label><input type="checkbox" id="isDevAdminRoleChkbx" {{isDevAdminRole}} {{isDevRolesEnabled}}></label>
+                                                        <label><input type="checkbox" id="isDevAdminRoleChkbx" {{isDevAdmin}} {{areDevRolesEnabled}}></label>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -151,7 +151,7 @@
                                                 <td>Manage all functions</td>
                                                 <td>
                                                     <div class="checkbox md">
-                                                        <label><input type="checkbox" id="isDevSuperuserRoleChkbx" {{isDevSuperuserRole}} {{isDevRolesEnabled}}></label>
+                                                        <label><input type="checkbox" id="isDevSuperuserRoleChkbx" {{isDevSuperuser}} {{areDevRolesEnabled}}></label>
                                                     </div>
                                                 </td>
                                             </tr>

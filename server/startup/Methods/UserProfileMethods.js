@@ -5,47 +5,47 @@
 
 Meteor.methods({
 
+    /**
+     * Create a User Profile Account
+     * @param userAccount
+     * @param cb
+     * @returns {String}
+     */
     createUserProfile: function(userAccount, cb){
         console.log("called createUserProfile");
         console.log(JSON.stringify(userAccount));
         //Check rubbish is not being parsed from the front end.
-        // try{
-            check(userAccount, {
-                profile: {
-                    user: {
-                        username: String,
-                        password: String,
-                        emails: String
-                    },
-                    userProfile: {
-                        firstName: String,
-                        lastName: String
-                    },
-                    userRoles: {
-                        common: Match.Maybe([String]),
-                        devRoles: Match.Maybe([String])
-                    }
+        check(userAccount, {
+            profile: {
+                user: {
+                    username: String,
+                    password: String,
+                    emails: String
+                },
+                userProfile: {
+                    firstName: String,
+                    lastName: String
+                },
+                userRoles: {
+                    common: Match.Maybe([String]),
+                    devRoles: Match.Maybe([String])
                 }
-            });
-        // }
-        // catch (err){
-        //     return cb(err, null);
-        // }
+            }
+        });
 
         console.log("Passed!! Maybe??");
 
         let id = Accounts.createUser({
             username: userAccount.profile.user.username,
             password: userAccount.profile.user.password,
-            emails: userAccount.profile.user.emails
+            email: userAccount.profile.user.emails
         });
 
-        let isDeveloper = userAccount.profile.userRoles.devRoles.length() > 0;
 
         const userProfile = {
             firstName: userAccount.profile.userProfile.firstName,
             lastName: userAccount.profile.userProfile.lastName,
-            isDeveloper: isDeveloper
+            groups: userAccount.profile.userRoles
         }
 
         Meteor.users.update({_id: id}, {$set:{'name.0.verified': true}});
@@ -61,25 +61,55 @@ Meteor.methods({
         //     }
         // }
 
-        if(userAccount.profile.user.userRoles.devRoles.length > 0){
-            _.each(userAccount.profile.user.userRoles.devRoles, function(role){
-                Roles.addUsersToRoles(id, ApplicationRoles.getApplicationRolesByGroup(role));
-            });
-            // By default a Developer should always have read-only access to DTL environments.
-            if(userAccount.profile.user.userRoles.common.length === 0){
-                Roles.addUsersToRoles(id, ApplicationRoles.getApplicationRolesByGroup(ApplicationRoles.properties[ApplicationRoles.Analyst].group));
-            }
-        }
-        if(userAccount.profile.user.userRoles.common.length > 0){
-            _.each(userAccount.profile.userRoles.common, function(role){
-                Roles.addUsersToRoles(id, ApplicationRoles.getApplicationRolesByGroup(role));
-            });
-        }
+        // if(userAccount.profile.user.userRoles.devRoles.length > 0){
+        //     _.each(userAccount.profile.user.userRoles.devRoles, function(role){
+        //         Roles.addUsersToRoles(id, ApplicationRoles.getApplicationRolesByGroup(role));
+        //     });
+        //     // By default a Developer should always have read-only access to OTHER environments.
+        //     if(userAccount.profile.user.userRoles.common.length === 0){
+        //         Roles.addUsersToRoles(id, ApplicationRoles.getApplicationRolesByGroup(ApplicationRoles.properties[ApplicationRoles.Analyst].group));
+        //     }
+        // }
+        // if(userAccount.profile.user.userRoles.common.length > 0){
+        //     _.each(userAccount.profile.userRoles.common, function(role){
+        //         Roles.addUsersToRoles(id, ApplicationRoles.getApplicationRolesByGroup(role));
+        //     });
+        // }
 
         console.log(Accounts.findUserByEmail(userAccount.profile.user.username));
         // return cb(null, "Profile Added.");
         return new String("Profile Added.");
     },
+
+    /**
+     * Delete a user
+     * @param userId
+     * @param cb
+     * @returns {*}
+     */
+    deleteUser: function(userId, cb){
+        console.log("Called delete user");
+        try{
+            Meteor.users.remove(userId);
+        }
+        catch(err){
+            return cb(err, null);
+        }
+        return(null, '');
+    },
+
+    updateUser: function(userProfile, cb){
+
+        let id = userProfile._id;
+        try{
+            Meteor.users.update({_id: id}, {$set:{userProfile: userProfile}});
+        }
+        catch(err){
+            return cb(err, null);
+        }
+        return cb(null, '');
+    },
+
 
     /**
      * Delete a User from a specific Group

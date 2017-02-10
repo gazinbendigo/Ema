@@ -8,7 +8,7 @@ var baseApiUrl = Meteor.settings.baseApiURL;
 //     UserEnvironments.remove({});
 //     if(UserEnvironments.find().count() === 0){
 //         UserEnvironments.insert({USER_ENVIRONMENT: "DEV"});
-//         UserEnvironments.insert({USER_ENVIRONMENT: "DTL"});
+//         UserEnvironments.insert({USER_ENVIRONMENT: "OTHER"});
 //         UserEnvironments.insert({USER_ENVIRONMENT: "PROD"});
 //     }
 // });

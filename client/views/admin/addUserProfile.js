@@ -19,7 +19,7 @@ Template.addUserProfile.onCreated(function(){
     this.devInstallerRoleChkbx = new ReactiveVar(false);
     this.devAdminRoleChkbx = new ReactiveVar(false);
     this.devSuperuserRoleChkbx = new ReactiveVar(false);
-    this.isDevRolesEnabled = new ReactiveVar(false);
+    this.areDevRolesEnabled = new ReactiveVar(false);
     this.responseMsg = new ReactiveVar(null);
     this.arePasswordsSame = new ReactiveVar(null);
 });
@@ -57,49 +57,49 @@ Template.addUserProfile.helpers({
         return null;
     },
 
-    applyInstallerRole: function(){
+    isInstaller: function(){
         if(Template.instance().installerRoleChkbx.get() === true){
             return 'checked';
         }
         return null;
     },
 
-    applyAdminRole: function(){
+    isAdmin: function(){
         if(Template.instance().adminRoleChkbx.get() === true){
             return 'checked';
         }
         return null;
     },
 
-    applySuperuserRole: function(){
+    isSuperuser: function(){
         if(Template.instance().superuserRoleChkbx.get() === true){
             return 'checked';
         }
         return null;
     },
 
-    isDevInstallerRole: () => {
+    isDevInstaller: () => {
         if(Template.instance().devInstallerRoleChkbx.get() === true) {
             return 'checked';
         }
         return null;
     },
 
-    isDevAdminRole: () => {
+    isDevAdmin: () => {
         if(Template.instance().devAdminRoleChkbx.get() === true){
             return 'checked';
         }
         return null;
     },
 
-    isDevSuperuserRole: () => {
+    isDevSuperuser: () => {
         if(Template.instance().devSuperuserRoleChkbx.get() === true){
             return 'checked';
         }
         return null;
     },
 
-    isDevRolesEnabled: () => {
+    areDevRolesEnabled: () => {
         if(Template.instance().isDevRolesEnabled.get() === true){
             return '';
         }
@@ -172,7 +172,7 @@ Template.addUserProfile.events({
         event.preventDefault();
         let isChecked = $('#isDeveloperChkbx').is(":checked");
         template.isDeveloperChkbx.set(isChecked);
-        template.isDevRolesEnabled.set(isChecked);
+        template.areDevRolesEnabled.set(isChecked);
         if(isChecked === false){
             template.newUserProfile.get().profile.devRoles = [];
         }
@@ -209,7 +209,7 @@ Template.addUserProfile.events({
         console.log("installerRoleChkbx");
         let isChecked = $('#installerRoleChkbx').is(":checked");
         template.installerRoleChkbx.set(isChecked);
-        addOrRemoveRole('Installer', isChecked, 'DTL', template);
+        addOrRemoveRole('Installer', isChecked, 'OTHER', template);
 
     },
 
@@ -218,7 +218,7 @@ Template.addUserProfile.events({
         console.log("adminRoleChkbx");
         let isChecked = $('#adminRoleChkbx').is(":checked");
         template.adminRoleChkbx.set(isChecked);
-        addOrRemoveRole('Admin', isChecked, 'DTL', template);
+        addOrRemoveRole('Admin', isChecked, 'OTHER', template);
     },
 
     'click #superuserRoleChkbx': (event, template) => {
@@ -226,7 +226,7 @@ Template.addUserProfile.events({
         console.log("superuserRoleChkbx");
         let isChecked = $('#superuserRoleChkbx').is(":checked");
         template.superuserRoleChkbx.set(isChecked);
-        addOrRemoveRole('SuperUser', isChecked, 'DTL', template);
+        addOrRemoveRole('SuperUser', isChecked, 'OTHER', template);
     },
 
     'click #isDevInstallerChkbx': (event, template) => {
@@ -259,10 +259,9 @@ Template.addUserProfile.events({
 function getEmptyProfile(){
     let userProfile = {firstName: null, lastName: null};
     let user = {username: null, password: null, emails: null};
-    let roles = {common: [], devRoles: []};
+    let roles = {OTHER: [], DEV: []};
     return {profile:{user: user, userProfile: userProfile, userRoles: roles}};
 }
-//firstName: "James", lastName: "Brown", username: "adm1112", password: "12345678", email:"User1@hotmail.com", roles: [], group: agroup
 
 function addOrRemoveRole(role, action, roleType, template){
     let userRoles = template.newUserProfile.get().profile.userRoles;

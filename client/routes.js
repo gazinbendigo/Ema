@@ -101,6 +101,7 @@ FlowRouter.route( '/userprofiles', {
 //TODO: Change to private
 FlowRouter.route('/userProfile/:adm', {
     name: 'updateUserProfile',
+    //triggersEnter: [AccountsTemplates.ensureSignedIn],
     action(){
         BlazeLayout.render("baseLayout", {content: "editUserProfile", menu: "menu"});
     }
