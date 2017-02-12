@@ -3,7 +3,7 @@
     <div class="component-spacer sm">
     <div class="page-container container">
         <div class="row">
-            <div class="col-md-12, col-lg-12"><h2>Edit User Profile: {{getUserProfile.username}}</h2></div>
+            <div class="col-md-12, col-lg-12"><h2>Edit User Profile: {{getUserProfile.profile.username}}</h2></div>
         </div>
         <div class="row">
             <div class="col-xs-12 col-sm-12">
@@ -21,25 +21,25 @@
                                         <div class="form-group">
                                             <label class="control-label col-sm-2" for="description">Adm:</label>
                                             <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="adm" value="{{getUserProfile.username}}" placeholder="Admxxxx">
+                                                <input type="text" class="form-control" id="adm" value="{{getUserProfile.profile.username}}" placeholder="Admxxxx">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label col-sm-2" for="firstname">First Name:</label>
                                             <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="firstname" value="{{getUserProfile.userProfile.firstName}}" placeholder="First name">
+                                                <input type="text" class="form-control" id="firstname" value="{{getFirstName}}" placeholder="First name">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label col-sm-2" for="lastname">Last Name:</label>
                                             <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="lastname" value="{{getUserProfile.userProfile.lastName}}" placeholder="Last name">
+                                                <input type="text" class="form-control" id="lastname" value="{{getUserProfile.profile.lastName}}" placeholder="Last name">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label col-sm-2" for="email">Email:</label>
                                             <div class="col-sm-10">
-                                                <input type="email" class="form-control" id="email" value="{{getUserProfile.emails.[0].address}}" placeholder="Enter email">
+                                                <input type="email" class="form-control" id="email" value="{{getUserProfile.profile.email}}" placeholder="Enter email">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -168,7 +168,7 @@
                         </div>
                         <div class="col-xs-12 col-sm-5">
                             <div class="text-right">
-                                <button type="button" class="btn btn-default" id="saveProfile">Submit</button>
+                                <button type="button" class="btn btn-default" id="updateProfile">Submit</button>
                                 <button type="button" class="btn btn-default" id="cancelProfile">Cancel</button>
                                 <button type="button" class="btn btn-default" id="deleteProfile">Delete</button>
                             </div>

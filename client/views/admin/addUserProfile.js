@@ -27,27 +27,27 @@ Template.addUserProfile.onCreated(function(){
 Template.addUserProfile.helpers({
 
     getAdmNumber: () => {
-        return Template.instance().username.get();
+        return Template.instance().newUserProfile.get().profile.username;
     },
 
     getFirstName: () => {
-        return Template.instance().firstName.get();
+        return Template.instance().newUserProfile.get().profile.firstName;
     },
 
     getLastName: () => {
-        return Template.instance().lastName.get();
+        return Template.instance().newUserProfile.get().profile.lastName;
     },
 
     getEmail: () => {
-        return Template.instance().email.get();
+        return Template.instance().newUserProfile.get().profile.email;
     },
 
     getPassword: () => {
-        return Template.instance().password.get();
+        return Template.instance().newUserProfile.get().profile.password;
     },
 
     getConfirmPassword: () => {
-        return Template.instance().confirmPassword.get();
+        return Template.instance().newUserProfile.get().profile.confirmPassword;
     },
 
     isDeveloper: function() {
@@ -100,7 +100,7 @@ Template.addUserProfile.helpers({
     },
 
     areDevRolesEnabled: () => {
-        if(Template.instance().isDevRolesEnabled.get() === true){
+        if(Template.instance().areDevRolesEnabled.get() === true){
             return '';
         }
         else {
@@ -121,8 +121,7 @@ Template.addUserProfile.events({
     'change #adm': (event, template) => {
         event.preventDefault();
         let adm = $('#adm').val();
-        template.username.set(adm);
-        template.newUserProfile.get().profile.user.username = adm;
+        template.newUserProfile.get().profile.username = adm;
         console.log(template.newUserProfile.get());
     },
 
@@ -130,36 +129,33 @@ Template.addUserProfile.events({
         event.preventDefault();
         let firstName = $('#firstname').val();
         console.log(firstName);
-        template.firstName.set(firstName);
-        template.newUserProfile.get().profile.userProfile.firstName = firstName;
+        template.newUserProfile.get().profile.firstName = firstName;
     },
 
     'change #lastname': (event, template) => {
         event.preventDefault();
         let lastName = $('#lastname').val();
         console.log(lastName);
-        template.lastName.set(lastName);
-        template.newUserProfile.get().profile.userProfile.lastName = lastName;
+        template.newUserProfile.get().profile.lastName = lastName;
     },
 
     'change #email': (event, template) => {
         event.preventDefault();
         let email = $('#email').val();
         console.log(email);
-        template.email.set(email);
-        template.newUserProfile.get().profile.user.emails = email
+        template.newUserProfile.get().profile.email = email
     },
 
     'change #password': (event, template) => {
         event.preventDefault();
         let pwd = $('#password').val();
         console.log(pwd);
-        template.newUserProfile.get().profile.user.password = pwd;
+        template.newUserProfile.get().profile.password = pwd;
     },
 
     'change #confirmPassword': (event, template) => {
         event.preventDefault();
-        let pwd = template.newUserProfile.get().profile.user.password;
+        let pwd = template.newUserProfile.get().profile.password;
         let confpwd = $('#confirmPassword').val();
         console.log(confpwd);
         // let passwordsMatch = confpwd === pwd ? true: false;
@@ -174,7 +170,7 @@ Template.addUserProfile.events({
         template.isDeveloperChkbx.set(isChecked);
         template.areDevRolesEnabled.set(isChecked);
         if(isChecked === false){
-            template.newUserProfile.get().profile.devRoles = [];
+            template.newUserProfile.get().profile.groups.DEV = [];
         }
     },
 
@@ -187,20 +183,21 @@ Template.addUserProfile.events({
                 template.responseMsg.set("Invalid Input.");
             }
             else {
-                template.responseMsg.set(res);
+                FlowRouter.go('/userprofiles');
+                //template.responseMsg.set(res);
             }
         });
     },
 
     'click #cancelAddUserProfile': (event, template) => {
         event.preventDefault();
-        template.username.set('');
-        template.firstName.set('');
-        template.lastName.set('');
-        template.email.set('');
+        // template.username.set('');
+        // template.firstName.set('');
+        // template.lastName.set('');
+        // template.email.set('');
         template.isDeveloperChkbx.set(false);
-        template.password.set('');
-        template.confirmPassword.set('');
+        // template.password.set('');
+        // template.confirmPassword.set('');
         template.userProfile.set(getEmptyProfile());
     },
 
@@ -257,42 +254,41 @@ Template.addUserProfile.events({
 });
 
 function getEmptyProfile(){
-    let userProfile = {firstName: null, lastName: null};
-    let user = {username: null, password: null, emails: null};
-    let roles = {OTHER: [], DEV: []};
-    return {profile:{user: user, userProfile: userProfile, userRoles: roles}};
+    // let userProfile = {firstName: null, lastName: null, groups: {OTHER: [], DEV: []}};
+    // let user = {username: null, password: null, email: null};
+    return {profile:{username: userProfile.username, password: '', email: userProfile.emails[0].address, firstName: userProfile.profile.firstName, lastName: userProfile.profile.lastName, groups: userProfile.profile.groups}};
 }
 
 function addOrRemoveRole(role, action, roleType, template){
-    let userRoles = template.newUserProfile.get().profile.userRoles;
+    let roles = template.newUserProfile.get().profile.groups;
     if(action){
         if(roleType === 'DEV'){
-            if(!_.contains(userRoles.devRoles, role)){
-                userRoles.devRoles.push(role);
+            if(!_.contains(roles.DEV, role)){
+                roles.DEV.push(role);
             }
         }
         else {
-            if(!_.contains(userRoles.common, role)){
-                userRoles.common.push(role);
+            if(!_.contains(roles.OTHER, role)){
+                roles.OTHER.push(role);
             }
         }
     }
     else {
         if(roleType === 'DEV'){
-            if(_.contains(userRoles.devRoles, role)){
-                let pos = _.indexOf(userRoles.devRoles, role);
-                userRoles.devRoles.splice(pos, 1);
+            if(_.contains(roles.DEV, role)){
+                let pos = _.indexOf(roles.DEV, role);
+                roles.DEV.splice(pos, 1);
             }
         }
         else {
-            if(_.contains(userRoles.common, role)){
-                let pos = _.indexOf(userRoles.common, role);
-                userRoles.common.splice(pos, 1);
+            if(_.contains(roles.OTHER, role)){
+                let pos = _.indexOf(roles.OTHER, role);
+                roles.OTHER.splice(pos, 1);
             }
         }
     }
 
-    template.newUserProfile.get().profile.userRoles = userRoles;
+    //template.newUserProfile.get().profile.userRoles = roles;
     console.log(JSON.stringify(template.newUserProfile.get()));
 }
 

@@ -13,10 +13,10 @@ Template.manageUsers.helpers({
         //Do not show dummy users whose lastname is User
         let userType = Template.instance().envRole.get();
         if(userType !== "default"){
-            return Meteor.users.find({"userProfile.userGroup": {"$eq": userType}});
+            return Meteor.users.find({"profile.groups": {"$eq": userType}});
         }
         else {
-            return Meteor.users.find({"userProfile.lastName": {"$ne": 'User'}});
+            return Meteor.users.find({"profile.lastName": {"$ne": 'User'}});
         }
 
         //Meteor.users.find({"userProfile.lastName": {"$ne": 'User'}});//Meteor.users.find({});

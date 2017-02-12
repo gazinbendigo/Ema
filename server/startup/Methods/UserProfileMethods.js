@@ -17,18 +17,14 @@ Meteor.methods({
         //Check rubbish is not being parsed from the front end.
         check(userAccount, {
             profile: {
-                user: {
-                    username: String,
-                    password: String,
-                    emails: String
-                },
-                userProfile: {
-                    firstName: String,
-                    lastName: String
-                },
-                userRoles: {
-                    common: Match.Maybe([String]),
-                    devRoles: Match.Maybe([String])
+                username: String,
+                password: String,
+                emails: String,
+                firstName: String,
+                lastName: String,
+                groups: {
+                    OTHER: Match.Maybe([String]),
+                    DEV: Match.Maybe([String])
                 }
             }
         });
@@ -36,33 +32,33 @@ Meteor.methods({
         console.log("Passed!! Maybe??");
 
         let id = Accounts.createUser({
-            username: userAccount.profile.user.username,
-            password: userAccount.profile.user.password,
-            email: userAccount.profile.user.emails
+            username: userAccount.profile.username,
+            password: userAccount.profile.password,
+            email: userAccount.profile.email
         });
 
 
         const userProfile = {
-            firstName: userAccount.profile.userProfile.firstName,
-            lastName: userAccount.profile.userProfile.lastName,
-            groups: userAccount.profile.userRoles
+            firstName: userAccount.profile.firstName,
+            lastName: userAccount.profile.lastName,
+            groups: userAccount.profile.groups
         }
 
         Meteor.users.update({_id: id}, {$set:{'name.0.verified': true}});
-        Meteor.users.update({_id: id}, {$set:{userProfile: userProfile}});
+        Meteor.users.update({_id: id}, {$set:{profile: userProfile}});
 
         // {"profile":
         //     {"user":
         //         {
         //             "username":"","password":"","emails":""},
         //             "userProfile":{"firstName":"","lastName":""},
-        //             "userRoles":{"common":[],"devRoles":[]
+        //             "userRoles":{"common":[],"DEV":[]
         //         }
         //     }
         // }
 
-        // if(userAccount.profile.user.userRoles.devRoles.length > 0){
-        //     _.each(userAccount.profile.user.userRoles.devRoles, function(role){
+        // if(userAccount.profile.user.userRoles.DEV.length > 0){
+        //     _.each(userAccount.profile.user.userRoles.DEV, function(role){
         //         Roles.addUsersToRoles(id, ApplicationRoles.getApplicationRolesByGroup(role));
         //     });
         //     // By default a Developer should always have read-only access to OTHER environments.
@@ -79,6 +75,17 @@ Meteor.methods({
         console.log(Accounts.findUserByEmail(userAccount.profile.user.username));
         // return cb(null, "Profile Added.");
         return new String("Profile Added.");
+    },
+
+
+    updateUser: function(user, cb){
+        console.log(JSON.stringify(user));
+        try{
+            return cb(null, '');
+        }
+        catch(err){
+            return cb(err, null);
+        }
     },
 
     /**
@@ -110,20 +117,5 @@ Meteor.methods({
         return cb(null, '');
     },
 
-
-    /**
-     * Delete a User from a specific Group
-     * @method deleteUserFromGroup
-     * @param userId
-     * @param group
-     */
-    deleteUserFromGroup(userId, group){
-        let loggedInUser = Meteor.user();
-        if(!loggedInUser || !Roles.userIsInRole(loggedInUser, [''], group)){
-            throw new Meteor.Error(403, "Access Denied");
-        }
-        //remove permissions for target group
-        Roles.setUserRoles(userId, [], group);
-    }
 
 });
