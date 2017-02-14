@@ -5,7 +5,7 @@
 Template.manageUsers.onCreated(function(){
     Meteor.subscribe('Users');
     this.envRole = new ReactiveVar("default");
-
+    Meteor.subscribe("UserGroups");
 });
 
 Template.manageUsers.helpers({

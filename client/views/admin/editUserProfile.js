@@ -5,7 +5,7 @@
 Template.editUserProfile.onCreated(function() {
     let template = Template.instance();
     //template.subscribe("Users");
-
+    Meteor.subscribe("UserGroups");
     let adm = FlowRouter.getParam("adm");
     console.log("Got adm: " + adm);
     let userProfile = null;
@@ -16,25 +16,26 @@ Template.editUserProfile.onCreated(function() {
     console.log(userProfile);
 
     //Object { _id: "Aiviyg9sLAerhcHW3", createdAt: Date 2017-02-11T22:49:36.829Z, services: Object, username: "adm1155", emails: Array[1], name: Object[1], profile: Object }
-    let profileToUpdate = {profile:{username: userProfile.username, password: '', email: userProfile.emails[0].address, firstName: userProfile.profile.firstName, lastName: userProfile.profile.lastName, groups: userProfile.profile.groups}};
+    //let profileToUpdate = {username: userProfile.username, password: '', email: userProfile.emails[0].address, firstName: userProfile.profile.firstName, lastName: userProfile.profile.lastName, groups: userProfile.profile.groups};
 
-    this.userProfile = new ReactiveVar(profileToUpdate);
-    console.log("Username: " + profileToUpdate.profile.username);
-    console.log("FirstName: " + profileToUpdate.profile.email[0].address);
-    this.username = new ReactiveVar(profileToUpdate.profile.username);
-    this.firstName = new ReactiveVar(profileToUpdate.profile.firstName);
-    this.lastName = new ReactiveVar(profileToUpdate.profile.lastName);
-    this.email = new ReactiveVar(profileToUpdate.profile.email);
+    this.userAccountGroups = new ReactiveVar(userProfile.profile.groups);
+    console.log("Groups: " + template.userAccountGroups.get())
+    console.log("Username: " + userProfile.username);
+    console.log("Email: " + userProfile.emails[0].address);
+    this.username = new ReactiveVar(userProfile.username);
+    this.firstName = new ReactiveVar(userProfile.profile.firstName);
+    this.lastName = new ReactiveVar(userProfile.profile.lastName);
+    this.email = new ReactiveVar(userProfile.emails[0].address);
     this.password = new ReactiveVar(null);
     this.confirmPassword = new ReactiveVar(null);
-    let devRolesEnabled = profileToUpdate.profile.groups.DEV.length > 0;
+    let devRolesEnabled = userProfile.profile.groups.DEV.length > 0;
     this.isDeveloperChkbx = new ReactiveVar(devRolesEnabled);
     this.areDevRolesEnabled = new ReactiveVar(devRolesEnabled);
     this.devInstallerRoleChkbx = new ReactiveVar(false);
     this.devAdminRoleChkbx = new ReactiveVar(false);
     this.devSuperuserRoleChkbx = new ReactiveVar(false);
     if(devRolesEnabled){
-        _.each(profileToUpdate.profile.groups.DEV, function(role){
+        _.each(userProfile.profile.groups.DEV, function(role){
             if(role === 'Installer'){
                 template.devInstallerRoleChkbx.set(true);
             }
@@ -43,14 +44,13 @@ Template.editUserProfile.onCreated(function() {
             }
             else if(role === 'SuperUser'){
                 template.devSuperuserRoleChkbx.set(true);
-                console.log("boink");
             }
         });
     }
     this.installerRoleChkbx = new ReactiveVar();
     this.adminRoleChkbx = new ReactiveVar(false);
     this.superuserRoleChkbx = new ReactiveVar(false);
-    _.each(profileToUpdate.profile.groups.OTHER, function(role){
+    _.each(userProfile.profile.groups.OTHER, function(role){
         if(role === 'Installer'){
             template.installerRoleChkbx.set(true);
         }
@@ -68,12 +68,20 @@ Template.editUserProfile.onCreated(function() {
 
 Template.editUserProfile.helpers({
 
-    getUserProfile: function(){
-        return Template.instance().userProfile.get();
+    getUsername: () => {
+        return Template.instance().username.get();
     },
 
     getFirstName: () => {
-        return Template.instance().userProfile.get().profile.firstName;
+        return Template.instance().firstName.get();
+    },
+
+    getLastName: () => {
+        return Template.instance().lastName.get();
+    },
+
+    getEmail: () => {
+        return Template.instance().email.get();
     },
 
     isDeveloper: function() {
@@ -119,7 +127,6 @@ Template.editUserProfile.helpers({
     },
 
     isDevSuperuser: () => {
-        console.log("blah");
         if(Template.instance().devSuperuserRoleChkbx.get() === true){
             return 'checked';
         }
@@ -145,37 +152,36 @@ Template.editUserProfile.events({
         event.preventDefault();
         let adm = $('#adm').val();
         template.username.set(adm);
-        template.userProfile.get().profile.username = adm;
-        console.log(template.userProfile.get());
+        console.log(adm);
     },
 
     "change #firstname": (event, template) => {
         event.preventDefault();
         let firstName = $('#firstname').val();
         template.firstName.set(firstName);
-        template.userProfile.get().profile.firstName = firstName;
-        console.log(template.userProfile.get());
+        template.firstName.set(firstName);
+        console.log(firstName);
     },
 
     "change #lastname": (event, template) => {
         event.preventDefault();
         let lastName = $('#lastname').val();
-        template.userProfile.get().profile.lastName = lastName;
-        console.log(template.userProfile.get());
+        template.lastName.set(lastName);
+        console.log(lastName);
     },
 
     "change #email": (event, template) => {
         event.preventDefault();
         let email = $('#email').val();
-        template.userProfile.get().profile.email = email;
-        console.log(template.userProfile.get());
+        template.email.set(email);
+        console.log(email);
     },
 
     "change #password": (event, template) => {
         event.preventDefault();
         let password = $('#password').val();
-        template.userProfile.get().profile.password = password;
-        console.log(template.userProfile.get());
+        template.password.set(password);
+        console.log(password);
     },
 
     "change #confirmPassword": (event, template) => {
@@ -207,7 +213,7 @@ Template.editUserProfile.events({
         console.log("installerRoleChkbx");
         let isChecked = $('#installerRoleChkbx').is(":checked");
         template.installerRoleChkbx.set(isChecked);
-        addOrRemoveRole('Admin', isChecked, 'OTHER', template);
+        addOrRemoveRole('Installer', isChecked, 'OTHER', template);
     },
 
 
@@ -216,7 +222,7 @@ Template.editUserProfile.events({
         console.log("adminRoleChkbx");
         let isChecked = $('#adminRoleChkbx').is(":checked");
         template.adminRoleChkbx.set(isChecked);
-        addOrRemoveRole('Admin', isChecked, 'OTHER', template);
+        addOrRemoveRole('Administrator', isChecked, 'OTHER', template);
     },
 
     'click #superuserRoleChkbx': (event, template) => {
@@ -241,7 +247,7 @@ Template.editUserProfile.events({
         console.log("devAdminRoleChkbx");
         let isChecked = $('#isDevAdminRoleChkbx').is(":checked");
         template.devAdminRoleChkbx.set(isChecked);
-        addOrRemoveRole('Admin', isChecked, 'DEV', template);
+        addOrRemoveRole('Administrator', isChecked, 'DEV', template);
     },
 
     'click #isDevSuperuserRoleChkbx': (event, template) => {
@@ -254,7 +260,17 @@ Template.editUserProfile.events({
 
     'click #updateProfile': (event, template) => {
         event.preventDefault();
-        Meteor.call('updateUser', template.userProfile.get(), function(err, res){
+        let profile = Meteor.users.findOne({username: FlowRouter.getParam("adm")});
+        let userProfile = {
+            id: profile._id,
+            userName: template.username.get(),
+            password: profile.password, //template.password.get(),
+            email: template.email.get(),
+            firstName: template.firstName.get(),
+            lastName: template.lastName.get(),
+            groups: template.userAccountGroups.get()
+        }
+        Meteor.call('updateUser', userProfile, function(err, res){
            if(err){
                console.log(err);
            }
@@ -265,38 +281,39 @@ Template.editUserProfile.events({
     }
 });
 
+function defaultGroups(){
+    return {groups: {OTHER: [], DEV: []}};
+}
 
-function addOrRemoveRole(role, action, roleType, template){
-    let userRoles = template.userProfile.get().profile.groups;
+function addOrRemoveRole(role, action, groupType, template){
+    console.log(template.userAccountGroups.get());
     if(action){
-        if(roleType === 'DEV'){
-            if(!_.contains(userRoles.DEV, role)){
-                userRoles.DEV.push(role);
+        if(groupType === 'DEV'){
+            if(!_.contains( template.userAccountGroups.get().DEV, role)){
+                template.userAccountGroups.get().DEV.push(role);
             }
         }
         else {
-            if(!_.contains(userRoles.common, role)){
-                userRoles.OTHER.push(role);
+            if(!_.contains( template.userAccountGroups.get().OTHER, role)){
+                template.userAccountGroups.get().OTHER.push(role);
             }
         }
     }
     else {
-        if(roleType === 'DEV'){
-            if(_.contains(userRoles.DEV, role)){
-                let pos = _.indexOf(userRoles.DEV, role);
-                userRoles.DEV.splice(pos, 1);
+        if(groupType === 'DEV'){
+            if(_.contains( template.userAccountGroups.get().DEV, role)){
+                let pos = _.indexOf( template.userAccountGroups.get().DEV, role);
+                template.userAccountGroups.get().DEV.splice(pos, 1);
             }
         }
         else {
-            if(_.contains(userRoles.common, role)){
-                let pos = _.indexOf(userRoles.common, role);
-                userRoles.OTHER.splice(pos, 1);
+            if(_.contains( template.userAccountGroups.get().OTHER, role)){
+                let pos = _.indexOf( template.userAccountGroups.get().OTHER, role);
+                template.userAccountGroups.get().OTHER.splice(pos, 1);
             }
         }
     }
 
-    template.userProfile.get().profile.groups = userRoles;
-    console.log(JSON.stringify(template.userProfile.get()));
 }
 
 

@@ -44,4 +44,8 @@ Meteor.publish("Users", function usersPublication(){
     return Meteor.users.find({});
 });
 
+Meteor.publish("UserGroups", () => {
+    return UserGroups.find({});
+});
+
 

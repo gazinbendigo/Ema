@@ -2,15 +2,15 @@
  * Created by adm9360 on 16/02/2016.
  */
 
-userGroups = {
+const myGroups = {
     Installer: "Installer",
-    Administrator: "Admin",
+    Administrator: "Administrator",
     Analyst: "Analyst",
     SuperUser: "SuperUser"
 }
 
 Template.registerHelper('getUserGroup', (value) => {
-    return userGroups[value];
+    return myGroups[value];
 });
 
 

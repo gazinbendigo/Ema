@@ -15,6 +15,15 @@ var baseApiUrl = Meteor.settings.baseApiURL;
 
 
 Meteor.startup(function() {
+    UserGroups.remove({});
+    if(UserGroups.find().count() === 0){
+        UserGroups.insert({Installer: "Installer"});
+        UserGroups.insert({Administrator: "Administrator"});
+        UserGroups.insert({Analyst: "Analyst"});
+        UserGroups.insert({SuperUser: "SuperUser"});
+    }
+
+
     Environments.remove({});
     // if(Environments.find().count() === 0){
     //     Environments.insert({ENVIRONMENT_ID: 1,ENVIRONMENT_NME: "HUBLD", ENVIRONMENT_DESCR: "Development", ENVIRONMENT_TYPE_ID: 1,URL: "",ADMIN_PAGE_URL: ""});

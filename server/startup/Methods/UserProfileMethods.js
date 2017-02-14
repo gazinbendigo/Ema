@@ -11,80 +11,53 @@ Meteor.methods({
      * @param cb
      * @returns {String}
      */
-    createUserProfile: function(userAccount, cb){
+    createUserProfile: function(userAccount){
         console.log("called createUserProfile");
         console.log(JSON.stringify(userAccount));
+        console.log(userAccount.userName);
         //Check rubbish is not being parsed from the front end.
         check(userAccount, {
-            profile: {
-                username: String,
+                userName: String,
                 password: String,
-                emails: String,
+                email: String,
                 firstName: String,
                 lastName: String,
                 groups: {
                     OTHER: Match.Maybe([String]),
                     DEV: Match.Maybe([String])
                 }
-            }
         });
 
         console.log("Passed!! Maybe??");
 
         let id = Accounts.createUser({
-            username: userAccount.profile.username,
-            password: userAccount.profile.password,
-            email: userAccount.profile.email
+            username: userAccount.userName,
+            password: userAccount.password,
+            email: userAccount.email
         });
 
 
         const userProfile = {
-            firstName: userAccount.profile.firstName,
-            lastName: userAccount.profile.lastName,
-            groups: userAccount.profile.groups
+            firstName: userAccount.firstName,
+            lastName: userAccount.lastName,
+            groups: userAccount.groups
         }
 
         Meteor.users.update({_id: id}, {$set:{'name.0.verified': true}});
         Meteor.users.update({_id: id}, {$set:{profile: userProfile}});
 
-        // {"profile":
-        //     {"user":
-        //         {
-        //             "username":"","password":"","emails":""},
-        //             "userProfile":{"firstName":"","lastName":""},
-        //             "userRoles":{"common":[],"DEV":[]
-        //         }
-        //     }
-        // }
-
-        // if(userAccount.profile.user.userRoles.DEV.length > 0){
-        //     _.each(userAccount.profile.user.userRoles.DEV, function(role){
-        //         Roles.addUsersToRoles(id, ApplicationRoles.getApplicationRolesByGroup(role));
-        //     });
-        //     // By default a Developer should always have read-only access to OTHER environments.
-        //     if(userAccount.profile.user.userRoles.common.length === 0){
-        //         Roles.addUsersToRoles(id, ApplicationRoles.getApplicationRolesByGroup(ApplicationRoles.properties[ApplicationRoles.Analyst].group));
-        //     }
-        // }
-        // if(userAccount.profile.user.userRoles.common.length > 0){
-        //     _.each(userAccount.profile.userRoles.common, function(role){
-        //         Roles.addUsersToRoles(id, ApplicationRoles.getApplicationRolesByGroup(role));
-        //     });
-        // }
-
-        console.log(Accounts.findUserByEmail(userAccount.profile.user.username));
-        // return cb(null, "Profile Added.");
-        return new String("Profile Added.");
+        return "Success";
     },
 
 
-    updateUser: function(user, cb){
+    updateUser: function(user){
         console.log(JSON.stringify(user));
         try{
-            return cb(null, '');
+            Meteor.users.update({_id: user.id}, {$set:{username: user.userName, "profile.firstName": user.firstName, "profile.lastName": user.lastName, email: user.email, groups: user.groups}});
+            cb(null, 'success');
         }
         catch(err){
-            return cb(err, null);
+            cb(err, null);
         }
     },
 
@@ -94,15 +67,16 @@ Meteor.methods({
      * @param cb
      * @returns {*}
      */
-    deleteUser: function(userId, cb){
+    deleteUser: function(userId){
         console.log("Called delete user");
+        console.log(userId);
         try{
             Meteor.users.remove(userId);
         }
         catch(err){
-            return cb(err, null);
+            cb(err, null);
         }
-        return(null, '');
+        cb(null, '');
     },
 
     updateUser: function(userProfile, cb){
@@ -119,3 +93,34 @@ Meteor.methods({
 
 
 });
+
+
+/////////////////////////////////////////////////
+/// Check a users password.
+// https://dweldon.silvrback.com/check-password
+// Template.userAccount.events({
+//     'click #check-password': function() {
+//         var digest = Package.sha.SHA256($('#password').val());
+//         Meteor.call('checkPassword', digest, function(err, result) {
+//             if (result) {
+//                 console.log('the passwords match!');
+//             }
+//         });
+//     }
+// });
+//
+//
+// Meteor.methods({
+//     checkPassword: function(digest) {
+//         check(digest, String);
+//
+//         if (this.userId) {
+//             var user = Meteor.user();
+//             var password = {digest: digest, algorithm: 'sha-256'};
+//             var result = Accounts._checkPassword(user, password);
+//             return result.error == null;
+//         } else {
+//             return false;
+//         }
+//     }
+// });
