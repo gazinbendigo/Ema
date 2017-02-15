@@ -4,26 +4,27 @@
 
 Template.manageUsers.onCreated(function(){
     Meteor.subscribe('Users');
-    this.envRole = new ReactiveVar("default");
+    this.groupOptions = new ReactiveVar("default");
     Meteor.subscribe("UserGroups");
 });
 
 Template.manageUsers.helpers({
+
     getUsers: () => {
-        //Do not show dummy users whose lastname is User
-        let userType = Template.instance().envRole.get();
-        if(userType !== "default"){
-            return Meteor.users.find({"profile.groups": {"$eq": userType}});
+        if(Template.instance().groupOptions.get() === "default"){
+            return Meteor.users.find({});
         }
         else {
-            return Meteor.users.find({"profile.lastName": {"$ne": 'User'}});
+            return Meteor.users.find({$or: [{"profile.groups.DEV": Template.instance().groupOptions.get()}, {"profile.groups.OTHER": Template.instance().groupOptions.get()}]});
         }
-
-        //Meteor.users.find({"userProfile.lastName": {"$ne": 'User'}});//Meteor.users.find({});
     },
 
-    getUserRoles: () => {
-        return null;
+    getUserGroups: () => {
+        return UserGroups.find({});
+    },
+
+    ugOptionsValue: (group) => {
+        return {key: group, selected: false ? 'selected' : '', value: group};
     },
 
     userProfilePath: (username) => {
@@ -34,10 +35,9 @@ Template.manageUsers.helpers({
 });
 
 Template.manageUsers.events({
-    'change #selectedRole': (event, template) => {
+    'change #GroupSelector': (event, template) => {
         event.preventDefault();
-        let selectedRole = $('#selectedRole').val();
-        console.log(selectedRole);
-        template.envRole.set(selectedRole);
+        let selectedGroup = $('#GroupSelector').val();
+        template.groupOptions.set(selectedGroup);
     }
 });

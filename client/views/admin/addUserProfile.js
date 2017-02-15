@@ -162,6 +162,9 @@ Template.addUserProfile.events({
         event.preventDefault();
         //let pwd = template.userGroups.get().password;
         let confpwd = $('#confirmPassword').val();
+        console.log(confpwd);
+        // let passwordsMatch = confpwd === pwd ? true: false;
+        // template.arePasswordsSame.set(passwordsMatch);
         template.confirmPassword.set(confpwd);
     },
 
@@ -176,36 +179,43 @@ Template.addUserProfile.events({
         }
     },
 
+
     "click #addUserProfile": (event, template) => {
         event.preventDefault();
         if(template.password.get() === template.confirmPassword.get()){
-            //I created this email regex myself.
-            let regex =  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-            //Test email is valid.
-            if(regex.test(template.email.get())){
-                let userProfile = {
-                    userName: template.username.get(),
-                    password: template.password.get(),
-                    email: template.email.get(),
-                    firstName: template.firstName.get(),
-                    lastName: template.lastName.get(),
-                    groups: template.userAccountGroups.get().groups
-                }
-                console.log(JSON.stringify(userProfile));
+            if(template.password.get().length > 5){
+                //I created this email regex myself.
+                let regex =  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+                //Test email is valid.
+                if(regex.test(template.email.get())){
+                    let userProfile = {
+                        userName: template.username.get(),
+                        password: template.password.get(),
+                        confirmPassword: template.confirmPassword.get(),
+                        email: template.email.get(),
+                        firstName: template.firstName.get(),
+                        lastName: template.lastName.get(),
+                        groups: template.userAccountGroups.get().groups
+                    }
+                    console.log(JSON.stringify(userProfile));
 
-                Meteor.call('createUserProfile', userProfile, function(err, res){
-                    if(err){
-                        console.log(err);
-                        template.responseMsg.set("Invalid Input.");
-                    }
-                    else {
-                        console.log(res);
-                        FlowRouter.go('userprofiles');
-                    }
-                });
+                    Meteor.call('createUserProfile', userProfile, function(err, res){
+                        if(err){
+                            console.log(err);
+                            template.responseMsg.set(err.error);
+                        }
+                        else {
+                            console.log(res);
+                            FlowRouter.go('userprofiles');
+                        }
+                    });
+                }
+                else {
+                    template.responseMsg.set("Invalid Email Address.");
+                }
             }
             else {
-                template.responseMsg.set("Invalid Email Address.");
+                template.responseMsg.set("Password must contian 5 characters.");
             }
         }
         else {
@@ -315,7 +325,6 @@ function addOrRemoveRole(role, action, roleType, template){
 
     console.log(JSON.stringify(template.userAccountGroups.get()));
 }
-
 
 function isValidAdm(adm){
     if(_.isString(adm)){

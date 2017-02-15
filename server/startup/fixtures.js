@@ -17,10 +17,10 @@ var baseApiUrl = Meteor.settings.baseApiURL;
 Meteor.startup(function() {
     UserGroups.remove({});
     if(UserGroups.find().count() === 0){
-        UserGroups.insert({Installer: "Installer"});
-        UserGroups.insert({Administrator: "Administrator"});
-        UserGroups.insert({Analyst: "Analyst"});
-        UserGroups.insert({SuperUser: "SuperUser"});
+        UserGroups.insert({GROUP_NME: "Installer"});
+        UserGroups.insert({GROUP_NME: "Administrator"});
+        UserGroups.insert({GROUP_NME: "Analyst"});
+        UserGroups.insert({GROUP_NME: "SuperUser"});
     }
 
 

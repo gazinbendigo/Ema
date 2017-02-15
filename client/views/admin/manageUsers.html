@@ -9,12 +9,14 @@
         </div>
         <div class="row">
             <div class="col-xs-4 col-sm-4">
-                <select id="selectedRole" class="form-control">
+                <select id="GroupSelector" class="form-control">
                     <option value="default">-- Select --</option>
-                    <option value="{{getUserGroup 'Installer'}}">Installer</option>
-                    <option value="{{getUserGroup 'Analyst'}}">Analyst</option>
-                    <option value="{{getUserGroup 'Administrator'}}">Administrator</option>
-                    <option value="{{getUserGroup 'SuperUser'}}">Super User</option>
+                    {{#if Template.subscriptionsReady}}
+                        {{#each getUserGroups}}
+                            {{> option ugOptionsValue GROUP_NME}}
+                        {{/each}}
+
+                    {{/if}}
                 </select>
             </div>
             <div class="col-xs-2 col-sm-1">

@@ -8,7 +8,6 @@ Meteor.methods({
     /**
      * Create a User Profile Account
      * @param userAccount
-     * @param cb
      * @returns {String}
      */
     createUserProfile: function(userAccount){
@@ -19,6 +18,7 @@ Meteor.methods({
         check(userAccount, {
                 userName: String,
                 password: String,
+                confirmPassword: String,
                 email: String,
                 firstName: String,
                 lastName: String,
@@ -27,6 +27,17 @@ Meteor.methods({
                     DEV: Match.Maybe([String])
                 }
         });
+
+        let doesUserExist = Accounts.findUserByUsername(userAccount.userName);
+        if(doesUserExist){
+            throw new Meteor.Error("User " + userAccount.userName + " already exists!");
+        }
+
+        if(userAccount.password !== userAccount.confirmPassword){
+            throw new Meteor.Error("Passwords do not match.");
+        }
+
+        //TODO: Other checks here later.
 
         console.log("Passed!! Maybe??");
 
@@ -46,81 +57,43 @@ Meteor.methods({
         Meteor.users.update({_id: id}, {$set:{'name.0.verified': true}});
         Meteor.users.update({_id: id}, {$set:{profile: userProfile}});
 
-        return "Success";
+        return "Success.";
     },
 
 
     updateUser: function(user){
         console.log(JSON.stringify(user));
-        try{
-            Meteor.users.update({_id: user.id}, {$set:{username: user.userName, "profile.firstName": user.firstName, "profile.lastName": user.lastName, email: user.email, groups: user.groups}});
-            cb(null, 'success');
+        let userExists = Meteor.users.findOne({username: user.userName});
+        if(userExists){
+            if(user.password){
+                Accounts.setPassword(user.id, user.password);
+            }
+            if(user.email){
+                //if old email exists then remove it.
+                let oldEmail = userExists.emails;
+                if(oldEmail){
+                    Accounts.removeEmail(userExists._id, userExists.emails[0].address);
+                }
+                Accounts.addEmail(userExists._id, user.email);
+            }
+            Meteor.users.update({_id: user.id}, {$set:{username: user.userName, "profile.firstName": user.firstName, "profile.lastName": user.lastName, groups: user.groups}});
+            return "Success";
         }
-        catch(err){
-            cb(err, null);
+        else {
+            throw new Meteor.Error("User does not exist.");
         }
     },
 
     /**
      * Delete a user
      * @param userId
-     * @param cb
      * @returns {*}
      */
     deleteUser: function(userId){
         console.log("Called delete user");
         console.log(userId);
-        try{
-            Meteor.users.remove(userId);
-        }
-        catch(err){
-            cb(err, null);
-        }
-        cb(null, '');
-    },
-
-    updateUser: function(userProfile, cb){
-
-        let id = userProfile._id;
-        try{
-            Meteor.users.update({_id: id}, {$set:{userProfile: userProfile}});
-        }
-        catch(err){
-            return cb(err, null);
-        }
-        return cb(null, '');
-    },
-
+        Meteor.users.remove(userId._id);
+        return "Success";
+    }
 
 });
-
-
-/////////////////////////////////////////////////
-/// Check a users password.
-// https://dweldon.silvrback.com/check-password
-// Template.userAccount.events({
-//     'click #check-password': function() {
-//         var digest = Package.sha.SHA256($('#password').val());
-//         Meteor.call('checkPassword', digest, function(err, result) {
-//             if (result) {
-//                 console.log('the passwords match!');
-//             }
-//         });
-//     }
-// });
-//
-//
-// Meteor.methods({
-//     checkPassword: function(digest) {
-//         check(digest, String);
-//
-//         if (this.userId) {
-//             var user = Meteor.user();
-//             var password = {digest: digest, algorithm: 'sha-256'};
-//             var result = Accounts._checkPassword(user, password);
-//             return result.error == null;
-//         } else {
-//             return false;
-//         }
-//     }
-// });

@@ -9,9 +9,9 @@ Template.editUserProfile.onCreated(function() {
     let adm = FlowRouter.getParam("adm");
     console.log("Got adm: " + adm);
     let userProfile = null;
-    this.autorun(() => {
+    //this.autorun(() => {
         userProfile = Meteor.users.findOne({username: adm});
-    });
+    //});
 
     console.log(userProfile);
 
@@ -22,7 +22,7 @@ Template.editUserProfile.onCreated(function() {
     console.log("Groups: " + template.userAccountGroups.get())
     console.log("Username: " + userProfile.username);
     console.log("Email: " + userProfile.emails[0].address);
-    this.username = new ReactiveVar(userProfile.username);
+    this.userName = new ReactiveVar(userProfile.username);
     this.firstName = new ReactiveVar(userProfile.profile.firstName);
     this.lastName = new ReactiveVar(userProfile.profile.lastName);
     this.email = new ReactiveVar(userProfile.emails[0].address);
@@ -69,7 +69,7 @@ Template.editUserProfile.onCreated(function() {
 Template.editUserProfile.helpers({
 
     getUsername: () => {
-        return Template.instance().username.get();
+        return Template.instance().userName.get();
     },
 
     getFirstName: () => {
@@ -144,6 +144,10 @@ Template.editUserProfile.helpers({
         }
         return  'disabled';
     },
+
+    responseMsg: () => {
+        return Template.instance().responseMsg.get();
+    }
 });
 
 Template.editUserProfile.events({
@@ -151,7 +155,7 @@ Template.editUserProfile.events({
     "change #adm": function(event, template){
         event.preventDefault();
         let adm = $('#adm').val();
-        template.username.set(adm);
+        template.userName.set(adm);
         console.log(adm);
     },
 
@@ -197,13 +201,16 @@ Template.editUserProfile.events({
 
     "click #deleteProfile": function(event, template){
         event.preventDefault();
-        console.log(template.userProfile.get()._id);
-        Meteor.call('deleteUser', template.userProfile.get()._id, function(err, res){
-           if(!err){
-               FlowRouter.go("userprofiles");
+        console.log(template.userName.get());
+        let user = Meteor.users.findOne({username: template.userName.get()});
+        console.log(user);
+        Meteor.call('deleteUser', user, function(err, res){
+           if(err){
+               console.log(err);
            }
            else {
-               console.log(err);
+               console.log(res);
+               FlowRouter.go("userprofiles");
            }
         });
     },
@@ -261,23 +268,30 @@ Template.editUserProfile.events({
     'click #updateProfile': (event, template) => {
         event.preventDefault();
         let profile = Meteor.users.findOne({username: FlowRouter.getParam("adm")});
-        let userProfile = {
-            id: profile._id,
-            userName: template.username.get(),
-            password: profile.password, //template.password.get(),
-            email: template.email.get(),
-            firstName: template.firstName.get(),
-            lastName: template.lastName.get(),
-            groups: template.userAccountGroups.get()
+        let regex =  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        if(regex.test(template.email.get())){
+            let userProfile = {
+                id: profile._id,
+                userName: template.userName.get(),
+                password: template.password.get(), //template.password.get(),
+                email: template.email.get(),
+                firstName: template.firstName.get(),
+                lastName: template.lastName.get(),
+                groups: template.userAccountGroups.get()
+            }
+            Meteor.call('updateUser', userProfile, function(err, res){
+                if(err){
+                    template.responseMsg.set(err.error);
+                }
+                else {
+                    console.log(res);
+                    FlowRouter.go("userprofiles");
+                }
+            });
         }
-        Meteor.call('updateUser', userProfile, function(err, res){
-           if(err){
-               console.log(err);
-           }
-           else {
-               console.log("succcess");
-           }
-        });
+        else {
+            template.responseMsg.set("Invalid email address.");
+        }
     }
 });
 
