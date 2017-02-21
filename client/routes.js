@@ -123,7 +123,7 @@ FlowRouter.route('/error', {
 
 FlowRouter.notFound = {
     action: function () {
-        BlazeLayout.render("noHeaderLayout", {content: "notFound"});
+        BlazeLayout.render("baseLayout", {content: "notFound", menu: "menu"});
     }
 }
 
@@ -131,6 +131,13 @@ FlowRouter.route('/signin',{
     name: 'login',
     action: function () {
         BlazeLayout.render("baseLayout", {content: "signin", menu: 'menu'});
+    }
+});
+
+FlowRouter.route('/landing', {
+    name: 'landingPrivate',
+    action: function(){
+        BlazeLayout.render("baseLayout", {content: "landingPrivate", menu: 'menu'});
     }
 });
 

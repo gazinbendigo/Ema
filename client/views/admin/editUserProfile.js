@@ -5,15 +5,26 @@
 Template.editUserProfile.onCreated(function() {
     let template = Template.instance();
     //template.subscribe("Users");
-    Meteor.subscribe("UserGroups");
+    template.subscribe("UserGroups");
     let adm = FlowRouter.getParam("adm");
     console.log("Got adm: " + adm);
     let userProfile = null;
     //this.autorun(() => {
-        userProfile = Meteor.users.findOne({username: adm});
+
+    Meteor.call('getProfileByUsername', adm, function(err, res){
+        if(err){
+            console.log(err.error);
+        }
+        else {
+            console.log("Response: " + JSON.stringify(res));
+            userProfile = res
+        }
+    });
+
+        // userProfile = Meteor.users.findOne({username: adm});
     //});
 
-    console.log(userProfile);
+    console.log("hhh: " + userProfile);
 
     //Object { _id: "Aiviyg9sLAerhcHW3", createdAt: Date 2017-02-11T22:49:36.829Z, services: Object, username: "adm1155", emails: Array[1], name: Object[1], profile: Object }
     //let profileToUpdate = {username: userProfile.username, password: '', email: userProfile.emails[0].address, firstName: userProfile.profile.firstName, lastName: userProfile.profile.lastName, groups: userProfile.profile.groups};

@@ -5,6 +5,8 @@
 
 Meteor.methods({
 
+    //Use Meteor.users on the Server
+
     /**
      * Create a User Profile Account
      * @param userAccount
@@ -94,6 +96,13 @@ Meteor.methods({
         console.log(userId);
         Meteor.users.remove(userId._id);
         return "Success";
+    },
+
+    getProfileByUsername: (userName) => {
+        console.log("Adm: " + userName);
+        let profile = Meteor.users.findOne({username: userName});
+        console.log(JSON.stringify(profile));
+        return profile;
     }
 
 });

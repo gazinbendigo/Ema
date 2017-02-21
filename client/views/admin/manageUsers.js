@@ -2,6 +2,9 @@
  * Created by holly on 10/11/16.
  */
 
+//User Meteor.userId() and Meteor.user() on the client
+//UserId is used to track login state throughout the App.
+
 Template.manageUsers.onCreated(function(){
     Meteor.subscribe('Users');
     this.groupOptions = new ReactiveVar("default");

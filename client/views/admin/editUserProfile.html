@@ -1,187 +1,177 @@
 <template name="editUserProfile">
-    {{#if Template.subscriptionsReady}}
-    <div class="component-spacer sm">
-    <div class="page-container container">
-        <div class="row">
-            <div class="col-md-12, col-lg-12"><h2>Edit User Profile: {{getFirstName}}&nbsp;{{getLastName}}</h2></div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a href="#info" data-toggle="tab">Info</a></li>
-                    <li><a href="#roles" data-toggle="tab">Roles</a></li>
-                    <li><a href="#dev-roles" data-toggle="tab">Development Roles</a></li>
-                </ul>
-                <div id="myTabContent" class="tab-content">
-                    <div class="tab-pane fade active in" id="info">
-                        <div class="container-fluid">
-                            <div class="component-spacer sm">
-                                <div class="bs-component">
-                                    <form class="form-horizontal">
-                                        <div class="form-group">
-                                            <label class="control-label col-sm-2" for="description">Adm:</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="adm" value="{{getUsername}}" placeholder="Admxxxx">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-sm-2" for="firstname">First Name:</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="firstname" value="{{getFirstName}}" placeholder="First name">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-sm-2" for="lastname">Last Name:</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="lastname" value="{{getLastName}}" placeholder="Last name">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-sm-2" for="email">Email:</label>
-                                            <div class="col-sm-10">
-                                                <input type="email" class="form-control" id="email" value="{{getEmail}}" placeholder="Enter email">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-sm-2" for="team">Team:</label>
-                                            <div class="col-sm-10">
-                                                <div class="checkbox">
-                                                    <label><input type="checkbox" id="isDeveloperChkbx" {{isDeveloper}}> Developer</label>
+    {{#unless currentUser.profile}}
+        {{> spinner}}
+    {{else}}
+        <div class="component-spacer sm">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12, col-lg-12"><h2>Edit User Profile: {{getFirstName}}&nbsp;{{getLastName}}</h2></div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#info" data-toggle="tab">Info</a></li>
+                            <li><a href="#roles" data-toggle="tab">Roles</a></li>
+                            <li><a href="#dev-roles" data-toggle="tab">Development Roles</a></li>
+                        </ul>
+                        <div id="myTabContent" class="tab-content">
+                            <div class="tab-pane fade active in" id="info">
+                                <div class="container-fluid">
+                                    <div class="component-spacer sm">
+                                        <form class="form-horizontal">
+                                            <div class="form-group">
+                                                <label class="control-label col-sm-2" for="description">Adm:</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="adm" value="{{getUsername}}" placeholder="Admxxxx">
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-sm-2" for="password">Password:</label>
-                                            <div class="col-sm-10">
-                                                <input type="password" class="form-control" id="password"  placeholder="Password">
+                                            <div class="form-group">
+                                                <label class="control-label col-sm-2" for="firstname">First Name:</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="firstname" value="{{getFirstName}}" placeholder="First name">
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-sm-2" for="confirmPassword">Confirm Password:</label>
-                                            <div class="col-sm-10">
-                                                <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm password">
+                                            <div class="form-group">
+                                                <label class="control-label col-sm-2" for="lastname">Last Name:</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="lastname" value="{{getLastName}}" placeholder="Last name">
+                                                </div>
                                             </div>
-                                        </div>
-                                    </form>
+                                            <div class="form-group">
+                                                <label class="control-label col-sm-2" for="email">Email:</label>
+                                                <div class="col-sm-10">
+                                                    <input type="email" class="form-control" id="email" value="{{getEmail}}" placeholder="Enter email">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-sm-2" for="team">Team:</label>
+                                                <div class="col-sm-10">
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" id="isDeveloperChkbx" {{isDeveloper}}> Developer</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-sm-2" for="password">Password:</label>
+                                                <div class="col-sm-10">
+                                                    <input type="password" class="form-control" id="password"  placeholder="Password">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-sm-2" for="confirmPassword">Confirm Password:</label>
+                                                <div class="col-sm-10">
+                                                    <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm password">
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="roles">
+                                <div class="container-fluid">
+                                    <table class="table table-hover" width="100%">
+                                        <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Description</th>
+                                            <th>
+                                                &nbsp;
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>Installer</td>
+                                            <td>Manages general Hub configuration i.e. versions, routing, properties</td>
+                                            <td>
+                                                <div class="checkbox md">
+                                                    <label><input type="checkbox" id="installerRoleChkbx" {{isInstaller}}></label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Administrator</td>
+                                            <td>Apply Roles to Users</td>
+                                            <td>
+                                                <div class="checkbox md">
+                                                    <label><input type="checkbox" id="adminRoleChkbx" {{isAdmin}}></label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Super User</td>
+                                            <td>Manage all functions</td>
+                                            <td>
+                                                <div class="checkbox md">
+                                                    <label><input type="checkbox" id="superuserRoleChkbx" {{isSuperuser}}></label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="dev-roles">
+                                <div class="container-fluid">
+                                    <table class="table table-hover" width="100%">
+                                        <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Description</th>
+                                            <th>
+                                                &nbsp;
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>Installer</td>
+                                            <td>Manages general Hub configuration i.e. versions, routing, properties</td>
+                                            <td>
+                                                <div class="checkbox md">
+                                                    <label><input type="checkbox" id="isDevInstallerChkbx" {{isDevInstaller}} {{areDevRolesEnabled}}></label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Administrator</td>
+                                            <td>Apply Roles to Users</td>
+                                            <td>
+                                                <div class="checkbox md">
+                                                    <label><input type="checkbox" id="isDevAdminRoleChkbx" {{isDevAdmin}} {{areDevRolesEnabled}}></label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Super User</td>
+                                            <td>Manage all functions</td>
+                                            <td>
+                                                <div class="checkbox md">
+                                                    <label><input type="checkbox" id="isDevSuperuserRoleChkbx" {{isDevSuperuser}} {{areDevRolesEnabled}}></label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2" for="responseMsg"></label>
+                                <div class="col-sm-5">
+                                    <span class="label label-danger">{{responseMsg}}</span>
+                                </div>
+                                <div class="col-xs-12 col-sm-5">
+                                    <div class="text-right">
+                                        <button type="button" class="btn btn-default" id="updateProfile">Submit</button>
+                                        <button type="button" class="btn btn-default" id="cancelProfile">Cancel</button>
+                                        <button type="button" class="btn btn-default" id="deleteProfile">Delete</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="roles">
-                        <div class="container-fluid">
-                            <div class="bs-component">
-                                <table class="table table-hover" width="100%">
-                                    <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Description</th>
-                                        <th>
-                                            &nbsp;
-                                        </th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>Installer</td>
-                                        <td>Manages general Hub configuration i.e. versions, routing, properties</td>
-                                        <td>
-                                            <div class="checkbox md">
-                                                <label><input type="checkbox" id="installerRoleChkbx" {{isInstaller}}></label>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Administrator</td>
-                                        <td>Apply Roles to Users</td>
-                                        <td>
-                                            <div class="checkbox md">
-                                                <label><input type="checkbox" id="adminRoleChkbx" {{isAdmin}}></label>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Super User</td>
-                                        <td>Manage all functions</td>
-                                        <td>
-                                            <div class="checkbox md">
-                                                <label><input type="checkbox" id="superuserRoleChkbx" {{isSuperuser}}></label>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="dev-roles">
-                        <div class="container-fluid">
-                            <div class="bs-component">
-                                <table class="table table-hover" width="100%">
-                                    <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Description</th>
-                                        <th>
-                                            &nbsp;
-                                        </th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>Installer</td>
-                                        <td>Manages general Hub configuration i.e. versions, routing, properties</td>
-                                        <td>
-                                            <div class="checkbox md">
-                                                <label><input type="checkbox" id="isDevInstallerChkbx" {{isDevInstaller}} {{areDevRolesEnabled}}></label>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Administrator</td>
-                                        <td>Apply Roles to Users</td>
-                                        <td>
-                                            <div class="checkbox md">
-                                                <label><input type="checkbox" id="isDevAdminRoleChkbx" {{isDevAdmin}} {{areDevRolesEnabled}}></label>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Super User</td>
-                                        <td>Manage all functions</td>
-                                        <td>
-                                            <div class="checkbox md">
-                                                <label><input type="checkbox" id="isDevSuperuserRoleChkbx" {{isDevSuperuser}} {{areDevRolesEnabled}}></label>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-sm-2" for="responseMsg"></label>
-                        <div class="col-sm-5">
-                            <span class="label label-danger">{{responseMsg}}</span>
-                        </div>
-                        <div class="col-xs-12 col-sm-5">
-                            <div class="text-right">
-                                <button type="button" class="btn btn-default" id="updateProfile">Submit</button>
-                                <button type="button" class="btn btn-default" id="cancelProfile">Cancel</button>
-                                <button type="button" class="btn btn-default" id="deleteProfile">Delete</button>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>
-
-    </div>
-    </div>
-    {{else}}
-        {{> spinner}}
-    {{/if}}
+    {{/unless}}
 </template>

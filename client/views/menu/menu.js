@@ -63,6 +63,12 @@ Template.menu.events({
                 $('.navbar-collapse').collapse('hide');
             }
         }
+    },
+
+    'click #logout': function(event){
+        event.preventDefault();
+        Meteor.logout();
+        FlowRouter.go("/");
     }
 
 });
