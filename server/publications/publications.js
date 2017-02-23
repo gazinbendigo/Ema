@@ -14,10 +14,10 @@
 // Meteor.publish("manageConsumerProperties", function(){
 //     return ConsumerProperties.find({});
 // });
-//
-// Meteor.publish("consumers", function(){
-//     return HubConsumers.find({});
-// });
+
+Meteor.publish("consumers", function(){
+    return Consumers.find({});
+});
 
 // Meteor.publish("environmentTypes", function () {
 //     return EnvironmentTypes.find({});

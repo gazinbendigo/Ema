@@ -49,39 +49,46 @@ Meteor.startup(function() {
     // }
 });
 
-// Meteor.startup(function(){
-    // ConsumerProperties.remove({});
-    // HubConsumers.remove({});
-    //
-    // if(HubConsumers.find().count() === 0){
-    //     HubConsumers.insert({brandCde: 'GRB', appCde: 'IBS', instanceCde: 'D'});
-    //     HubConsumers.insert({brandCde: 'GRB', appCde: 'BRF', instanceCde: 'D'});
-    //     HubConsumers.insert({brandCde: 'GRB', appCde: 'GHJ', instanceCde: 'D'});
-    //     HubConsumers.insert({brandCde: 'GRB', appCde: 'KLM', instanceCde: 'D'});
-    //     HubConsumers.insert({brandCde: 'GRB', appCde: 'YTO', instanceCde: 'D'});
-    //     HubConsumers.insert({brandCde: 'GRB', appCde: 'POR', instanceCde: 'D'});
-    //     HubConsumers.insert({brandCde: 'TYP', appCde: 'IBS', instanceCde: 'D'});
-    //     HubConsumers.insert({brandCde: 'GKL', appCde: 'AWD', instanceCde: 'D'});
-    //     HubConsumers.insert({brandCde: 'JDM', appCde: 'MNM', instanceCde: 'D'});
-    //     HubConsumers.insert({brandCde: 'JOB', appCde: 'IOP', instanceCde: 'D'});
-    //     HubConsumers.insert({brandCde: 'ARB', appCde: 'KLR', instanceCde: 'D'});
-    // }
-    //
-    // if(ConsumerProperties.find().count() === 0){
-    //     ConsumerProperties._ensureIndex({ID: 1});
-    //     ConsumerProperties.insert({PROPERTY_NAME: "ACC_HOLDING_UPDATE_OUT", PROPERTY_VALUE: "\\\\ddvmcm01\\mocom\\main\\data", CONSUMER_PROPERTY_ID: 1, CONSUMER_ID: 'ABCD1'});
-    //     ConsumerProperties.insert({PROPERTY_NAME: "ACC_HOLDING_UPDATE_OUT", PROPERTY_VALUE: "\\\\ddvmcm01\\mocom\\main\\data", CONSUMER_PROPERTY_ID: 2, CONSUMER_ID: 'ABCD2'});
-    //     ConsumerProperties.insert({PROPERTY_NAME: "ACTIVATE_ACC_IN", PROPERTY_VALUE: "\\\\bendpdc\\dfs\\BENHUBXFRDSH\\MLPI\\ACM\\In", CONSUMER_PROPERTY_ID: 3, CONSUMER_ID: 'ABCD3'});
-    //     ConsumerProperties.insert({PROPERTY_NAME: "AGENCY_CODE", PROPERTY_VALUE: "98888", CONSUMER_PROPERTY_ID: 4, CONSUMER_ID: 'ABCD4'});
-    //     ConsumerProperties.insert({PROPERTY_NAME: "ALERT_EMAIL_ADDRESS", PROPERTY_VALUE: "nobody", CONSUMER_PROPERTY_ID: 5, CONSUMER_ID: 'ABCD5'});
-    //     ConsumerProperties.insert({PROPERTY_NAME: "ALIAS_ENQUIRY_URL", PROPERTY_VALUE: "http://vmv0595:9091/npp/bblwsenq", CONSUMER_PROPERTY_ID: 6, CONSUMER_ID: 'ABCD6'});
-    //     ConsumerProperties.insert({PROPERTY_NAME: "ALIAS_MANAGEMENT_URL", PROPERTY_VALUE: "http://vmv0595:9091/npp/bblws", CONSUMER_PROPERTY_ID: 7, CONSUMER_ID: 'ABCD7'});
-    //     ConsumerProperties.insert({PROPERTY_NAME: "ALIAS_PORTING_URL", PROPERTY_VALUE: "http://vmv0595:9091/npp/bblwsauto", CONSUMER_PROPERTY_ID: 8, CONSUMER_ID: 'ABCD8'});
-    //     ConsumerProperties.insert({PROPERTY_NAME: "APPIAN_URL", PROPERTY_VALUE: "http://ddvbpm05/suite/webservice/processmodel/babAppianService", CONSUMER_PROPERTY_ID: 9, CONSUMER_ID: 'ABCD9'});
-    //     ConsumerProperties.insert({PROPERTY_NAME: "AWAIT_IN", PROPERTY_VALUE: "\\\\bendpdc\\dfs\\BENHUBXFRDSH\\MLPI\\AM\\in", CONSUMER_PROPERTY_ID: 10, CONSUMER_ID: 'ABCD10'});
-    //     ConsumerProperties.insert({PROPERTY_NAME: "AWAIT_MSGS_ARCHIVE_PATH", PROPERTY_VALUE: "\\\\bendpdc\\dfs\\BENHUBXFRDSH\\MLPI\\AM\\In\\Archive",  CONSUMER_PROPERTY_ID: 11, CONSUMER_ID: 'ABCD11'});
-    // }
-// });
+Meteor.startup(function(){
+    ConsumerProperties.remove({});
+    Consumers.remove({});
+
+    if(Consumers.find().count() === 0){
+        Consumers.insert({brandCde: 'GRB', appCde: 'IBS', instanceCde: 'D'});
+        Consumers.insert({brandCde: 'GRB', appCde: 'BRF', instanceCde: 'D'});
+        Consumers.insert({brandCde: 'GRB', appCde: 'GHJ', instanceCde: 'D'});
+        Consumers.insert({brandCde: 'GRB', appCde: 'KLM', instanceCde: 'D'});
+        Consumers.insert({brandCde: 'GRB', appCde: 'YTO', instanceCde: 'D'});
+        Consumers.insert({brandCde: 'GRB', appCde: 'POR', instanceCde: 'D'});
+        Consumers.insert({brandCde: 'TYP', appCde: 'IBS', instanceCde: 'D'});
+        Consumers.insert({brandCde: 'GKL', appCde: 'AWD', instanceCde: 'D'});
+        Consumers.insert({brandCde: 'JDM', appCde: 'MNM', instanceCde: 'D'});
+        Consumers.insert({brandCde: 'JOB', appCde: 'IOP', instanceCde: 'D'});
+        Consumers.insert({brandCde: 'ARB', appCde: 'KLR', instanceCde: 'D'});
+
+        Consumers.insert({brandCde: 'GRB', appCde: 'POR', instanceCde: 'A'});
+        Consumers.insert({brandCde: 'TYP', appCde: 'IBS', instanceCde: 'A'});
+        Consumers.insert({brandCde: 'GKL', appCde: 'AWD', instanceCde: 'A'});
+        Consumers.insert({brandCde: 'JDM', appCde: 'MNM', instanceCde: 'A'});
+        Consumers.insert({brandCde: 'JOB', appCde: 'IOP', instanceCde: 'A'});
+        Consumers.insert({brandCde: 'ARB', appCde: 'KLR', instanceCde: 'A'});
+    }
+
+    if(ConsumerProperties.find().count() === 0){
+        //ConsumerProperties.ensureIndex({ID: 1});
+        ConsumerProperties.insert({PROPERTY_NAME: "ACC_HOLDING_UPDATE_OUT", PROPERTY_VALUE: "\\\\ddvmcm01\\mocom\\main\\data", CONSUMER_PROPERTY_ID: 1, CONSUMER_ID: 'ABCD1'});
+        ConsumerProperties.insert({PROPERTY_NAME: "ACC_HOLDING_UPDATE_OUT", PROPERTY_VALUE: "\\\\ddvmcm01\\mocom\\main\\data", CONSUMER_PROPERTY_ID: 2, CONSUMER_ID: 'ABCD2'});
+        ConsumerProperties.insert({PROPERTY_NAME: "ACTIVATE_ACC_IN", PROPERTY_VALUE: "\\\\bendpdc\\dfs\\BENHUBXFRDSH\\MLPI\\ACM\\In", CONSUMER_PROPERTY_ID: 3, CONSUMER_ID: 'ABCD3'});
+        ConsumerProperties.insert({PROPERTY_NAME: "AGENCY_CODE", PROPERTY_VALUE: "98888", CONSUMER_PROPERTY_ID: 4, CONSUMER_ID: 'ABCD4'});
+        ConsumerProperties.insert({PROPERTY_NAME: "ALERT_EMAIL_ADDRESS", PROPERTY_VALUE: "nobody", CONSUMER_PROPERTY_ID: 5, CONSUMER_ID: 'ABCD5'});
+        ConsumerProperties.insert({PROPERTY_NAME: "ALIAS_ENQUIRY_URL", PROPERTY_VALUE: "http://vmv0595:9091/npp/bblwsenq", CONSUMER_PROPERTY_ID: 6, CONSUMER_ID: 'ABCD6'});
+        ConsumerProperties.insert({PROPERTY_NAME: "ALIAS_MANAGEMENT_URL", PROPERTY_VALUE: "http://vmv0595:9091/npp/bblws", CONSUMER_PROPERTY_ID: 7, CONSUMER_ID: 'ABCD7'});
+        ConsumerProperties.insert({PROPERTY_NAME: "ALIAS_PORTING_URL", PROPERTY_VALUE: "http://vmv0595:9091/npp/bblwsauto", CONSUMER_PROPERTY_ID: 8, CONSUMER_ID: 'ABCD8'});
+        ConsumerProperties.insert({PROPERTY_NAME: "APPIAN_URL", PROPERTY_VALUE: "http://ddvbpm05/suite/webservice/processmodel/babAppianService", CONSUMER_PROPERTY_ID: 9, CONSUMER_ID: 'ABCD9'});
+        ConsumerProperties.insert({PROPERTY_NAME: "AWAIT_IN", PROPERTY_VALUE: "\\\\bendpdc\\dfs\\BENHUBXFRDSH\\MLPI\\AM\\in", CONSUMER_PROPERTY_ID: 10, CONSUMER_ID: 'ABCD10'});
+        ConsumerProperties.insert({PROPERTY_NAME: "AWAIT_MSGS_ARCHIVE_PATH", PROPERTY_VALUE: "\\\\bendpdc\\dfs\\BENHUBXFRDSH\\MLPI\\AM\\In\\Archive",  CONSUMER_PROPERTY_ID: 11, CONSUMER_ID: 'ABCD11'});
+    }
+});
 
 
 Meteor.startup(function () {

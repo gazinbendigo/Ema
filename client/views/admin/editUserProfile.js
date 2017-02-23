@@ -11,9 +11,8 @@ Template.editUserProfile.onCreated(function() {
     let userProfile = null;
     //this.autorun(() => {
 
-    Meteor.call('getProfileByUsername', adm, function(err, res){
-        if(err){
-            console.log(err.error);
+    this.userProfile = new ReactiveVar(UserProfilesCollection.getProfileByUsername(adm));
+    //console.log(userProfile.get());
         }
         else {
             console.log("Response: " + JSON.stringify(res));
@@ -29,49 +28,49 @@ Template.editUserProfile.onCreated(function() {
     //Object { _id: "Aiviyg9sLAerhcHW3", createdAt: Date 2017-02-11T22:49:36.829Z, services: Object, username: "adm1155", emails: Array[1], name: Object[1], profile: Object }
     //let profileToUpdate = {username: userProfile.username, password: '', email: userProfile.emails[0].address, firstName: userProfile.profile.firstName, lastName: userProfile.profile.lastName, groups: userProfile.profile.groups};
 
-    this.userAccountGroups = new ReactiveVar(userProfile.profile.groups);
-    console.log("Groups: " + template.userAccountGroups.get())
-    console.log("Username: " + userProfile.username);
-    console.log("Email: " + userProfile.emails[0].address);
-    this.userName = new ReactiveVar(userProfile.username);
-    this.firstName = new ReactiveVar(userProfile.profile.firstName);
-    this.lastName = new ReactiveVar(userProfile.profile.lastName);
-    this.email = new ReactiveVar(userProfile.emails[0].address);
+    this.userAccountGroups = new ReactiveVar(defaultGroups());//userProfile.profile.groups);
+    // console.log("Groups: " + template.userAccountGroups.get())
+    // console.log("Username: " + userProfile.username);
+    // console.log("Email: " + userProfile.emails[0].address);
+    this.userName = new ReactiveVar(null);//userProfile.username);
+    this.firstName = new ReactiveVar(null);//userProfile.profile.firstName);
+    this.lastName = new ReactiveVar(null);//userProfile.profile.lastName);
+    this.email = new ReactiveVar(null);//userProfile.emails[0].address);
     this.password = new ReactiveVar(null);
     this.confirmPassword = new ReactiveVar(null);
-    let devRolesEnabled = userProfile.profile.groups.DEV.length > 0;
-    this.isDeveloperChkbx = new ReactiveVar(devRolesEnabled);
-    this.areDevRolesEnabled = new ReactiveVar(devRolesEnabled);
+    // let devRolesEnabled = userProfile.profile.groups.DEV.length > 0;
+    this.isDeveloperChkbx = new ReactiveVar(null);//devRolesEnabled);
+    this.areDevRolesEnabled = new ReactiveVar(null);//devRolesEnabled);
     this.devInstallerRoleChkbx = new ReactiveVar(false);
     this.devAdminRoleChkbx = new ReactiveVar(false);
     this.devSuperuserRoleChkbx = new ReactiveVar(false);
-    if(devRolesEnabled){
-        _.each(userProfile.profile.groups.DEV, function(role){
-            if(role === 'Installer'){
-                template.devInstallerRoleChkbx.set(true);
-            }
-            else if(role === 'Administrator'){
-                template.devAdminRoleChkbx.set(true);
-            }
-            else if(role === 'SuperUser'){
-                template.devSuperuserRoleChkbx.set(true);
-            }
-        });
-    }
+    // if(devRolesEnabled){
+    //     _.each(userProfile.profile.groups.DEV, function(role){
+    //         if(role === 'Installer'){
+    //             template.devInstallerRoleChkbx.set(true);
+    //         }
+    //         else if(role === 'Administrator'){
+    //             template.devAdminRoleChkbx.set(true);
+    //         }
+    //         else if(role === 'SuperUser'){
+    //             template.devSuperuserRoleChkbx.set(true);
+    //         }
+    //     });
+    // }
     this.installerRoleChkbx = new ReactiveVar();
     this.adminRoleChkbx = new ReactiveVar(false);
     this.superuserRoleChkbx = new ReactiveVar(false);
-    _.each(userProfile.profile.groups.OTHER, function(role){
-        if(role === 'Installer'){
-            template.installerRoleChkbx.set(true);
-        }
-        else if(role === 'Administrator'){
-            template.adminRoleChkbx.set(true);
-        }
-        else if(role === 'SuperUser'){
-            template.superuserRoleChkbx.set(true);
-        }
-    });
+    // _.each(userProfile.profile.groups.OTHER, function(role){
+    //     if(role === 'Installer'){
+    //         template.installerRoleChkbx.set(true);
+    //     }
+    //     else if(role === 'Administrator'){
+    //         template.adminRoleChkbx.set(true);
+    //     }
+    //     else if(role === 'SuperUser'){
+    //         template.superuserRoleChkbx.set(true);
+    //     }
+    // });
 
     this.responseMsg = new ReactiveVar(null);
 
@@ -79,12 +78,12 @@ Template.editUserProfile.onCreated(function() {
 
 Template.editUserProfile.helpers({
 
-    getUsername: () => {
-        return Template.instance().userName.get();
+    isLoaded: () => {
+        return UserProfilesCollection.isLoaded.get();
     },
 
-    getFirstName: () => {
-        return Template.instance().firstName.get();
+    userData: () => {
+        return UserProfilesCollection.findOne({username: FlowRouter.getParam("adm")});
     },
 
     getLastName: () => {
@@ -96,21 +95,21 @@ Template.editUserProfile.helpers({
     },
 
     isDeveloper: function() {
-        if(Template.instance().isDeveloperChkbx.get() === true) {
+        if(isDeveloper(FlowRouter.getParam("adm"))) {
             return 'checked';
         }
         return null;
     },
 
     isInstaller: function(){
-        if(Template.instance().installerRoleChkbx.get() === true){
+        if(isUserInGroup(FlowRouter.getParam("adm"), 'OTHER', 'Installer')){
             return 'checked';
         }
         return null;
     },
 
     isAdmin: function(){
-        if(Template.instance().adminRoleChkbx.get() === true){
+        if(isUserInGroup(FlowRouter.getParam("adm"), 'OTHER', 'Administrator')){
             return 'checked';
         }
         return null;

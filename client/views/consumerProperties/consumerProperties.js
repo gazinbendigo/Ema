@@ -13,7 +13,7 @@ Template.manageConsumerProperties.onCreated(function(){
         Environments.getFromServer();
     }
     Meteor.subscribe("hubConsumers");
-    HubConsumers.getFromServer('hubld');
+    Consumers.getFromServer('hubld');
     //ConsumerProperties.getFromServer();
     Meteor.subscribe("manageConsumerProperties");
 });
@@ -51,11 +51,11 @@ Template.manageConsumerProperties.helpers({
     },
 
     consumers: function(){
-        return HubConsumers.find({});
+        return Consumers.find({});
     },
 
     consumers: function(){
-        return HubConsumers.find({}).fetch();
+        return Consumers.find({}).fetch();
     },
 
     isEnvironmentsLoaded: function(){

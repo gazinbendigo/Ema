@@ -47,7 +47,7 @@ accounts-base@1.2.14
 accounts-ui@1.1.9
 alanning:trace
 #easy:search
-shell-server
+shell-server@0.2.1
 aldeed:autoform
 msavin:mongol
-reactive-dict
+reactive-dict@1.1.8

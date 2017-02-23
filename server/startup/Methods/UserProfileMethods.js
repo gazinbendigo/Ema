@@ -103,6 +103,10 @@ Meteor.methods({
         let profile = Meteor.users.findOne({username: userName});
         console.log(JSON.stringify(profile));
         return profile;
+    },
+
+    getUserProfiles: function(){
+        return Meteor.users().find({});
     }
 
 });
