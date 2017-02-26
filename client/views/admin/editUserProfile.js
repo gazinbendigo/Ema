@@ -12,13 +12,8 @@ Template.editUserProfile.onCreated(function() {
     //this.autorun(() => {
 
     this.userProfile = new ReactiveVar(UserProfilesCollection.getProfileByUsername(adm));
-    //console.log(userProfile.get());
-        }
-        else {
-            console.log("Response: " + JSON.stringify(res));
-            userProfile = res
-        }
-    });
+
+
 
         // userProfile = Meteor.users.findOne({username: adm});
     //});
@@ -337,7 +332,14 @@ function addOrRemoveRole(role, action, groupType, template){
             }
         }
     }
+}
 
+function isDeveloper(adm){
+    return true;
+}
+
+function isUserInGroup(adm, group, type){
+    return true;
 }
 
 

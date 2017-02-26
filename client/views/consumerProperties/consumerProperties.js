@@ -23,6 +23,10 @@ Template.manageConsumerProperties.helpers({
         return ConsumerProperties.isLoaded.get();
     },
 
+    consumerProperties: () => {
+        return ConsumerProperties.find({});
+    },
+
     propertyRow: function(){
         return ConsumerProperties.find({});
     },

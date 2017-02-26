@@ -74,20 +74,7 @@ Meteor.startup(function(){
         Consumers.insert({brandCde: 'ARB', appCde: 'KLR', instanceCde: 'A'});
     }
 
-    if(ConsumerProperties.find().count() === 0){
-        //ConsumerProperties.ensureIndex({ID: 1});
-        ConsumerProperties.insert({PROPERTY_NAME: "ACC_HOLDING_UPDATE_OUT", PROPERTY_VALUE: "\\\\ddvmcm01\\mocom\\main\\data", CONSUMER_PROPERTY_ID: 1, CONSUMER_ID: 'ABCD1'});
-        ConsumerProperties.insert({PROPERTY_NAME: "ACC_HOLDING_UPDATE_OUT", PROPERTY_VALUE: "\\\\ddvmcm01\\mocom\\main\\data", CONSUMER_PROPERTY_ID: 2, CONSUMER_ID: 'ABCD2'});
-        ConsumerProperties.insert({PROPERTY_NAME: "ACTIVATE_ACC_IN", PROPERTY_VALUE: "\\\\bendpdc\\dfs\\BENHUBXFRDSH\\MLPI\\ACM\\In", CONSUMER_PROPERTY_ID: 3, CONSUMER_ID: 'ABCD3'});
-        ConsumerProperties.insert({PROPERTY_NAME: "AGENCY_CODE", PROPERTY_VALUE: "98888", CONSUMER_PROPERTY_ID: 4, CONSUMER_ID: 'ABCD4'});
-        ConsumerProperties.insert({PROPERTY_NAME: "ALERT_EMAIL_ADDRESS", PROPERTY_VALUE: "nobody", CONSUMER_PROPERTY_ID: 5, CONSUMER_ID: 'ABCD5'});
-        ConsumerProperties.insert({PROPERTY_NAME: "ALIAS_ENQUIRY_URL", PROPERTY_VALUE: "http://vmv0595:9091/npp/bblwsenq", CONSUMER_PROPERTY_ID: 6, CONSUMER_ID: 'ABCD6'});
-        ConsumerProperties.insert({PROPERTY_NAME: "ALIAS_MANAGEMENT_URL", PROPERTY_VALUE: "http://vmv0595:9091/npp/bblws", CONSUMER_PROPERTY_ID: 7, CONSUMER_ID: 'ABCD7'});
-        ConsumerProperties.insert({PROPERTY_NAME: "ALIAS_PORTING_URL", PROPERTY_VALUE: "http://vmv0595:9091/npp/bblwsauto", CONSUMER_PROPERTY_ID: 8, CONSUMER_ID: 'ABCD8'});
-        ConsumerProperties.insert({PROPERTY_NAME: "APPIAN_URL", PROPERTY_VALUE: "http://ddvbpm05/suite/webservice/processmodel/babAppianService", CONSUMER_PROPERTY_ID: 9, CONSUMER_ID: 'ABCD9'});
-        ConsumerProperties.insert({PROPERTY_NAME: "AWAIT_IN", PROPERTY_VALUE: "\\\\bendpdc\\dfs\\BENHUBXFRDSH\\MLPI\\AM\\in", CONSUMER_PROPERTY_ID: 10, CONSUMER_ID: 'ABCD10'});
-        ConsumerProperties.insert({PROPERTY_NAME: "AWAIT_MSGS_ARCHIVE_PATH", PROPERTY_VALUE: "\\\\bendpdc\\dfs\\BENHUBXFRDSH\\MLPI\\AM\\In\\Archive",  CONSUMER_PROPERTY_ID: 11, CONSUMER_ID: 'ABCD11'});
-    }
+
 });
 
 
@@ -116,6 +103,8 @@ Meteor.startup(() => {
     //     Configurations.insert({CONFIGURATION_ID: 3, CONFIGURATION_NME: 'HUBC1', DATABASE_SERVER: 'server3', DATABSE: 'db3', USERNAME: 'user3', PASSWD: 'pwd3', DATASOURCE: 'ds3', PREF_HOURS: 24});
     // }
 });
+
+
 
 
 

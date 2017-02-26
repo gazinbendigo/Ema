@@ -3,9 +3,10 @@
  */
 
 Meteor.methods({
+
     getConsumerPropertiesByEnvironment: function(env){
         let environment = ValidationHelper.isEnvironmentBlank(env) ? DefaultEnv : env.env;
-        let path = BaseApiURI + "consumerProperties/" + environment;
+        let path = BaseApiURI + "consumer/properties/" + environment;
         return HTTPHelper.httpRequest('GET', path);
     },
 

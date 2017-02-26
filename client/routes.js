@@ -141,6 +141,13 @@ FlowRouter.route('/landing', {
     }
 });
 
+FlowRouter.route('/consumer/properties/:env', {
+    name: 'consumerProperties',
+    action: function(){
+        BlazeLayout.render("baseLayout", {content: '', menu: 'menu'});
+    }
+});
+
 /////////// MOCK UPS  ///////////
 FlowRouter.route('/mockHome', {
     name: 'mockHome',
