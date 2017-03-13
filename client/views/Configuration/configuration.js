@@ -12,7 +12,7 @@ Template.configuration.onCreated(function() {
     this.password = new ReactiveVar(null);
     this.datasource = new ReactiveVar(null);
     this.prefHours = new ReactiveVar(24);
-    EnvironmentTypes.getFromServer();
+    EnvironmentConfiguration.getFromServer();
 });
 
 Template.configuration.helpers({
@@ -113,30 +113,30 @@ Template.configuration.events({
         }
 
     },
+    //
+    // "click #updateConfigBttn": (event, template) => {
+    //     event.preventDefault();
+    //
+    //     let configId = template.find('#configOptions').value;
+    //     if(Number(configId) > 0){
+    //         let configuration = createConfiguration(template, configId);
+    //
+    //         Configurations.applyChange('configuration', configuration, function(err, response){
+    //             if(err){
+    //                 console.log(err);
+    //             }
+    //             else {
+    //                 template.find('#configOptions').value = 0;
+    //                 clearForm(template);
+    //             }
+    //         });
+    //     }
+    //     else {
+    //         console.log("Error");
+    //     }
+    // },
 
-    "click #updateConfigBttn": (event, template) => {
-        event.preventDefault();
-
-        let configId = template.find('#configOptions').value;
-        if(Number(configId) > 0){
-            let configuration = createConfiguration(template, configId);
-
-            Configurations.applyChange('configuration', configuration, function(err, response){
-                if(err){
-                    console.log(err);
-                }
-                else {
-                    template.find('#configOptions').value = 0;
-                    clearForm(template);
-                }
-            });
-        }
-        else {
-            console.log("Error");
-        }
-    },
-
-    "click #addConfigBttn": (event, template) => {
+    "click #createBttn": (event, template) => {
         event.preventDefault();
         let configId = Configurations.find({}).count() + 1;
 
@@ -159,7 +159,7 @@ Template.configuration.events({
         clearForm(template);
     },
 
-    "click #removeConfigBttn": (event, template) => {
+    "click #deleteBttn": (event, template) => {
         event.preventDefault();
 
         let configId = template.find('#configOptions').value;
