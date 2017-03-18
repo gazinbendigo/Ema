@@ -6,7 +6,7 @@
 //UserId is used to track login state throughout the App.
 
 Template.manageUsers.onCreated(function(){
-    Meteor.subscribe('Users');
+    Template.instance().subscribe("Users");//Meteor.subscribe('Users');
     this.groupOptions = new ReactiveVar("default");
     this.advancedSearch = new ReactiveVar(null);
     this.responseMsg = new ReactiveVar(null);
@@ -47,6 +47,7 @@ Template.manageUsers.helpers({
         return Template.instance().responseMsg.get();
     },
 
+    //Revist this page: https://www.discovermeteor.com/blog/template-level-subscriptions/
     next: () => {
         if(Meteor.users.find({}).count() > 20){
             if((Number(Template.instance().pageCursor.get()) + Number(20)) <= Meteor.users.find({}).count()){

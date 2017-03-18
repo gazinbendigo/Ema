@@ -57,7 +57,7 @@ Meteor.methods({
         }
 
         Meteor.users.update({_id: id}, {$set:{'name.0.verified': true}});
-        Meteor.users.update({_id: id}, {$set:{profile: userProfile}});
+        Meteor.users.update({_id: id}, {$set:{profile: profile}});
 
         return "Success.";
     },
@@ -99,14 +99,12 @@ Meteor.methods({
     },
 
     getProfileByUsername: (userName) => {
-        console.log("Adm: " + userName);
-        let profile = Meteor.users.findOne({username: userName});
-        console.log(JSON.stringify(profile));
+        let profile = Meteor.users.findOne({username: userName}, {fields: {profile: 1, roles: 1, emails: 1, username: 1}});
         return profile;
     },
 
     getUserProfiles: function(){
-        return Meteor.users().find({});
+        return Meteor.users().find({}, {fields: {profile: 1, roles: 1, emails: 1, username: 1}});
     }
 
 });

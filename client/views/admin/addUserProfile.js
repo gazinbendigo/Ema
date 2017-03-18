@@ -197,9 +197,9 @@ Template.addUserProfile.events({
                         lastName: template.lastName.get(),
                         groups: template.userAccountGroups.get().groups
                     }
-                    console.log(JSON.stringify(userProfile));
+                    console.log(JSON.stringify(profile));
 
-                    Meteor.call('createUserProfile', userProfile, function(err, res){
+                    Meteor.call('createUserProfile', profile, function(err, res){
                         if(err){
                             console.log(err);
                             template.responseMsg.set(err.error);

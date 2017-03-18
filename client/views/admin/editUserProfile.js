@@ -3,139 +3,69 @@
  */
 
 Template.editUserProfile.onCreated(function() {
-    let template = Template.instance();
-    //template.subscribe("Users");
-    template.subscribe("UserGroups");
-    let adm = FlowRouter.getParam("adm");
-    console.log("Got adm: " + adm);
-    let userProfile = null;
-    //this.autorun(() => {
 
-    this.userProfile = new ReactiveVar(UserProfilesCollection.getProfileByUsername(adm));
-
-
-
-        // userProfile = Meteor.users.findOne({username: adm});
-    //});
-
-    console.log("hhh: " + userProfile);
-
-    //Object { _id: "Aiviyg9sLAerhcHW3", createdAt: Date 2017-02-11T22:49:36.829Z, services: Object, username: "adm1155", emails: Array[1], name: Object[1], profile: Object }
-    //let profileToUpdate = {username: userProfile.username, password: '', email: userProfile.emails[0].address, firstName: userProfile.profile.firstName, lastName: userProfile.profile.lastName, groups: userProfile.profile.groups};
-
-    this.userAccountGroups = new ReactiveVar(defaultGroups());//userProfile.profile.groups);
-    // console.log("Groups: " + template.userAccountGroups.get())
-    // console.log("Username: " + userProfile.username);
-    // console.log("Email: " + userProfile.emails[0].address);
-    this.userName = new ReactiveVar(null);//userProfile.username);
-    this.firstName = new ReactiveVar(null);//userProfile.profile.firstName);
-    this.lastName = new ReactiveVar(null);//userProfile.profile.lastName);
-    this.email = new ReactiveVar(null);//userProfile.emails[0].address);
-    this.password = new ReactiveVar(null);
-    this.confirmPassword = new ReactiveVar(null);
-    // let devRolesEnabled = userProfile.profile.groups.DEV.length > 0;
-    this.isDeveloperChkbx = new ReactiveVar(null);//devRolesEnabled);
-    this.areDevRolesEnabled = new ReactiveVar(null);//devRolesEnabled);
-    this.devInstallerRoleChkbx = new ReactiveVar(false);
-    this.devAdminRoleChkbx = new ReactiveVar(false);
-    this.devSuperuserRoleChkbx = new ReactiveVar(false);
-    // if(devRolesEnabled){
-    //     _.each(userProfile.profile.groups.DEV, function(role){
-    //         if(role === 'Installer'){
-    //             template.devInstallerRoleChkbx.set(true);
-    //         }
-    //         else if(role === 'Administrator'){
-    //             template.devAdminRoleChkbx.set(true);
-    //         }
-    //         else if(role === 'SuperUser'){
-    //             template.devSuperuserRoleChkbx.set(true);
-    //         }
-    //     });
-    // }
-    this.installerRoleChkbx = new ReactiveVar();
-    this.adminRoleChkbx = new ReactiveVar(false);
-    this.superuserRoleChkbx = new ReactiveVar(false);
-    // _.each(userProfile.profile.groups.OTHER, function(role){
-    //     if(role === 'Installer'){
-    //         template.installerRoleChkbx.set(true);
-    //     }
-    //     else if(role === 'Administrator'){
-    //         template.adminRoleChkbx.set(true);
-    //     }
-    //     else if(role === 'SuperUser'){
-    //         template.superuserRoleChkbx.set(true);
-    //     }
-    // });
-
+    UserProfile.getProfile(FlowRouter.getParam("adm"));
+    this.profile = new ReactiveVar(null);
+    this.userAccountGroups = new ReactiveVar(defaultGroups());
+    this.userName = new ReactiveVar(null);
+    this.firstName = new ReactiveVar(null);
+    this.lastName = new ReactiveVar(null);
+    this.email = new ReactiveVar(null);
+    this.isDeveloperChkbx = new ReactiveVar(null);
+    this.areDevRolesEnabled = new ReactiveVar(false);
+    this.devInstallerRoleChkbx = new ReactiveVar(null);
+    this.devAdminRoleChkbx = new ReactiveVar(null);
+    this.devSuperuserRoleChkbx = new ReactiveVar(null);
+    this.installerRoleChkbx = new ReactiveVar(null);
+    this.adminRoleChkbx = new ReactiveVar(null);
+    this.superuserRoleChkbx = new ReactiveVar(null);
     this.responseMsg = new ReactiveVar(null);
 
 });
 
+
+
 Template.editUserProfile.helpers({
 
     isLoaded: () => {
-        return UserProfilesCollection.isLoaded.get();
+        if(UserProfile.isLoaded.get()){
+            setFields(UserProfile.findOne({}));
+            return true;
+        }
+        return false;
     },
 
     userData: () => {
-        return UserProfilesCollection.findOne({username: FlowRouter.getParam("adm")});
+        return UserProfile.findOne({});
     },
 
-    getLastName: () => {
-        return Template.instance().lastName.get();
+
+    isDeveloper: () => {
+        return Template.instance().isDeveloperChkbx.get() ? 'checked' : null;
     },
 
-    getEmail: () => {
-        return Template.instance().email.get();
+    isInstaller: () => {
+        return Template.instance().installerRoleChkbx.get();
     },
 
-    isDeveloper: function() {
-        if(isDeveloper(FlowRouter.getParam("adm"))) {
-            return 'checked';
-        }
-        return null;
+    isAdmin: () => {
+        return Template.instance().adminRoleChkbx.get();
     },
 
-    isInstaller: function(){
-        if(isUserInGroup(FlowRouter.getParam("adm"), 'OTHER', 'Installer')){
-            return 'checked';
-        }
-        return null;
-    },
-
-    isAdmin: function(){
-        if(isUserInGroup(FlowRouter.getParam("adm"), 'OTHER', 'Administrator')){
-            return 'checked';
-        }
-        return null;
-    },
-
-    isSuperuser: function(){
-        if(Template.instance().superuserRoleChkbx.get() === true){
-            return 'checked';
-        }
-        return null;
+    isSuperuser: () => {
+        return Template.instance().superuserRoleChkbx.get();
     },
 
     isDevInstaller: () => {
-        if(Template.instance().devInstallerRoleChkbx.get() === true) {
-            return 'checked';
-        }
-        return null;
+        return Template.instance().devInstallerRoleChkbx.get();
     },
 
     isDevAdmin: () => {
-        if(Template.instance().devAdminRoleChkbx.get() === true){
-            return 'checked';
-        }
-        return null;
+        return Template.instance().devAdminRoleChkbx.get();
     },
 
     isDevSuperuser: () => {
-        if(Template.instance().devSuperuserRoleChkbx.get() === true){
-            return 'checked';
-        }
-        return null;
+        return Template.instance().devSuperuserRoleChkbx.get();
     },
 
     areDevRolesEnabled: () => {
@@ -143,9 +73,9 @@ Template.editUserProfile.helpers({
             return '';
         }
         else {
-            Template.instance().devInstallerRoleChkbx.set(false);
-            Template.instance().devAdminRoleChkbx.set(false);
-            Template.instance().devSuperuserRoleChkbx.set(false);
+            Template.instance().devInstallerRoleChkbx.set(null);
+            Template.instance().devAdminRoleChkbx.set(null);
+            Template.instance().devSuperuserRoleChkbx.set(null);
         }
         return  'disabled';
     },
@@ -167,7 +97,6 @@ Template.editUserProfile.events({
     "change #firstname": (event, template) => {
         event.preventDefault();
         let firstName = $('#firstname').val();
-        template.firstName.set(firstName);
         template.firstName.set(firstName);
         console.log(firstName);
     },
@@ -220,12 +149,18 @@ Template.editUserProfile.events({
         });
     },
 
+    'click #isDeveloperChkbx': (event, template) => {
+        event.preventDefault();
+        let isChecked = $('#isDeveloperChkbx').is(":checked");
+        template.isDeveloperChkbx.set(checkedValue(isChecked));
+        template.areDevRolesEnabled.set(isChecked);
+    },
+
     'click #installerRoleChkbx': (event, template) => {
         event.preventDefault();
-        console.log("installerRoleChkbx");
         let isChecked = $('#installerRoleChkbx').is(":checked");
-        template.installerRoleChkbx.set(isChecked);
-        addOrRemoveRole('Installer', isChecked, 'OTHER', template);
+        template.installerRoleChkbx.set(checkedValue(isChecked));
+        addOrRemoveRole('installer', isChecked, 'OTHER', template);
     },
 
 
@@ -233,41 +168,37 @@ Template.editUserProfile.events({
         event.preventDefault();
         console.log("adminRoleChkbx");
         let isChecked = $('#adminRoleChkbx').is(":checked");
-        template.adminRoleChkbx.set(isChecked);
-        addOrRemoveRole('Administrator', isChecked, 'OTHER', template);
+        template.adminRoleChkbx.set(checkedValue(isChecked));
+        addOrRemoveRole('administrator', isChecked, 'OTHER', template);
     },
 
     'click #superuserRoleChkbx': (event, template) => {
         event.preventDefault();
         console.log("superuserRoleChkbx");
         let isChecked = $('#superuserRoleChkbx').is(":checked");
-        template.superuserRoleChkbx.set(isChecked);
-        addOrRemoveRole('SuperUser', isChecked, 'OTHER', template);
+        template.superuserRoleChkbx.set(checkedValue(isChecked));
+        addOrRemoveRole('super-admin', isChecked, 'OTHER', template);
     },
 
     'click #isDevInstallerChkbx': (event, template) => {
         event.preventDefault();
-        console.log("isDevInstallerChkbx");
         let isChecked = $('#isDevInstallerChkbx').is(":checked");
-        template.devInstallerRoleChkbx.set(isChecked);
-        console.log("bbbb" + isChecked);
-        addOrRemoveRole('Installer', isChecked, 'DEV', template);
+        template.devInstallerRoleChkbx.set(checkedValue(isChecked));
+        addOrRemoveRole('installer', isChecked, 'DEV', template);
     },
 
     'click #isDevAdminRoleChkbx': (event, template) => {
         event.preventDefault();
-        console.log("devAdminRoleChkbx");
         let isChecked = $('#isDevAdminRoleChkbx').is(":checked");
-        template.devAdminRoleChkbx.set(isChecked);
-        addOrRemoveRole('Administrator', isChecked, 'DEV', template);
+        template.devAdminRoleChkbx.set(checkedValue(isChecked));
+        addOrRemoveRole('administrator', isChecked, 'DEV', template);
     },
 
     'click #isDevSuperuserRoleChkbx': (event, template) => {
         event.preventDefault();
-        console.log("devSuperuserRoleChkbx");
         let isChecked = $('#isDevSuperuserRoleChkbx').is(":checked");
-        template.devSuperuserRoleChkbx.set(isChecked);
-        addOrRemoveRole('SuperUser', isChecked, 'DEV', template);
+        template.devSuperuserRoleChkbx.set(checkedValue(isChecked));
+        addOrRemoveRole('super-admin', isChecked, 'DEV', template);
     },
 
     'click #updateProfile': (event, template) => {
@@ -282,9 +213,9 @@ Template.editUserProfile.events({
                 email: template.email.get(),
                 firstName: template.firstName.get(),
                 lastName: template.lastName.get(),
-                groups: template.userAccountGroups.get()
+                roles: template.userAccountGroups.get()
             }
-            Meteor.call('updateUser', userProfile, function(err, res){
+            Meteor.call('updateUser', profile, function(err, res){
                 if(err){
                     template.responseMsg.set(err.error);
                 }
@@ -305,41 +236,63 @@ function defaultGroups(){
 }
 
 function addOrRemoveRole(role, action, groupType, template){
-    console.log(template.userAccountGroups.get());
     if(action){
         if(groupType === 'DEV'){
-            if(!_.contains( template.userAccountGroups.get().DEV, role)){
-                template.userAccountGroups.get().DEV.push(role);
+            if(!_.contains( template.userAccountGroups.get().groups.DEV, role)){
+                template.userAccountGroups.get().groups.DEV.push(role);
             }
         }
         else {
-            if(!_.contains( template.userAccountGroups.get().OTHER, role)){
-                template.userAccountGroups.get().OTHER.push(role);
+            if(!_.contains( template.userAccountGroups.get().groups.OTHER, role)){
+                template.userAccountGroups.get().groups.OTHER.push(role);
             }
         }
     }
     else {
         if(groupType === 'DEV'){
-            if(_.contains( template.userAccountGroups.get().DEV, role)){
-                let pos = _.indexOf( template.userAccountGroups.get().DEV, role);
-                template.userAccountGroups.get().DEV.splice(pos, 1);
+            if(_.contains( template.userAccountGroups.get().groups.DEV, role)){
+                let pos = _.indexOf( template.userAccountGroups.get().groups.DEV, role);
+                template.userAccountGroups.get().groups.DEV.splice(pos, 1);
             }
         }
         else {
-            if(_.contains( template.userAccountGroups.get().OTHER, role)){
-                let pos = _.indexOf( template.userAccountGroups.get().OTHER, role);
-                template.userAccountGroups.get().OTHER.splice(pos, 1);
+            if(_.contains( template.userAccountGroups.get().groups.OTHER, role)){
+                let pos = _.indexOf( template.userAccountGroups.get().groups.OTHER, role);
+                template.userAccountGroups.get().groups.OTHER.splice(pos, 1);
             }
         }
     }
 }
 
-function isDeveloper(adm){
-    return true;
+function checkedValue(checked){
+    return checked ? 'checked' : null;
 }
 
-function isUserInGroup(adm, group, type){
-    return true;
+function isUserInRole(user, group, type){
+    let isInRole = null;
+    if(group === 'OTHER'){
+        isInRole =  _.contains(user.roles.OTHER, type) ? 'checked' : null;
+    }
+    else{
+        isInRole = _.contains(user.roles.DEV, type) ? 'checked' : null;
+    }
+    return isInRole;
+}
+
+function setFields(user){
+
+    Template.instance().userName.set(user.username);
+    Template.instance().firstName.set(user.profile.firstName);
+    Template.instance().lastName.set(user.profile.lastName);
+    Template.instance().email.set(user.emails[0].address);
+    Template.instance().isDeveloperChkbx.set(checkedValue(user.profile.isDeveloper));
+    Template.instance().areDevRolesEnabled.set(user.profile.isDeveloper);
+    Template.instance().devInstallerRoleChkbx.set(isUserInRole(user, 'DEV', 'installer'));
+    Template.instance().devAdminRoleChkbx.set(isUserInRole(user, 'DEV', 'administrator'));
+    Template.instance().devSuperuserRoleChkbx.set(isUserInRole(user, 'DEV', 'super-admin'));
+    Template.instance().installerRoleChkbx.set(isUserInRole(user, 'OTHER', 'installer'));
+    Template.instance().adminRoleChkbx.set(isUserInRole(user, 'OTHER', 'administrator'));
+    Template.instance().superuserRoleChkbx.set(isUserInRole(user, 'OTHER', 'super-admin'));
 }
 
 

@@ -1,9 +1,0 @@
-{
-  "dependencies": {
-    "memory-cache": {
-      "version": "0.1.4",
-      "resolved": "https://registry.npmjs.org/memory-cache/-/memory-cache-0.1.4.tgz",
-      "from": "memory-cache@0.1.4"
-    }
-  }
-}
