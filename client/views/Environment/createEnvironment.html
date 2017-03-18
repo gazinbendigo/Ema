@@ -1,0 +1,39 @@
+<template name="createEnvironment">
+    <div class="component-spacer sm">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12">
+                <div class="form-title"><h2>Create Environment</h2></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12">
+                <div class="form-title"><h3>Configuration Type</h3></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <select id="configType" class="form-control">
+                    <option value="{{defaultSelectItem}}">I want to create...</option>
+                    {{#each getConfigurationTypes}}
+                        {{> option configurationType TYPE_NME}}
+                    {{/each}}
+                </select>
+            </div>
+        </div>
+        <div class="component-spacer sm"></div>
+        <div class="success-message" style="visibility: hidden">{{successMessage}}</div>
+        {{> Template.dynamic template=getConfigurationView}}
+        <div class="component-spacer sm"></div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="button-container" id="container-view" style="visibility: hidden">
+                    <ul class="list-inline">
+                        <li><button type="reset" class="btn btn-default btn-sm" id="resetBttn">Reset</button></li>
+                        <li><button type="button" class="btn btn-default btn-sm" id="createEnvBttn">Create</button></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</template>

@@ -1,0 +1,18 @@
+applications:
+- disk_quota: 1G
+  host: ema-v5
+  name: ema-v5
+  path: .
+  stack: cflinuxfs2
+  domain: c.bbldtl.int
+  instances: 1
+  memory: 512M
+  buildpack: https://github.com/bendigoadelaide/cf-meteor-buildpack.git
+  #https://github.com/cloudfoundry-community/cf-meteor-buildpack.git
+env:
+  APPSWITCH: true
+  ROOT_URL: https://ema.c.bbldtl.int
+  METEOR_SETTINGS: '{ "baseUrl": "https://ema.c.bbldtl.int", "baseApiURL": "https://ema-api.c.bbldtl.int/", "defaultRegion": "HUBLD" }'
+  NODE_TLS_REJECT_UNAUTHORIZED: 0
+services:
+  - mongodb-emav5
