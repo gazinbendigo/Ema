@@ -48,7 +48,7 @@ Template.menu.helpers({
 
 Template.menu.events({
 
-    "click": function(event) { // Fix Bootstrap Dropdown Menu Collapse on click outside Menu
+    "click": (event) => { // Fix Bootstrap Dropdown Menu Collapse on click outside Menu
         var clickover = $(event.target).closest(".dropdown-toggle").length;
         var opened = $(".navbar-collapse").hasClass("in");
         if (opened === true && !clickover) {
@@ -56,7 +56,7 @@ Template.menu.events({
         }
     },
 
-    "keyup": function(event) {
+    "keyup": (event) => {
         if (event.keyCode === 27) { // Bootstrap Dropdown Menu Collapse on ESC pressed
             var opened = $(".navbar-collapse").hasClass("in");
             if (opened === true) {
@@ -65,10 +65,11 @@ Template.menu.events({
         }
     },
 
-    'click #logout': function(event){
+    'click #logout': (event) => {
         event.preventDefault();
         Meteor.logout();
         FlowRouter.go("/");
-    }
+    },
+
 
 });

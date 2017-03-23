@@ -38,18 +38,31 @@ Template.signin.events({
         }
 
         submit_button.button("loading");
-        Meteor.loginWithPassword(userName, pwd, function(err) {
-            submit_button.button("reset");
-            if (err)
-            {
+        Meteor.loginWithPassword(userName, pwd, (err) => {
+            if(err){
+                console.log(err.message);
                 pageSession.set("errorMessage", err.message);
-                return false;
+                setTimeout(() => {
+                    submit_button.button("reset");
+                }, 1000);
+
             }
             else {
                 FlowRouter.go("/landing");
             }
         });
-        return false;
+        // Meteor.loginWithPassword(userName, pwd, function(err) {
+        //     submit_button.button("reset");
+        //     if (err)
+        //     {
+        //         pageSession.set("errorMessage", err.message);
+        //         return false;
+        //     }
+        //     else {
+        //         FlowRouter.go("/landing");
+        //     }
+        // });
+        // return false;
     }
 });
 
