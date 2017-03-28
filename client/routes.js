@@ -13,7 +13,9 @@ FlowRouter.route('/', {
 
 
 
-FlowRouter.route('/signin', {
+
+
+FlowRouter.route('/signin',{
     name: 'login',
     action: () => {
         BlazeLayout.render("baseLayout", {content: "signin", menu: 'menu'});
@@ -39,13 +41,6 @@ FlowRouter.route('/addUserProfile', {
     name: "addUserProfile",
     action: () => {
         BlazeLayout.render("baseLayout", {content: "addUserProfile", menu: "menu"});
-    }
-});
-
-FlowRouter.route('/landing', {
-    name: "landing",
-    action: () => {
-        BlazeLayout.render("baseLayout", {content: "landing", menu: "menu"});
     }
 });
 
