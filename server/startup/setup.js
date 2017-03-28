@@ -36,7 +36,7 @@
         // Create Default Users
         //
         if (Meteor.users.find().fetch().length === 0) {
-            const userRoles = {inst: 'installer', admin: 'administrator', ana: 'analyst', supu: 'super-admin'};
+            const userRoles = {inst: 'Installer', admin: 'Administrator', ana: 'Analyst', supu: 'SuperUser'};
 
             console.log('Creating users: ');
             //Meteor requires the user must have a username field.
