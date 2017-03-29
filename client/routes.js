@@ -44,6 +44,13 @@ FlowRouter.route('/addUserProfile', {
     }
 });
 
+FlowRouter.route('/landing', {
+    name: 'landing',
+    action: function(){
+        BlazeLayout.render("baseLayout", {content: "landing", menu: 'menu'});
+    }
+});
+
 
 FlowRouter.notFound = {
     action: () => {

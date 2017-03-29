@@ -5,28 +5,31 @@
 //User Meteor.userId() and Meteor.user() on the client
 //UserId is used to track login state throughout the App.
 
+const NUMBER_OR_ROWS = 20;
+
 Template.manageUsers.onCreated(function(){
     Template.instance().subscribe("Users");//Meteor.subscribe('Users');
     this.groupOptions = new ReactiveVar("default");
     this.advancedSearch = new ReactiveVar(null);
     this.responseMsg = new ReactiveVar(null);
     this.pageCursor = new ReactiveVar(0);
-    this.nextPage = new ReactiveVar(null);
-    this.prevPage = new ReactiveVar(null);
+    this.nextPage = new ReactiveVar(0);
+    this.prevPage = new ReactiveVar(0);
     Meteor.subscribe("UserGroups");
 });
 
 Template.manageUsers.helpers({
 
     getUsers: () => {
+        let cursor = Number(Template.instance().pageCursor.get());
         if(Template.instance().groupOptions.get() === "default" && Template.instance().advancedSearch.get() === null){
-            return Meteor.users.find({}, {skip: 0, limit: 20});
+            return Meteor.users.find({}, {skip: cursor, limit: NUMBER_OR_ROWS});
         }
         else if(Template.instance().advancedSearch.get() != null){
             return Meteor.users.find(Template.instance().advancedSearch.get());
         }
         else {
-            return Meteor.users.find({$or: [{"roles.DEV": Template.instance().groupOptions.get()}, {"roles.OTHER": Template.instance().groupOptions.get()}]}, {skip: 0, limit: 20});
+            return Meteor.users.find({$or: [{"roles.DEV": Template.instance().groupOptions.get()}, {"roles.OTHER": Template.instance().groupOptions.get()}]}, {skip: cursor, limit: NUMBER_OR_ROWS});
         }
     },
 
@@ -49,11 +52,11 @@ Template.manageUsers.helpers({
 
     //Revist this page: https://www.discovermeteor.com/blog/template-level-subscriptions/
     next: () => {
-        if(Meteor.users.find({}).count() > 20){
-            if((Number(Template.instance().pageCursor.get()) + Number(20)) <= Meteor.users.find({}).count()){
+        if(Meteor.users.find({}).count() > NUMBER_OR_ROWS){
+            if((Number(Template.instance().pageCursor.get()) + NUMBER_OR_ROWS) <= Meteor.users.find({}).count()){
                 $(".next").css('visibility', 'visible');
-                return "Next " + (Number(Template.instance().pageCursor.get()) +  Number(20)) + " - "
-                    + (Number(Template.instance().pageCursor.get()) + Number(20) * 2);
+                return "Next " + (Number(Template.instance().pageCursor.get()) +  NUMBER_OR_ROWS) + " - "
+                    + (Number(Template.instance().pageCursor.get()) + NUMBER_OR_ROWS * 2);
             }
             else {
                 $(".next").css('visibility', 'hidden');
@@ -63,14 +66,14 @@ Template.manageUsers.helpers({
     },
 
     prev: () => {
-        if(Meteor.users.find({}).count() > 20){
-            if(Number(Template.instance().pageCursor.get()) < 20) {
+        if(Meteor.users.find({}).count() > NUMBER_OR_ROWS){
+            if(Number(Template.instance().pageCursor.get()) < NUMBER_OR_ROWS) {
                 $(".prev").css('visibility', 'hidden');
                 return '';
             }
             else {
                 $(".prev").css('visibility', 'visible');
-                return "Prev " + (Number(Template.instance().pageCursor.get()) - 20) + " - "
+                return "Prev " + (Number(Template.instance().pageCursor.get()) - NUMBER_OR_ROWS) + " - "
                     + (Number(Template.instance().pageCursor.get()));
             }
         }
@@ -93,7 +96,7 @@ Template.manageUsers.events({
         event.preventDefault();
         if(Number(template.pageCursor.get()) >  19)
         {
-            let pageCursor = Number(template.pageCursor.get()) - Number(20);
+            let pageCursor = Number(template.pageCursor.get()) - NUMBER_OR_ROWS;
             template.prevPage.set(pageCursor);
             template.pageCursor.set(pageCursor);
         }
@@ -102,10 +105,8 @@ Template.manageUsers.events({
     "click .next": function(event, template) {
         event.preventDefault();
         let index = template.pageCursor.get();
-        template.pageCursor.set((index + 20));
-        if(template.pageCursor.get() <= Meteor.users.find({}).count()){
-            Meteor.users.find({}, {skip: template.pageCursor.get(), limit: 20})
-        }
+        template.pageCursor.set((index + NUMBER_OR_ROWS));
+
     },
 
     'click #searchUserBttn': (event, template) => {
