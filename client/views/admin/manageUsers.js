@@ -26,7 +26,7 @@ Template.manageUsers.helpers({
             return Meteor.users.find(Template.instance().advancedSearch.get());
         }
         else {
-            return Meteor.users.find({$or: [{"profile.groups.DEV": Template.instance().groupOptions.get()}, {"profile.groups.OTHER": Template.instance().groupOptions.get()}]}, {skip: 0, limit: 5});
+            return Meteor.users.find({$or: [{"roles.DEV": Template.instance().groupOptions.get()}, {"roles.OTHER": Template.instance().groupOptions.get()}]}, {skip: 0, limit: 20});
         }
     },
 
