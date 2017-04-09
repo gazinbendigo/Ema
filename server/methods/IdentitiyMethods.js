@@ -25,7 +25,7 @@ Meteor.methods({
                 firstName: String,
                 lastName: String,
                 groups: {
-                    OTHER: Match.Maybe([String]),
+                    TEST: Match.Maybe([String]),
                     DEV: Match.Maybe([String])
                 }
         });
@@ -98,13 +98,30 @@ Meteor.methods({
         return "Success";
     },
 
-    getProfileByUsername: (userName) => {
-        let profile = Meteor.users.findOne({username: userName}, {fields: {profile: 1, roles: 1, emails: 1, username: 1}});
+    getIdentityByUsername: (userName) => {
+        let profile = Meteor.users.findOne({username: userName}, {fields: Meteor.users.publicFields});
         return profile;
     },
 
     getUserProfiles: function(){
-        return Meteor.users().find({}, {fields: {profile: 1, roles: 1, emails: 1, username: 1}});
+        return Meteor.users().find({}, {fields: {profile: 1, Role: 1, emails: 1, username: 1}});
     }
 
 });
+
+// // Get list of all method names on Lists
+// const LISTS_METHODS = _.pluck([
+//     createUserProfile,
+//     updateUser,
+//     deleteUser,
+// ], 'name');
+//
+// // Only allow 5 list operations per connection per second
+// DDPRateLimiter.addRule({
+//     name(name) {
+//         return _.contains(LISTS_METHODS, name);
+//     },
+//
+//     // Rate limit per connection ID
+//     connectionId() { return true; },
+// }, 5, 1000);

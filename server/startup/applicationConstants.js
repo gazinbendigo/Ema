@@ -7,40 +7,54 @@
 /// The Ultimate God role is Roles.GLOBAL_GROUP, but is not used here
 
 
-ApplicationRoles = {
-    Analyst: 1,
-    Installer: 2,
-    Administrator: 3,
-    SuperUser: 4,
-    properties: {
-        1: {roles: ['read-only'], group: 'Analyst'},
-        2: {roles: ['manage-apps', 'manage-versions', 'manage-routing', 'manage-roles'], group: 'Installer'},
-        3: {roles: ['manage-roles'], group: 'Administrator'},
-        4: {roles: ['super-user'], group: 'SuperUser'}
-    }
-};
-
-ApplicationRoles.getApplicationRolesByGroup = function(role){
-    if(role === ApplicationRoles.properties[ApplicationRoles.Analyst].group){
-        return ApplicationRoles.properties[ApplicationRoles.Analyst].roles;
-    }
-    else if(role === ApplicationRoles.properties[ApplicationRoles.Installer].group){
-        return ApplicationRoles.properties[ApplicationRoles.Installer].roles;
-    }
-    else if(role === ApplicationRoles.properties[ApplicationRoles.Administrator].group){
-        return ApplicationRoles.properties[ApplicationRoles.Administrator].roles;
-    }
-    else if(role === ApplicationRoles.properties[ApplicationRoles.SuperUser].group){
-        return ApplicationRoles.properties[ApplicationRoles.SuperUser].roles;
-    }
-}
-
-EnvironmentGroups = {
+EnvironmentTypes = {
     VMV: "VMV",
     DEV: "DEV",
     DTL: "DTL",
     PROD: "PROD"
 }
+
+
+ApplicationFunctions = {
+    1: {READ_ONLY: 'read-only'},
+    2: {MANAGE_APPS: 'manage-apps'},
+    3: {MANAGE_VERSIONS: 'manage-versions'},
+    4: {MANAGE_ROUTING: 'manage-routing'},
+    5: {ADMIN: 'manage-roles'},
+    6: {INSTALL_APPS: 'install-apps'}
+}
+
+
+// GroupRoles = {
+//     Dev: 1,
+//     Dtl: 2,
+//     Prod: 3,
+//     EnvRoles: {
+//         //1: {VMV: {Roles: [ApplicationFunctions.MANAGE_APPS, ApplicationFunctions.MANAGE_VERSIONS, ApplicationFunctions.MANAGE_ROUTING]}, DEV: {Roles: [ApplicationFunctions.MANAGE_APPS, ApplicationFunctions.MANAGE_VERSIONS, ApplicationFunctions.MANAGE_ROUTING]}, DTL: [ApplicationFunctions.READ_ONLY]}, PROD:{Roles: [ApplicationFunctions.READ_ONLY]}},
+//         1: {VMV: {Roles: [ApplicationFunctions[2], ApplicationFunctions[3], ApplicationFunctions[4]]}, DEV: {Roles: [ApplicationFunctions[2], ApplicationFunctions[3], ApplicationFunctions[4]]}, DTL: [ApplicationFunctions[1]]}, PROD:{Roles: [ApplicationFunctions[1]]}
+//         // 2: {VMV: {Roles: [ApplicationFunctions.READ_ONLY], DEV: {Roles: [ApplicationFunctions.READ_ONLY]}, DTL: {Roles: [ApplicationFunctions.MANAGE_APPS, ApplicationFunctions.MANAGE_VERSIONS, ApplicationFunctions.MANAGE_ROUTING]}, PROD:{Roles: [ApplicationFunctions.READ_ONLY]}},
+//         // 3: {VMV: {Roles: [ApplicationFunctions.READ_ONLY]}, DEV: {Roles: [ApplicationFunctions.READ_ONLY]}, DTL: {Roles: [ApplicationFunctions.READ_ONLY]}, PROD:{Roles: [ApplicationFunctions.MANAGE_APPS, ApplicationFunctions.MANAGE_VERSIONS, ApplicationFunctions.MANAGE_ROUTING]}},
+//     }
+// }
+
+UserType = {
+    Developer: 'Developer',
+    Configurator: 'Configurator',
+    Administrator: 'Administrator',
+    Analyst: 'Analyst',
+    Installer: 'Installer'
+}
+
+
+Role = {
+    Developer: {VMV: [ApplicationFunctions[2], ApplicationFunctions[3], ApplicationFunctions[4], ApplicationFunctions[6]], DEV: [ApplicationFunctions[2], ApplicationFunctions[3], ApplicationFunctions[4]], DTL: [ApplicationFunctions[1]], PROD: [ApplicationFunctions[1]]},
+    Configurator: {VMV: [ApplicationFunctions[1]], DEV: [ApplicationFunctions[1]], DTL: [ApplicationFunctions[2], ApplicationFunctions[3], ApplicationFunctions[4], ApplicationFunctions[4]], PROD: [ApplicationFunctions[1]]},
+    Administrator: {VMV: [ApplicationFunctions[5]], DEV: [ApplicationFunctions[5]], DTL: [ApplicationFunctions[5]], PROD: [ApplicationFunctions[5]]},
+    Analyst: {VMV: [ApplicationFunctions[1]], DEV: [ApplicationFunctions[1]], DTL: [ApplicationFunctions[1]], PROD: [ApplicationFunctions[1]]},
+}
+
+
+
 
 
 

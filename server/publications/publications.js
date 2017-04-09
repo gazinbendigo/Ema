@@ -9,11 +9,41 @@
  * "username" : "user", "emails" : [ { "address" : "User8@hotmail.com", "verified" : false } ],
  * "profile" : { "firstName" : "some", "lastName" : "thing" }, "roles" : { "OTHER" : [ "super-admin" ], "DEV" : [ "analyst" ]}}
  */
-Meteor.publish("Users", () => {
-    return Meteor.users.find({}, {fields: {profile: 1, roles: 1, emails: 1, username: 1}});
+
+Meteor.users.publicFields = {
+    username: 1,
+    emails: 1,
+    'identity.firstName': 1,
+    'identity.lastName': 1,
+    'identity.primaryEnv': 1
+}
+
+Meteor.users.privateFields = {
+    _id: 1,
+    username: 1,
+    emails: 1,
+    roles: 1,
+    'identity.firstName': 1,
+    'identity.lastName': 1,
+    'identity.primaryEnv': 1
+}
+
+Meteor.publish("identities", function() {
+    if (!this.userId) {
+        return this.ready();
+    }
+    //TODO: Add Admin component
+    else {
+        return Meteor.users.find({}, {fields: Meteor.users.publicFields});//this shows all user data
+        //return Meteor.users.find({_id: this.userId}, {fields: Meteor.users.publicFields}); this shows just the logged in users data.
+    }
 });
 
 
-Meteor.publish("UserGroups", () => {
-    return UserGroups.find({});
+Meteor.publish("UserTypes", function() {
+    return UserTypes.find({});
+});
+
+Meteor.publish("EnvironmentTypes", function() {
+    return EnvironmentTypes.find({}, {fields: {NAME:1}});
 });

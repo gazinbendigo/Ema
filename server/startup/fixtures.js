@@ -4,11 +4,15 @@
 
 
 Meteor.startup(function() {
-    UserGroups.remove({});
-    if (UserGroups.find().count() === 0) {
-        UserGroups.insert({GROUP_NME: "Installer"});
-        UserGroups.insert({GROUP_NME: "Administrator"});
-        UserGroups.insert({GROUP_NME: "Analyst"});
-        UserGroups.insert({GROUP_NME: "SuperUser"});
+
+    UserTypes.remove({});
+    if (UserTypes.find().count() === 0) {
+        UserTypes.insert({USER_TYPE: UserType.Developer});
+        UserTypes.insert({USER_TYPE: UserType.Analyst});
+        UserTypes.insert({USER_TYPE: UserType.Administrator});
+        UserTypes.insert({USER_TYPE: UserType.Configurator});
+        UserTypes.insert({USER_TYPE: UserType.Installer});
     }
+
+
 });

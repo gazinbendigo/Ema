@@ -16,7 +16,7 @@
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="themes">Environments<span class="caret"></span></a>
                         <ul class="dropdown-menu" aria-labelledby="themes">
                             <li><a href="{{viewEnvironmentPath}}" >View Environment</a></li>
-                            {{#if isInRole 'admin'}}
+                            {{#if isUserInRole }}
                             <li><a href="{{createEnvironmentPath}}">Create Environment</a></li>
                             <li><a href="{{manageEnvironmentPath}}">Manage Environments</a></li>
                             <li><a href="{{consumerPropsParentPath}}">Consumer Properties</a></li>

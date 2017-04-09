@@ -8,14 +8,14 @@
 const NUMBER_OR_ROWS = 20;
 
 Template.manageUsers.onCreated(function(){
-    Template.instance().subscribe("Users");//Meteor.subscribe('Users');
+    Meteor.subscribe('identities');//Template.instance().subscribe("identities");
     this.groupOptions = new ReactiveVar("default");
     this.advancedSearch = new ReactiveVar(null);
     this.responseMsg = new ReactiveVar(null);
     this.pageCursor = new ReactiveVar(0);
     this.nextPage = new ReactiveVar(0);
     this.prevPage = new ReactiveVar(0);
-    Meteor.subscribe("UserGroups");
+    Meteor.subscribe("UserTypes");
 });
 
 Template.manageUsers.helpers({
@@ -33,8 +33,8 @@ Template.manageUsers.helpers({
         }
     },
 
-    getUserGroups: () => {
-        return UserGroups.find({});
+    getUserTypes: () => {
+        return UserTypes.find({});
     },
 
     ugOptionsValue: (group) => {

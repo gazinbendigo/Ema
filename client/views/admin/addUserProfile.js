@@ -5,6 +5,7 @@
 
 Template.addUserProfile.onCreated(function(){
 
+    Meteor.subscribe('EnvironmentTypes');
     this.userAccountGroups = new ReactiveVar(defaultGroups());
     this.username = new ReactiveVar(null);
     this.firstName = new ReactiveVar(null);
@@ -19,6 +20,9 @@ Template.addUserProfile.onCreated(function(){
     this.devInstallerRoleChkbx = new ReactiveVar(false);
     this.devAdminRoleChkbx = new ReactiveVar(false);
     this.devSuperuserRoleChkbx = new ReactiveVar(false);
+    this.prodInstallerRoleChkbx = new ReactiveVar(false);
+    this.prodAdminRoleChkbx = new ReactiveVar(false);
+    this.prodSuperuserRoleChkbx = new ReactiveVar(false);
     this.areDevRolesEnabled = new ReactiveVar(false);
     this.responseMsg = new ReactiveVar(null);
 
@@ -50,7 +54,16 @@ Template.addUserProfile.helpers({
         return Template.instance().confirmPassword.get();
     },
 
-    isDeveloper: function() {
+    envType: () => {
+        return EnvironmentTypes.find({});
+    },
+
+    envTypeOption: (type) => {
+        let isSelected = false;
+        return {key: type, selected: isSelected ? 'selected' : '', value: type};
+    },
+
+    PrimaryEnv: function() {
         if(Template.instance().isDeveloperChkbx.get() === true) {
             return 'checked';
         }
@@ -97,6 +110,24 @@ Template.addUserProfile.helpers({
             return 'checked';
         }
         return null;
+    },
+
+    isProdInstaller: () => {
+        if(Template.instance().prodInstallerRoleChkbx.get()){
+            return 'checked';
+        }
+    },
+
+    isProdAdmin: () => {
+        if(Template.instance().prodAdminRoleChkbx.get()){
+            return 'checked';
+        }
+    },
+
+    isProdSuperuser: () => {
+        if(Template.instance().prodSuperuserRoleChkbx.get()){
+            return 'checked';
+        }
     },
 
     areDevRolesEnabled: () => {
@@ -244,7 +275,7 @@ Template.addUserProfile.events({
         console.log("installerRoleChkbx");
         let isChecked = $('#installerRoleChkbx').is(":checked");
         template.installerRoleChkbx.set(isChecked);
-        addOrRemoveRole('Installer', isChecked, 'OTHER', template);
+        addOrRemoveRole('Installer', isChecked, 'TEST', template);
 
     },
 
@@ -253,7 +284,7 @@ Template.addUserProfile.events({
         console.log("adminRoleChkbx");
         let isChecked = $('#adminRoleChkbx').is(":checked");
         template.adminRoleChkbx.set(isChecked);
-        addOrRemoveRole('Administrator', isChecked, 'OTHER', template);
+        addOrRemoveRole('Administrator', isChecked, 'TEST', template);
     },
 
     "click #superuserRoleChkbx": (event, template) => {
@@ -261,7 +292,7 @@ Template.addUserProfile.events({
         console.log("superuserRoleChkbx");
         let isChecked = $('#superuserRoleChkbx').is(":checked");
         template.superuserRoleChkbx.set(isChecked);
-        addOrRemoveRole('SuperUser', isChecked, 'OTHER', template);
+        addOrRemoveRole('SuperUser', isChecked, 'TEST', template);
     },
 
     "click #isDevInstallerChkbx": (event, template) => {
@@ -291,7 +322,7 @@ Template.addUserProfile.events({
 });
 
 function defaultGroups(){
-    return {groups: {OTHER: [], DEV: []}};
+    return {groups: {TEST: [], DEV: [], PROD: []}};
 }
 
 function addOrRemoveRole(role, action, roleType, template){
@@ -303,8 +334,8 @@ function addOrRemoveRole(role, action, roleType, template){
             }
         }
         else {
-            if(!_.contains(roles.OTHER, role)){
-                roles.OTHER.push(role);
+            if(!_.contains(roles.TEST, role)){
+                roles.TEST.push(role);
             }
         }
     }
@@ -316,9 +347,9 @@ function addOrRemoveRole(role, action, roleType, template){
             }
         }
         else {
-            if(_.contains(roles.OTHER, role)){
-                let pos = _.indexOf(roles.OTHER, role);
-                roles.OTHER.splice(pos, 1);
+            if(_.contains(roles.TEST, role)){
+                let pos = _.indexOf(roles.TEST, role);
+                roles.TEST.splice(pos, 1);
             }
         }
     }

@@ -19,7 +19,7 @@ Template.signin.events({
 
     "submit #loginForm": (event, template) => {
         event.preventDefault();
-        var submit_button = $(template.find(":submit"));
+        let submit_button = $(template.find(":submit"));
 
         pageSession.set("errorMessage", "");
 
@@ -39,13 +39,14 @@ Template.signin.events({
 
         submit_button.button("loading");
         Meteor.loginWithPassword(userName, pwd, function(err) {
-            submit_button.button("reset");
             if (err)
             {
                 pageSession.set("errorMessage", err.message);
+                submit_button.button("Try again");
                 return false;
             }
             else {
+                console.log(Meteor.user());
                 FlowRouter.go("/landing");
             }
         });

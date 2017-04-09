@@ -9,11 +9,11 @@
         </div>
         <div class="row">
             <div class="col-xs-4 col-sm-4">
-                <select id="GroupSelector" class="form-control">
+                <select id="GroupSelector" class="select-default">
                     <option value="default">-- Select --</option>
                     {{#if Template.subscriptionsReady}}
-                        {{#each getUserGroups}}
-                            {{> option ugOptionsValue GROUP_NME}}
+                        {{#each getUserTypes}}
+                            {{> option ugOptionsValue USER_TYPE}}
                         {{/each}}
 
                     {{/if}}
@@ -76,7 +76,7 @@
             <div class="col-md-12 col-lg-12">
                 <div class="list-group">
                     {{#each getUsers}}
-                        <a href="{{userProfilePath username}}" class="list-group-item">{{username}}:&nbsp;&nbsp;&nbsp;&nbsp;{{profile.firstName}}&nbsp;{{profile.lastName}}</a>
+                        <a href="{{userProfilePath username}}" class="list-group-item">{{username}}:&nbsp;&nbsp;&nbsp;&nbsp;{{identity.firstName}}&nbsp;{{identity.lastName}}</a>
                     {{/each}}
                 </div>
             </div>

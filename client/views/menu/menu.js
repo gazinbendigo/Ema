@@ -43,6 +43,11 @@ Template.menu.helpers({
 
     addUserProfile: () => {
         return FlowRouter.path("addUserProfile");
+    },
+
+    isUserInRole: () => {
+
+        return false;
     }
 });
 

@@ -4,7 +4,7 @@
 
 Template.editUserProfile.onCreated(function() {
 
-    UserProfile.getProfile(FlowRouter.getParam("adm"));
+    Identities.getProfile(FlowRouter.getParam("adm"));
     this.profile = new ReactiveVar(null);
     this.userAccountGroups = new ReactiveVar(defaultGroups());
     this.userName = new ReactiveVar(null);
@@ -28,19 +28,19 @@ Template.editUserProfile.onCreated(function() {
 Template.editUserProfile.helpers({
 
     isLoaded: () => {
-        if(UserProfile.isLoaded.get()){
-            setFields(UserProfile.findOne({}));
+        if(Identities.isLoaded.get()){
+            setFields(Identities.findOne({}));
             return true;
         }
         return false;
     },
 
     userData: () => {
-        return UserProfile.findOne({});
+        return Identities.findOne({});
     },
 
 
-    isDeveloper: () => {
+    PrimaryEnv: () => {
         return Template.instance().isDeveloperChkbx.get() ? 'checked' : null;
     },
 
@@ -160,7 +160,7 @@ Template.editUserProfile.events({
         event.preventDefault();
         let isChecked = $('#installerRoleChkbx').is(":checked");
         template.installerRoleChkbx.set(checkedValue(isChecked));
-        addOrRemoveRole('installer', isChecked, 'OTHER', template);
+        addOrRemoveRole('installer', isChecked, 'TEST', template);
     },
 
 
@@ -169,7 +169,7 @@ Template.editUserProfile.events({
         console.log("adminRoleChkbx");
         let isChecked = $('#adminRoleChkbx').is(":checked");
         template.adminRoleChkbx.set(checkedValue(isChecked));
-        addOrRemoveRole('administrator', isChecked, 'OTHER', template);
+        addOrRemoveRole('administrator', isChecked, 'TEST', template);
     },
 
     'click #superuserRoleChkbx': (event, template) => {
@@ -177,7 +177,7 @@ Template.editUserProfile.events({
         console.log("superuserRoleChkbx");
         let isChecked = $('#superuserRoleChkbx').is(":checked");
         template.superuserRoleChkbx.set(checkedValue(isChecked));
-        addOrRemoveRole('super-admin', isChecked, 'OTHER', template);
+        addOrRemoveRole('super-admin', isChecked, 'TEST', template);
     },
 
     'click #isDevInstallerChkbx': (event, template) => {
@@ -232,7 +232,7 @@ Template.editUserProfile.events({
 });
 
 function defaultGroups(){
-    return {groups: {OTHER: [], DEV: []}};
+    return {groups: {TEST: [], DEV: []}};
 }
 
 function addOrRemoveRole(role, action, groupType, template){
@@ -243,8 +243,8 @@ function addOrRemoveRole(role, action, groupType, template){
             }
         }
         else {
-            if(!_.contains( template.userAccountGroups.get().groups.OTHER, role)){
-                template.userAccountGroups.get().groups.OTHER.push(role);
+            if(!_.contains( template.userAccountGroups.get().groups.TEST, role)){
+                template.userAccountGroups.get().groups.TEST.push(role);
             }
         }
     }
@@ -256,9 +256,9 @@ function addOrRemoveRole(role, action, groupType, template){
             }
         }
         else {
-            if(_.contains( template.userAccountGroups.get().groups.OTHER, role)){
-                let pos = _.indexOf( template.userAccountGroups.get().groups.OTHER, role);
-                template.userAccountGroups.get().groups.OTHER.splice(pos, 1);
+            if(_.contains( template.userAccountGroups.get().groups.TEST, role)){
+                let pos = _.indexOf( template.userAccountGroups.get().groups.TEST, role);
+                template.userAccountGroups.get().groups.TEST.splice(pos, 1);
             }
         }
     }
@@ -270,8 +270,8 @@ function checkedValue(checked){
 
 function isUserInRole(user, group, type){
     let isInRole = null;
-    if(group === 'OTHER'){
-        isInRole =  _.contains(user.roles.OTHER, type) ? 'checked' : null;
+    if(group === 'TEST'){
+        isInRole =  _.contains(user.roles.TEST, type) ? 'checked' : null;
     }
     else{
         isInRole = _.contains(user.roles.DEV, type) ? 'checked' : null;
@@ -285,14 +285,14 @@ function setFields(user){
     Template.instance().firstName.set(user.profile.firstName);
     Template.instance().lastName.set(user.profile.lastName);
     Template.instance().email.set(user.emails[0].address);
-    Template.instance().isDeveloperChkbx.set(checkedValue(user.profile.isDeveloper));
-    Template.instance().areDevRolesEnabled.set(user.profile.isDeveloper);
+    Template.instance().isDeveloperChkbx.set(checkedValue(user.profile.PrimaryEnv));
+    Template.instance().areDevRolesEnabled.set(user.profile.PrimaryEnv);
     Template.instance().devInstallerRoleChkbx.set(isUserInRole(user, 'DEV', 'installer'));
     Template.instance().devAdminRoleChkbx.set(isUserInRole(user, 'DEV', 'administrator'));
     Template.instance().devSuperuserRoleChkbx.set(isUserInRole(user, 'DEV', 'super-admin'));
-    Template.instance().installerRoleChkbx.set(isUserInRole(user, 'OTHER', 'installer'));
-    Template.instance().adminRoleChkbx.set(isUserInRole(user, 'OTHER', 'administrator'));
-    Template.instance().superuserRoleChkbx.set(isUserInRole(user, 'OTHER', 'super-admin'));
+    Template.instance().installerRoleChkbx.set(isUserInRole(user, 'TEST', 'installer'));
+    Template.instance().adminRoleChkbx.set(isUserInRole(user, 'TEST', 'administrator'));
+    Template.instance().superuserRoleChkbx.set(isUserInRole(user, 'TEST', 'super-admin'));
 }
 
 
