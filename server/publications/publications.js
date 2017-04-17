@@ -10,7 +10,7 @@
  * "profile" : { "firstName" : "some", "lastName" : "thing" }, "roles" : { "OTHER" : [ "super-admin" ], "DEV" : [ "analyst" ]}}
  */
 
-Meteor.users.publicFields = {
+publicFields = {
     username: 1,
     emails: 1,
     'identity.firstName': 1,
@@ -28,15 +28,17 @@ Meteor.users.privateFields = {
     'identity.primaryEnv': 1
 }
 
-Meteor.publish("identities", function() {
-    if (!this.userId) {
-        return this.ready();
-    }
-    //TODO: Add Admin component
-    else {
-        return Meteor.users.find({}, {fields: Meteor.users.publicFields});//this shows all user data
+Meteor.publish('Identities', function() {
+    console.log("Identities publication");
+    // if (!this.userId) {
+    //     return this.ready();
+    // }
+    // //TODO: Add Admin component
+    // else {
+    console.log(publicFields);
+        return Meteor.users.find({});//, {fields: publicFields});//this shows all user data
         //return Meteor.users.find({_id: this.userId}, {fields: Meteor.users.publicFields}); this shows just the logged in users data.
-    }
+    // }
 });
 
 

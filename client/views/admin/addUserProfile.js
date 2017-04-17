@@ -218,7 +218,7 @@ Template.addUserProfile.events({
                 //I created this email regex myself.
                 let regex =  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
                 //Test email is valid.
-                if(regex.test(template.email.get())){
+                if(regex.dom(template.email.get())){
                     let userProfile = {
                         userName: template.username.get(),
                         password: template.password.get(),

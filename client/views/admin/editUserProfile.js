@@ -4,7 +4,11 @@
 
 Template.editUserProfile.onCreated(function() {
 
-    Identities.getProfile(FlowRouter.getParam("adm"));
+    //Identities.getIdentity(FlowRouter.getParam("adm"));
+    let adm = FlowRouter.getParam("adm");
+    console.log('my ' + adm);
+    Meteor.subscribe('identities');
+    console.log(JSON.stringify(Identities.findOne({username: FlowRouter.getParam("adm")})));
     this.profile = new ReactiveVar(null);
     this.userAccountGroups = new ReactiveVar(defaultGroups());
     this.userName = new ReactiveVar(null);
@@ -27,16 +31,19 @@ Template.editUserProfile.onCreated(function() {
 
 Template.editUserProfile.helpers({
 
-    isLoaded: () => {
-        if(Identities.isLoaded.get()){
-            setFields(Identities.findOne({}));
-            return true;
-        }
-        return false;
+    isLoaded: function() {
+        console.log(JSON.stringify(Identities.findOne({username: FlowRouter.getParam("adm")})));
+        return true;
+        // if(Identities.findOne({}).count() > 0){
+        //     //setFields(Identities.findOne({username: FlowRouter.getParam("adm")}));
+        //     console.log('blah');
+        //     return true;
+        // }
+        // return false;
     },
 
     userData: () => {
-        return Identities.findOne({});
+        return Identities.findOne({username: FlowRouter.getParam("adm")});
     },
 
 
@@ -205,7 +212,7 @@ Template.editUserProfile.events({
         event.preventDefault();
         let profile = Meteor.users.findOne({username: FlowRouter.getParam("adm")});
         let regex =  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-        if(regex.test(template.email.get())){
+        if(regex.dom(template.email.get())){
             let userProfile = {
                 id: profile._id,
                 userName: template.userName.get(),
@@ -282,17 +289,17 @@ function isUserInRole(user, group, type){
 function setFields(user){
 
     Template.instance().userName.set(user.username);
-    Template.instance().firstName.set(user.profile.firstName);
-    Template.instance().lastName.set(user.profile.lastName);
+    Template.instance().firstName.set(user.identity.firstName);
+    Template.instance().lastName.set(user.identity.lastName);
     Template.instance().email.set(user.emails[0].address);
-    Template.instance().isDeveloperChkbx.set(checkedValue(user.profile.PrimaryEnv));
-    Template.instance().areDevRolesEnabled.set(user.profile.PrimaryEnv);
-    Template.instance().devInstallerRoleChkbx.set(isUserInRole(user, 'DEV', 'installer'));
-    Template.instance().devAdminRoleChkbx.set(isUserInRole(user, 'DEV', 'administrator'));
-    Template.instance().devSuperuserRoleChkbx.set(isUserInRole(user, 'DEV', 'super-admin'));
-    Template.instance().installerRoleChkbx.set(isUserInRole(user, 'TEST', 'installer'));
-    Template.instance().adminRoleChkbx.set(isUserInRole(user, 'TEST', 'administrator'));
-    Template.instance().superuserRoleChkbx.set(isUserInRole(user, 'TEST', 'super-admin'));
+    // Template.instance().isDeveloperChkbx.set(checkedValue(user.profile.PrimaryEnv));
+    // Template.instance().areDevRolesEnabled.set(user.profile.PrimaryEnv);
+    // Template.instance().devInstallerRoleChkbx.set(isUserInRole(user, 'DEV', 'installer'));
+    // Template.instance().devAdminRoleChkbx.set(isUserInRole(user, 'DEV', 'administrator'));
+    // Template.instance().devSuperuserRoleChkbx.set(isUserInRole(user, 'DEV', 'super-admin'));
+    // Template.instance().installerRoleChkbx.set(isUserInRole(user, 'TEST', 'installer'));
+    // Template.instance().adminRoleChkbx.set(isUserInRole(user, 'TEST', 'administrator'));
+    // Template.instance().superuserRoleChkbx.set(isUserInRole(user, 'TEST', 'super-admin'));
 }
 
 

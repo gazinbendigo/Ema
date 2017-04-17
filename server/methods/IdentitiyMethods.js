@@ -99,7 +99,9 @@ Meteor.methods({
     },
 
     getIdentityByUsername: (userName) => {
+        console.log(userName);
         let profile = Meteor.users.findOne({username: userName}, {fields: Meteor.users.publicFields});
+        console.log(JSON.stringify(profile));
         return profile;
     },
 

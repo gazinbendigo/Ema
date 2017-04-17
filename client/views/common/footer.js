@@ -5,9 +5,9 @@
 
 Template.footer.helpers(
 {
-    copyRightDate: function()
+    copyRightDate()
     {
-        var now = new Date();
+        let now = new Date();
         return now.getFullYear();
     }
 });

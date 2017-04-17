@@ -8,7 +8,7 @@
 const NUMBER_OR_ROWS = 20;
 
 Template.manageUsers.onCreated(function(){
-    Meteor.subscribe('identities');//Template.instance().subscribe("identities");
+    Meteor.subscribe('Identities');//Template.instance().subscribe("identities");
     this.groupOptions = new ReactiveVar("default");
     this.advancedSearch = new ReactiveVar(null);
     this.responseMsg = new ReactiveVar(null);
@@ -20,7 +20,7 @@ Template.manageUsers.onCreated(function(){
 
 Template.manageUsers.helpers({
 
-    getUsers: () => {
+    getUsers() {
         let cursor = Number(Template.instance().pageCursor.get());
         if(Template.instance().groupOptions.get() === "default" && Template.instance().advancedSearch.get() === null){
             return Meteor.users.find({}, {skip: cursor, limit: NUMBER_OR_ROWS});
@@ -33,25 +33,25 @@ Template.manageUsers.helpers({
         }
     },
 
-    getUserTypes: () => {
+    getUserTypes() {
         return UserTypes.find({});
     },
 
-    ugOptionsValue: (group) => {
+    ugOptionsValue(group) {
         return {key: group, selected: false ? 'selected' : '', value: group};
     },
 
-    userProfilePath: (username) => {
+    userProfilePath(username) {
         let param = {adm: username};
         return FlowRouter.path("updateUserProfile", param);
     },
 
-    responseMsg: () => {
+    responseMsg() {
         return Template.instance().responseMsg.get();
     },
 
     //Revist this page: https://www.discovermeteor.com/blog/template-level-subscriptions/
-    next: () => {
+    next() {
         if(Meteor.users.find({}).count() > NUMBER_OR_ROWS){
             if((Number(Template.instance().pageCursor.get()) + NUMBER_OR_ROWS) <= Meteor.users.find({}).count()){
                 $(".next").css('visibility', 'visible');
@@ -65,7 +65,7 @@ Template.manageUsers.helpers({
         }
     },
 
-    prev: () => {
+    prev() {
         if(Meteor.users.find({}).count() > NUMBER_OR_ROWS){
             if(Number(Template.instance().pageCursor.get()) < NUMBER_OR_ROWS) {
                 $(".prev").css('visibility', 'hidden');
@@ -85,14 +85,14 @@ Template.manageUsers.helpers({
  *
  */
 Template.manageUsers.events({
-    'change #GroupSelector': (event, template) => {
+    'change #GroupSelector'(event, template) {
         event.preventDefault();
         let selectedGroup = $('#GroupSelector').val();
         template.groupOptions.set(selectedGroup);
         template.advancedSearch.set(null);
     },
 
-    "click .prev": function(event, template) {
+    "click .prev"(event, template) {
         event.preventDefault();
         if(Number(template.pageCursor.get()) >  19)
         {
@@ -102,14 +102,14 @@ Template.manageUsers.events({
         }
     },
 
-    "click .next": function(event, template) {
+    "click .next"(event, template) {
         event.preventDefault();
         let index = template.pageCursor.get();
         template.pageCursor.set((index + NUMBER_OR_ROWS));
 
     },
 
-    'click #searchUserBttn': (event, template) => {
+    'click #searchUserBttn'(event, template) {
         event.preventDefault();
         let query = {};
         query['$or'] = [];
@@ -144,7 +144,7 @@ Template.manageUsers.events({
         }
     },
 
-    'click #clearBttn': (event, template) => {
+    'click #clearBttn'(event, template) {
         event.preventDefault();
         let fields = template.findAll("input[type=text]");
         _.each(fields, (field) => {

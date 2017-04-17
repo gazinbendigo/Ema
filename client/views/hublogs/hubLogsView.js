@@ -62,71 +62,71 @@ Template.hubLogsView.onCreated(function(){
 });
 
 Template.hubLogsView.helpers({
-    start: ()  => {
+    start() {
         return Template.instance().start.get();
     },
 
-    rowsPerPage: () => {
+    rowsPerPage() {
         return Template.instance().rowsPerPage.get();
     },
 
-    requestId: () => {
+    requestId() {
         return Template.instance().requestId.get();
     },
 
-    serviceId: () => {
+    serviceId() {
         return Template.instance().serviceId.get();
     },
 
-    sourceName: () => {
+    sourceName() {
         return Template.instance().sourceName.get();
     },
 
-    userId: () => {
+    userId() {
         return Template.instance().userId.get();
     },
 
-    severity: () => {
+    severity() {
         return Template.instance().severity.get();
     },
 
-    earliestDate: () => {
+    earliestDate() {
         return Template.instance().earliestDate.get();
     },
-    latestDate: () => {
+    latestDate() {
         return Template.instance().latestDate.get();
     },
-    logCode: () => {
+    logCode() {
         return Template.instance().logCode.get();
     },
-    requestMessage: () => {
+    requestMessage() {
         return Template.instance().requestMessage.get();
     },
-    logMessage: () => {
+    logMessage() {
         return Template.instance().logMessage.get();
     },
-    noRecords: function(){
+    noRecords() {
         return Template.instance().noRecords.get();
     },
-    errsOnly: () => {
+    errsOnly() {
         if(Template.instance().errsOnly.get() === true){
             return 'checked';
         }
         return null;
     },
-    olbPing: () => {
+    olbPing() {
         if(Template.instance().olbPing.get() === true){
             return 'checked';
         }
         return null;
     },
 
-    env: () => {
+    env() {
         //Equivilent of select * from Environments where env_type = 1
         return Environments.find({CONFIGURATION_TYPE_ID: 2});
     },
 
-    environmentOptions: (environment) =>{
+    environmentOptions(environment) {
         //Loops thru twice. TODO: Look into this.
         let selectedVar = Template.instance().selectedEnvironment.get();
         selectedVar = selectedVar.env;
@@ -135,20 +135,20 @@ Template.hubLogsView.helpers({
         //return {key: 'hubld', selected: isSelected ? 'selected' : '', value: 'hubld'};
     },
 
-    areLogsLoaded: () =>{
+    areLogsLoaded() {
         return HubLogs.isLoaded.get();
     },
 
-    isEnvsLoaded: () =>{
+    isEnvsLoaded() {
         return Environments.isLoaded.get();
     },
 
-    isApplicationsLoaded: () => {
+    isApplicationsLoaded() {
         return Applications.isLoaded.get();
     },
 
-    applications: () => {
-        let allApplications = [];
+    applications() {
+        let allApplications;
         //fetch turns the retrieved data into an array
         allApplications = Applications.find({}, {sort: {APPLICATION_CDE: 1}}).fetch();//Sort +1 ACS, -1 DESC
         let rows = [];
@@ -172,13 +172,13 @@ Template.hubLogsView.helpers({
         return rows;
     },
 
-    hubLog: () => {
+    hubLog() {
         let cursor = Template.instance().pageCursor.get();
         let rowsPerPage = Template.instance().rowsPerPage.get();
         return HubLogs.find({}, {skip: Number(cursor), limit: Number(rowsPerPage)});
     },
 
-    next: () => {
+    next() {
         if((Number(Template.instance().pageCursor.get()) + Number(Template.instance().rowsPerPage.get())) <= HubLogs.find({}).count()){
             $(".next").css('visibility', 'visible');
             return "Next " + (Number(Template.instance().pageCursor.get()) +  Number(Template.instance().rowsPerPage.get())) + " - "
@@ -190,7 +190,7 @@ Template.hubLogsView.helpers({
         }
     },
 
-    prev: () => {
+    prev() {
         $(".prev").css('visibility', 'hidden');
         if(Number(Template.instance().pageCursor.get()) < Number(Template.instance().rowsPerPage.get()) ) {
             return '';
@@ -202,30 +202,30 @@ Template.hubLogsView.helpers({
         }
     },
 
-    performancePath: (requestId) => {
+    performancePath(requestId) {
         let params = {env: getEnvironment(), requestId: requestId};
         return FlowRouter.path('requestServiceAveragesByRequestId', params);
     },
 
-    getSourceNameUrl: (srcName) => {
+    getSourceNameUrl(srcName) {
         let params = {"env": getEnvironment()};
         let queryParams = {"sourceName":srcName};
         return FlowRouter.path('searchHublogs', params, queryParams);
     },
 
-    getServiceIdUrl: (serviceId) => {
+    getServiceIdUrl(serviceId) {
         let params = {"env": getEnvironment()};
         let queryParams = {"serviceId":serviceId};
         return FlowRouter.path('searchHublogs', params, queryParams);
     },
 
-    getRequestIdUrl: (requestId) => {
+    getRequestIdUrl(requestId) {
         let params = {"env": getEnvironment()};
         let queryParams = {"requestId": requestId};
         return FlowRouter.path('searchHublogs', params, queryParams);
     },
 
-    getApplicationCodeUrl: (appCode) => {
+    getApplicationCodeUrl(appCode) {
         let params = {"env": getEnvironment()};
         let queryParams = {"appCode": appCode};
         return FlowRouter.path('searchHublogs', params, queryParams);
@@ -235,7 +235,7 @@ Template.hubLogsView.helpers({
 
 
 Template.hubLogsView.events({
-    "keyup #start": (event, template) => {
+    "keyup #start"(event, template) {
         event.preventDefault();
         let start = Number($('#start').val());
         start = setIntFromInput(start, DEFAULT_START);
@@ -243,42 +243,42 @@ Template.hubLogsView.events({
         updateSearchParams("start", start);
 
     },
-    "click #start": (event, template) => {
+    "click #start"(event, template) {
         event.preventDefault();
         let start = Number($('#start').val());
         start = setIntFromInput(start, DEFAULT_START);
         template.start.set(start);
         updateSearchParams('start', start)
     },
-    "keyup #rowsPerPage": (event, template) => {
+    "keyup #rowsPerPage"(event, template) {
         event.preventDefault();
         let rowsPerPage = Number($('#rowsPerPage').val());
         rowsPerPage = setIntFromInput(rowsPerPage, DEFAULT_ROWS_PER_PAGE);
         template.rowsPerPage.set(rowsPerPage);
         updateSearchParams('rowsPerPage', rowsPerPage)
     },
-    "click #rowsPerPage": (event, template) => {
+    "click #rowsPerPage"(event, template) {
         event.preventDefault();
         let rowsPerPage = Number($('#rowsPerPage').val());
         rowsPerPage = setIntFromInput(rowsPerPage, DEFAULT_ROWS_PER_PAGE);
         template.rowsPerPage.set(rowsPerPage);
         updateSearchParams('rowsPerPage', rowsPerPage)
     },
-    "keyup #requestId": (event, template) => {
+    "keyup #requestId"(event, template) {
         event.preventDefault();
         let requestId = Number($('#requestId').val());
         requestId = setIntFromInput(requestId, null);
         template.requestId.set(requestId);
         updateSearchParams("requestId", requestId);
     },
-    "click #requestId": (event, template) => {
+    "click #requestId"(event, template) {
         event.preventDefault();
         let requestId = Number($('#requestId').val());
         requestId = setIntFromInput(requestId, null);
         template.requestId.set(requestId);
         updateSearchParams("requestId", requestId);
     },
-    "keyup #serviceId": (event, template) => {
+    "keyup #serviceId"(event, template) {
         event.preventDefault();
         let serviceId = Number($('#serviceId').val());
         serviceId = setIntFromInput(serviceId, null);
@@ -292,96 +292,96 @@ Template.hubLogsView.events({
         template.serviceId.set(serviceId);
         updateSearchParams("serviceId", serviceId);
     },
-    "keyup #sourceName": (event, template) => {
+    "keyup #sourceName"(event, template) {
         event.preventDefault();
         let sourceName = $('#sourceName').val();
         template.sourceName.set(extractStringFromInput(sourceName));
         updateSearchParams('sourceName', extractStringFromInput(sourceName));
     },
-    "keyup #userId": (event, template) => {
+    "keyup #userId"(event, template) {
         event.preventDefault();
         let userId = $('#userId').val();
         template.userId.set(extractStringFromInput(userId));
         updateSearchParams('userId', extractStringFromInput(userId));
     },
-    "keyup #severity": (event, template) => {
+    "keyup #severity"(event, template) {
         event.preventDefault();
         let severity = $('#severity').val();
         template.severity.set(extractValidSeverity(severity));
         updateSearchParams('serverity', extractValidSeverity(severity));
     },
-    "keyup #earliestDate": (event, template) => {
+    "keyup #earliestDate"(event, template) {
         event.preventDefault();
         let earliestDate = $('#earliestDate').val();
         template.earliestDate.set(extractStringFromInput(earliestDate));
         updateSearchParams('earliestDate', earliestDate);
     },
-    "keyup #latestDate": (event, template) => {
+    "keyup #latestDate"(event, template) {
         event.preventDefault();
         let latestDate = $('#latestDate').val();
         template.latestDate.set(extractStringFromInput(latestDate));
         updateSearchParams('latestDate', latestDate);
     },
-    "keyup #logCode": (event, template) => {
+    "keyup #logCode"(event, template) {
         event.preventDefault();
         let logCode = Number($('#logCode').val());
         logCode = setIntFromInput(logCode, null);
         template.logCode.set(logCode);
         updateSearchParams('logCode', logCode);
     },
-    "click #logCode": (event, template) => {
+    "click #logCode"(event, template) {
         event.preventDefault();
         let logCode = Number($('#logCode').val());
         logCode = setIntFromInput(logCode, null);
         template.logCode.set(logCode);
         updateSearchParams('logCode', logCode);
     },
-    "keyup #requestMessage": (event, template) => {
+    "keyup #requestMessage"(event, template) {
         event.preventDefault();
         let message = $('#requestMessage').val();
         template.requestMessage.set(extractStringFromInput(message));
         updateSearchParams('requestMessage', message);
     },
-    "keyup #logMessage": (event, template) => {
+    "keyup #logMessage"(event, template) {
         event.preventDefault();
         let message = $('#logMessage').val();
         template.logMessage.set(extractStringFromInput(message));
         updateSearchParams('logMessage', message);
     },
-    "keyup #noRecords": (event, template) => {
+    "keyup #noRecords"(event, template) {
         event.preventDefault();
         let recordSize = Number($('#noRecords').val());
         recordSize = setIntFromInput(recordSize, DEFAULT_NO_RECORDS);
         template.noRecords.set(recordSize);
         updateSearchParams('noRecords', recordSize);
     },
-    "click #noRecords": (event, template) => {
+    "click #noRecords"(event, template) {
         event.preventDefault();
         let recordSize = Number($('#noRecords').val());
         recordSize = setIntFromInput(recordSize, DEFAULT_NO_RECORDS);
         template.noRecords.set(recordSize);
         updateSearchParams('noRecords', recordSize);
     },
-    "click #errsOnly": (event, template) => {
+    "click #errsOnly"(event, template) {
         event.preventDefault();
         let isChecked = $('#errsOnly').is(":checked");
         template.errsOnly.set(isChecked);
         updateCheckboxSearchParam('errorsOnly', isChecked);
     },
-    "click #olbPing": (event, template) => {
+    "click #olbPing"(event, template) {
         event.preventDefault();
         let isChecked = $('#olbPing').is(":checked");
         template.olbPing.set(isChecked);
         updateCheckboxSearchParam('includeOlbPing', isChecked)
     },
 
-    "click .reqId": (event, template) => {
+    "click .reqId"(event, template) {
         event.preventDefault();
         updateSearchParams("requestId", this.REQUEST_ID);
         searchHubLogs(template);
     },
 
-    "change #hubEnvironments": (event, template) => {
+    "change #hubEnvironments"(event, template) {
         event.preventDefault();
         template.selectedEnvironment.set({"env": $('#hubEnvironments').val()});
         updateSearchParams("start", DEFAULT_START);
@@ -390,25 +390,25 @@ Template.hubLogsView.events({
         searchHubLogs(template, null, null);
     },
 
-    "click .appCode": (event, template) => {
+    "click .appCode"(event, template) {
         event.preventDefault();
         updateSearchParams("apps", this.APPLICATION_CDE);
         searchHubLogs(template);
     },
 
-    "click .srvcId": (event, template) => {
+    "click .srvcId"(event, template) {
         event.preventDefault();
         updateSearchParams("serviceId", this.SERVICE_ID);
         searchHubLogs(template);
     },
 
-    "click .srcName": (event, template) => {
+    "click .srcName"(event, template) {
         event.preventDefault();
         updateSearchParams("sourceName", this.SOURCE_NME);
         searchHubLogs(template);
     },
 
-    "click #btnSearch": (event, template) => {
+    "click #btnSearch"(event, template) {
         event.preventDefault();
         let params = {"env": $('#hubEnvironments').val()};
         template.selectedEnvironment.set(params);
@@ -438,13 +438,13 @@ Template.hubLogsView.events({
         updateSearchUrl(params, template.searchParams.get());
     },
 
-    "click #clearFilter": (event, template) => {
+    "click #clearFilter"(event, template) {
         event.preventDefault();
         clearFilter(template);
         searchHubLogs(template);
     },
 
-    "click .prev": (event, template) => {
+    "click .prev"(event, template) {
         event.preventDefault();
         if(Number(template.pageCursor.get()) > (Number(template.rowsPerPage.get())) -1)
         {
@@ -454,7 +454,7 @@ Template.hubLogsView.events({
         }
     },
 
-    "click .next": (event, template) => {
+    "click .next"(event, template) {
         event.preventDefault();
         let index = template.pageCursor.get();
         let pageRows = template.rowsPerPage.get();

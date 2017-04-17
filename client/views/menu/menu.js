@@ -5,47 +5,47 @@
 "use strict";
 
 Template.menu.helpers({
-    homePage: () => {
+    homePage() {
         return FlowRouter.path("home");
     },
 
-    consumerPropsParentPath: () => {
+    consumerPropsParentPath() {
         return FlowRouter.path('manageConsumerProperties');
     },
 
-    viewEnvironmentPath: () => {
+    viewEnvironmentPath() {
         return FlowRouter.path('viewEnvironments');
     },
 
-    createEnvironmentPath:  () => {
+    createEnvironmentPath() {
         return FlowRouter.path('createEnvironment');
     },
 
-    manageEnvironmentPath: () => {
+    manageEnvironmentPath() {
         return FlowRouter.path('manageEnvironment');
     },
 
-    configurationParentPath:  () => {
+    configurationParentPath() {
         return FlowRouter.path('configuration');
     },
 
-    performanceParentPath: () => {
+    performanceParentPath() {
         return FlowRouter.path('performance');
     },
 
-    manageUsers: () => {
+    manageUsers() {
         return FlowRouter.path("userprofiles");
     },
 
-    loginPath: () => {
+    loginPath() {
         return FlowRouter.path("login");
     },
 
-    addUserProfile: () => {
+    addUserProfile() {
         return FlowRouter.path("addUserProfile");
     },
 
-    isUserInRole: () => {
+    isUserInRole() {
 
         return false;
     }

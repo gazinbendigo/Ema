@@ -10,7 +10,7 @@ Template.signin.onCreated(function(){
 });
 
 Template.signin.helpers({
-    errorMessage: function() {
+    errorMessage() {
         return pageSession.get("errorMessage");
     }
 });

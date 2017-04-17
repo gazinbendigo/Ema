@@ -5,13 +5,11 @@
 
 Meteor.startup(function() {
 
-    UserTypes.remove({});
-    if (UserTypes.find().count() === 0) {
-        UserTypes.insert({USER_TYPE: UserType.Developer});
-        UserTypes.insert({USER_TYPE: UserType.Analyst});
-        UserTypes.insert({USER_TYPE: UserType.Administrator});
-        UserTypes.insert({USER_TYPE: UserType.Configurator});
-        UserTypes.insert({USER_TYPE: UserType.Installer});
+    UserTypesList.remove({});
+    if (UserTypesList.find().count() === 0) {
+        // UserTypesList.insert({USER_TYPE: UserTypes.Developer.name});
+        // UserTypesList.insert({USER_TYPE: UserTypes.Domain.name});
+        // UserTypesList.insert({USER_TYPE: UserTypes.SystemUser.name});
     }
 
 
