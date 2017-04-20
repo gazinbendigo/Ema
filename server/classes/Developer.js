@@ -5,19 +5,20 @@
 
 Developer = class Developer extends ApplicationUser{
     constructor(firstName, lastName, username, password, email){
-        super(firstName, lastName, username, password, email);
+        super(firstName, lastName, username, password, email, 'Developer');
         this.groups = new Map();
-        this.addGroup(GroupTypes.VMV, [ApplicationFunctions.superUser]);
-        this.addGroup(GroupTypes.DEV, [ApplicationFunctions.superUser]);
-        this.addGroup(GroupTypes.DOM, [ApplicationFunctions.readOnly]);
+        this.groups.set('VMV', ['super-user']);
+        this.groups.set('DEV', ['super-user']);
+        this.groups.set('DOM', ['read-only']);
+        this.setGroups(this.groups);
     }
 
     getGroups(){
-        return this.groups;
+        return super.getGroups();
     }
 
-    setGroups(groups) {
-        this.groups = groups;
+    setGroups(values) {
+        super.setGroups(values);
     }
 
     addGroup(groupName, roles){

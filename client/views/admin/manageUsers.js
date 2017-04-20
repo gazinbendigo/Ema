@@ -15,7 +15,7 @@ Template.manageUsers.onCreated(function(){
     this.pageCursor = new ReactiveVar(0);
     this.nextPage = new ReactiveVar(0);
     this.prevPage = new ReactiveVar(0);
-    Meteor.subscribe("UserTypes");
+
 });
 
 Template.manageUsers.helpers({
@@ -29,12 +29,12 @@ Template.manageUsers.helpers({
             return Meteor.users.find(Template.instance().advancedSearch.get());
         }
         else {
-            return Meteor.users.find({$or: [{"roles.DEV": Template.instance().groupOptions.get()}, {"roles.OTHER": Template.instance().groupOptions.get()}]}, {skip: cursor, limit: NUMBER_OR_ROWS});
+            return Meteor.users.find({$or: [{"identity.userType": Template.instance().groupOptions.get()}, {"identity.userType": Template.instance().groupOptions.get()}]}, {skip: cursor, limit: NUMBER_OR_ROWS});
         }
     },
 
     getUserTypes() {
-        return UserTypes.find({});
+        return Meteor.users.find({});
     },
 
     ugOptionsValue(group) {

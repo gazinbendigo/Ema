@@ -15,7 +15,7 @@ publicFields = {
     emails: 1,
     'identity.firstName': 1,
     'identity.lastName': 1,
-    'identity.primaryEnv': 1
+    'identity.userType': 1
 }
 
 Meteor.users.privateFields = {
@@ -25,17 +25,15 @@ Meteor.users.privateFields = {
     roles: 1,
     'identity.firstName': 1,
     'identity.lastName': 1,
-    'identity.primaryEnv': 1
+    'identity.userType': 1
 }
 
 Meteor.publish('Identities', function() {
-    console.log("Identities publication");
     // if (!this.userId) {
     //     return this.ready();
     // }
     // //TODO: Add Admin component
     // else {
-    console.log(publicFields);
         return Meteor.users.find({});//, {fields: publicFields});//this shows all user data
         //return Meteor.users.find({_id: this.userId}, {fields: Meteor.users.publicFields}); this shows just the logged in users data.
     // }

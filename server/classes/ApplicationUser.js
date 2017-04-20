@@ -3,13 +3,13 @@
  */
 
 ApplicationUser = class ApplicationUser{
-    constructor(firstName, lastName, username, password, email, groups){
+    constructor(firstName, lastName, username, password, email, userType){
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.password = password;
         this.email = email;
-        this.groups = groups;
+        this.userType = userType;
     }
 
     getFirstName() {
@@ -58,6 +58,14 @@ ApplicationUser = class ApplicationUser{
 
     setGroups(value) {
         this.groups = value;
+    }
+
+    getUserType() {
+        return this.userType;
+    }
+
+    setUserType(type){
+        this.userType = type;
     }
 }
 

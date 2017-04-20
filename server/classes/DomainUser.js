@@ -5,17 +5,19 @@
 
 DomainUser = class DomainUser extends ApplicationUser {
     constructor(firstName, lastName, username, password, email){
-        super(firstName, lastName, username, password, email);
-        this.groups = [{groupName: GroupTypes.VMV, roles: [ApplicationFunctions.readOnly]},
-            {groupName: GroupTypes.DEV, roles: [ApplicationFunctions.readOnly]},
-            {groupName: GroupTypes.DOM, roles: [ApplicationFunctions.manageApps, ApplicationFunctions.manageProps, ApplicationFunctions.manageRouting, ApplicationFunctions.manageUsers, ApplicationFunctions.manageVersions]}];
+        super(firstName, lastName, username, password, email, 'Domain');
+        this.groups = new Map();
+        this.groups.set('VMV', ['read-only']);
+        this.groups.set('DEV', ['read-only']);
+        this.groups.set('DOM', ['manage-apps', 'manage-versions', 'manage-routing', 'manage-props', 'manage-users'])
+        super.setGroups(this.groups);
     }
 
     getGroups(){
-        return this.groups;
+        return super.getGroups();
     }
 
-    setGroups(groups) {
-        this.groups = groups;
+    setGroups(values) {
+        super.setGroups(values);
     }
 }

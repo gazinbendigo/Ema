@@ -29,38 +29,13 @@ import { Meteor } from 'meteor/meteor';
 
 //if(!Roles.userIsInRole(Meteor.user(), 'muserRoles.anage-channel'))
 
-
-
-
-
-
-
-    Meteor.startup(function(){
+Meteor.startup(function(){
     "use strict";
-    // const ident = UserTypes.Developer;
-    // console.log("start");
-    // const myData = new Map();
-    // _.each(ident.Groups, (item) => {
-    //     console.log(item.groupName);
-    //     console.log(item.roles);
-    //     myData.set(item.groupName, item.roles);
-    // });
-    // console.log("end");
-    //
-    // for (let [key, value] of myData) {
-    //     console.log(key + ' = ' + value);
-    // }
-
-    const appUser = new Developer("James", "Brown", "adm1112", "12345678", "User1@hotmail.com");
-    appUser.setFirstName("bob");
-    for (let [key, value] of appUser.groups) {
-        console.log(key + ' = ' + value);
-    }
 
     ////////////////////////////////////////////////////////////////////
     // Create Default Users
     //
-    // if (Meteor.users.find().fetch().length === 0) {
+    if (Meteor.users.find().fetch().length === 0) {
 
         //const env = {dom: 'TEST', dev: 'DEV', dom: 'PROD'};
 
@@ -73,10 +48,10 @@ import { Meteor } from 'meteor/meteor';
             "Turner","Wally","Oslow","Wally","Travis","Fry","Baxter","Bridges","Baker","Harding","Conway","Chapman","Zamora",
             "Townsend","Mcmahon","Guerra","Gilmore","Garza","Boone","Sloan","Villa","Gill","Boyd","Foster","Bryant","Mcguire","Hendricks","Kennedy","Duke","Jacobs","Fleming"];
 
-        let userNames = ["adm1112", "adm1143", "adm1144", "adm1146", "adm1147", "adm1145", "adm1155", "adm1166", "adm1177",
-            "adm1188", "adm1199", "adm1100", "adm0011", "adm0012", "adm1113", "adm1114", "adm1115", "adm1116", "adm1117",
-            "adm1118", "adm1119", "adm1120", "adm1121", "adm1122", "adm1123", "adm1124", "adm1125", "adm1126", "adm1127",
-            "adm1128", "adm1129", "adm1130", "adm1131", "adm1132", "adm1133", "adm1134", "adm1135", "adm1136", "adm1137", "adm1138", "adm1139", "adm1140", "adm1141", "adm1142"];
+        let userNames = ["adm0001", "adm0002", "adm0003", "adm0004", "adm0005", "adm0006", "adm0007", "adm0008", "adm0009",
+            "adm0010", "adm0011", "adm0012", "adm0013", "adm0014", "adm0015", "adm0016", "adm0017", "adm0018", "adm0019",
+            "adm0020", "adm0021", "adm0022", "adm0023", "adm0024", "adm0025", "adm0026", "adm0027", "adm0028", "adm0029",
+            "adm0030", "adm0031", "adm0032", "adm0033", "adm0034", "adm0035", "adm0036", "adm0037", "adm0038", "adm0039", "adm0040", "adm0041", "adm0042", "adm0043", "adm0044"];
 
         let email = ["User1@hotmail.com", "aUser2@hotmail.com", "User3@hotmail.com", "Userp1@hotmail.com", "Userp2@hotmail.com",
             "User4@hotmail.com", "User5@hotmail.com", "User6@hotmail.com", "User7@hotmail.com", "User8@hotmail.com",
@@ -106,51 +81,34 @@ import { Meteor } from 'meteor/meteor';
         let configCount = 0;
         _.each(users, (userData) => {
             let id;
+            console.log(userData.username);
+            id = Accounts.createUser({
+                username: userData.username,
+                password: userData.password,
+                email: userData.email
+            });
 
-            if(userData instanceof Developer){
-                console.log(userData.firstName);
+            const identity = {
+                firstName: userData.firstName,
+                lastName: userData.lastName,
+                userType: userData.userType
             }
-            // id = Accounts.createUser({
-            //     username: userData.username,
-            //     password: userData.password,
-            //     email: userData.email
-            // });
-            //
-            // const identity = {
-            //     firstName: userData.firstName,
-            //     lastName: userData.lastName
-            // }
-            //
-            //
-            // Meteor.users.update({_id: id}, {$set:{identity: identity}});
-            // if(userData.UserTypes.name.isEqual(UserTypes.Developer.name)){
-            //     console.log(UserTypes.Developer.Groups.VMV);
-            //     let roles = [];
-            //
-            //     _.each(UserTypes.Domain.Groups.DOM, function(role){
-            //         console.log(String(role.action).toString());
-            //         roles.push(role.action);
-            //     });
-            //     console.log(JSON.stringify(roles));
-            // }
-            //if(userData.UserType)
-            //Roles.addUsersToRoles(id, [userData.UserType], userData.PrimaryEnv);
-            // Roles.addUsersToRoles(id, UserTypes.Configurator, UserType.Configurator);
-            // Roles.addUsersToRoles(id, UserTypes.Administrator, UserType.Administrator);
-            // Roles.addUsersToRoles(id, UserTypes.Analyst, UserType.Analyst);
+
+            Meteor.users.update({_id: id}, {$set:{identity: identity}});
+
+            //console.log(userData.getGroups());
+
+            for (let [key, value] of userData.getGroups()) {
+                console.log(key + ' = ' + value);
+                Roles.addUsersToRoles(id, value, key);
+            }
+
         });
 
-        //     // name verification
         //     //Meteor.users.update({_id: id}, {$set:{'name.0.verified': true}});
 
-        //
-        //     Roles.addUsersToRoles(id, userData.groups.TEST, 'TEST');
-        //     Roles.addUsersToRoles(id, userData.groups.DEV, 'DEV');
-        //     Roles.addUsersToRoles(id, userData.groups.PROD, 'PROD');
-        //
-        // });
         console.log("Accounts created."); console.log(configCount);
-    // }
+    }
 
 });
 
