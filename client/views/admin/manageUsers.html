@@ -8,18 +8,28 @@
             <div class="col-md-12, col-lg-12"><h3>Find User by Role</h3></div>
         </div>
         <div class="row">
-            <div class="col-xs-4 col-sm-4">
-                <select id="GroupSelector" class="select-default">
+            <div class="col-xs-12 col-sm-3">
+                <select id="RoleSelector" class="select-default">
                     <option value="default">-- Select --</option>
                     {{#if Template.subscriptionsReady}}
-                        {{#each getUserTypes}}
-                            {{> option ugOptionsValue identity.userType}}
+                        {{#each role in getApplicationRoles}}
+                            {{> option getAppRolesOptions role}}
                         {{/each}}
 
                     {{/if}}
                 </select>
             </div>
-            <div class="col-xs-4 col-sm-4">
+            <div class="col-xs-12 col-sm-3">
+                <select id="roleFilter" class="select-default">
+                    <option value="default">-- Filter by --</option>
+                    <option value="Developer">Developer</option>
+                    <option value="Domain">Domain</option>
+                </select>
+            </div>
+        </div>
+        <div class="component-spacer sm"></div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12">
                 <button data-toggle="collapse" data-target="#advancedSearchPanel" type="button" class="btn btn-default" id="searchOptions">More Search Options</button>
             </div>
         </div>
@@ -50,8 +60,8 @@
                             <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-10">
                                     <button type="button" class="btn btn-default" id="searchUserBttn">Search</button>
-                                    <button type="reset" class="btn btn-default" id="cancelBttn" data-toggle="collapse" data-target="#advancedSearchPanel">Cancel</button>
-                                    <button type="button" class="btn btn-default" id="clearBttn" >Clear</button>
+                                    <button type="reset" class="btn btn-default" id="closeBttn" data-toggle="collapse" data-target="#advancedSearchPanel">Close</button>
+                                    <button type="button" class="btn btn-default" id="clearBttn">Reset</button>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -66,7 +76,7 @@
             </div>
         </div>
 
-
+        <div class="component-spacer sm"></div>
         <div class="row">
             <div class="col-lg-6"><a href="" class="prev">{{prev}}</a></div>
             <div class="col-lg-6"><a href="" class="next">{{next}}</a></div>

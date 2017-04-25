@@ -66,13 +66,13 @@ Meteor.startup(function(){
         //Meteor requires the user must have a username field.
         var users = [];
 
-        for(let i = 0; i < 44; i++){
+        for(let i = 0; i < email.length; i++){
             if(i % 2 === 0){
-                let dev = new Developer(firstNames[i], lastNames[i], userNames[i], "1234", email[i]);
+                let dev = new Developer(firstNames[i], lastNames[i], userNames[i], "12345678", email[i]);
                 users.push(dev);
             }
             else {
-                let domUser = new DomainUser(firstNames[i], lastNames[i], userNames[i], "1234", email[i]);
+                let domUser = new DomainUser(firstNames[i], lastNames[i], userNames[i], "12345678", email[i]);
                 users.push(domUser);
             }
         }
@@ -81,7 +81,7 @@ Meteor.startup(function(){
         let configCount = 0;
         _.each(users, (userData) => {
             let id;
-            console.log(userData.username);
+
             id = Accounts.createUser({
                 username: userData.username,
                 password: userData.password,
@@ -99,7 +99,7 @@ Meteor.startup(function(){
             //console.log(userData.getGroups());
 
             for (let [key, value] of userData.getGroups()) {
-                console.log(key + ' = ' + value);
+                //console.log(key + ' = ' + value);
                 Roles.addUsersToRoles(id, value, key);
             }
 

@@ -5,22 +5,32 @@
 var pageSession = new ReactiveDict();
 
 Template.signin.onCreated(function(){
-
+    this.loginBttnTxt = new ReactiveVar("Sign in");
     pageSession.set("errorMessage", "");
 });
 
 Template.signin.helpers({
     errorMessage() {
         return pageSession.get("errorMessage");
+    },
+
+    getLoginBttTxt() {
+        return Template.instance().loginBttnTxt.get();
     }
+});
+
+Template.signin.onRendered(function() {
+    this.find('#inputAdm').focus();
 });
 
 Template.signin.events({
 
     "submit #loginForm": (event, template) => {
         event.preventDefault();
-        let submit_button = $(template.find(":submit"));
-
+        ////////////////////////////////////////////////////////
+        /// The jquery way below works, but did not work on the reset button?? Ill leave it here for doco purposes for now.
+        //let submit_button = $(template.find(":submit"));
+        //submit_button.button("loading");
         pageSession.set("errorMessage", "");
 
         let userName = template.find('#inputAdm').value.trim();
@@ -32,17 +42,17 @@ Template.signin.events({
 
         let pwd = template.find('#inputPassword').value.trim();
         if(!isValidString(pwd, 6)){
-            pageSession.set("errorMessage", "Invalid Password.");
+            pageSession.set("errorMessage", "Invalid Username or Password.");
             template.find('#inputPassword').focus();
             return false;
         }
 
-        submit_button.button("loading");
+        template.loginBttnTxt.set("loading...");
         Meteor.loginWithPassword(userName, pwd, function(err) {
             if (err)
             {
-                pageSession.set("errorMessage", err.message);
-                submit_button.button("Try again");
+                pageSession.set("errorMessage", "Invalid Username or Password.");
+                template.loginBttnTxt.set("Try again");
                 return false;
             }
             else {
@@ -50,7 +60,14 @@ Template.signin.events({
                 FlowRouter.go("/landing");
             }
         });
-        return false;
+    },
+
+    "click #resetBttn": function(event, template) {
+        event.preventDefault();
+        pageSession.set("errorMessage", "");
+        template.find("form").reset();
+        template.find('#inputAdm').focus();
+        template.loginBttnTxt.set("Sign in");
     }
 });
 

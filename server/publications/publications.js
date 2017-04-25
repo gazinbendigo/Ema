@@ -47,3 +47,7 @@ Meteor.publish("UserTypes", function() {
 Meteor.publish("EnvironmentTypes", function() {
     return EnvironmentTypes.find({}, {fields: {NAME:1}});
 });
+
+Meteor.publish('ApplicationRoles', function() {
+    return ApplicationRoles.find({});
+});

@@ -7,9 +7,9 @@ Developer = class Developer extends ApplicationUser{
     constructor(firstName, lastName, username, password, email){
         super(firstName, lastName, username, password, email, 'Developer');
         this.groups = new Map();
-        this.groups.set('VMV', ['super-user']);
-        this.groups.set('DEV', ['super-user']);
-        this.groups.set('DOM', ['read-only']);
+        this.groups.set('VMV', ['SuperUser']);
+        this.groups.set('DEV', ['SuperUser']);
+        this.groups.set('DOM', ['ReadOnly']);
         this.setGroups(this.groups);
     }
 

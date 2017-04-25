@@ -26,13 +26,13 @@ EnvironmentTypes = {
 // }
 
 ApplicationFunctions = {
-    readOnly: "read-only",
-    manageApps: "manage-apps",
-    manageVersions: "manage-versions",
-    manageRouting: "manage-routing",
-    manageProps: "manage-props",
-    manageUsers: "manage-users",
-    superUser: "super-user"
+    readOnly: "ReadOnly",
+    manageApps: "ManageApps",
+    manageVersions: "ManageVersions",
+    manageRouting: "ManageRouting",
+    manageProps: "ManageProps",
+    manageUsers: "ManageUsers",
+    superUser: "SuperUser"
 }
 
 // UserTypes = {
