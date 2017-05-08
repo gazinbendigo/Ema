@@ -51,12 +51,57 @@ FlowRouter.route('/landing', {
     }
 });
 
+FlowRouter.route('/manage/groups', {
+    name: 'listGroups',
+    action: function() {
+        BlazeLayout.render("baseLayout", {content: "listGroups", menu: 'menu'});
+    }
+});
+
+FlowRouter.route('/manage/group/:id', {
+    name: 'manageGroup',
+    action: function() {
+        BlazeLayout.render("baseLayout", {content: "manageGroup", menu: 'menu'});
+    }
+});
+
+FlowRouter.route('/manage/group', {
+    name: 'addGroup',
+    action: function() {
+        BlazeLayout.render("baseLayout", {content: "addGroup", menu: 'menu'});
+    }
+});
+
+FlowRouter.route('/manage/roles', {
+    name: 'listRoles',
+    action: function() {
+        BlazeLayout.render("baseLayout", {content: "listRoles", menu: 'menu'});
+    }
+});
+
+FlowRouter.route('/manage/role/:id', {
+    name: 'manageRole',
+    action: function() {
+        BlazeLayout.render("baseLayout", {content: "manageRole", menu: 'menu'});
+    }
+});
+
+FlowRouter.route('/manage/role', {
+    name: 'addRole',
+    action: function() {
+        BlazeLayout.render("baseLayout", {content: "addRole", menu: 'menu'});
+    }
+});
+
+
 
 FlowRouter.notFound = {
     action: () => {
         BlazeLayout.render("baseLayout", {content: "notFound", menu: "menu"});
     }
 }
+
+
 
 ////////////////////////////////////////////////////////
 // Sample style page

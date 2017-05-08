@@ -11,6 +11,7 @@ const DEFAULT = 'default'
 Template.manageUsers.onCreated(function(){
     Meteor.subscribe('Identities');//Template.instance().subscribe("identities");
     Meteor.subscribe("ApplicationRoles");
+    Meteor.subscribe("groups");
     this.selectedRole = new ReactiveVar(DEFAULT);
     this.filterByUserType = new ReactiveVar(DEFAULT);
     this.advancedSearch = new ReactiveVar(null);
@@ -49,24 +50,32 @@ Template.manageUsers.helpers({
         }
         else if(selectedRoll !== DEFAULT && filterByUser !== DEFAULT){
             if(filterByUser === 'Developer'){
-               return Meteor.users.find({$and: [{'identity.userType': "Developer"}, {'roles.DEV': selectedRoll}]}, {skip: rowIndex, limit: NUMBER_OF_ROWS});
+                numberOfRows.set(Meteor.users.find({$and: [{'identity.groupId': 1}, {'roles.DEV': selectedRoll}]}).count());
+               return Meteor.users.find({$and: [{'identity.groupId': 1}, {'roles.DEV': selectedRoll}]}, {skip: rowIndex, limit: NUMBER_OF_ROWS});
             }
             else{
-                return Meteor.users.find({$and: [{'identity.userType': "Domain"}, {'roles.DOM': selectedRoll}]}, {skip: rowIndex, limit: NUMBER_OF_ROWS});
+                numberOfRows.set(Meteor.users.find({$and: [{'identity.groupId': 2}, {'roles.DOM': selectedRoll}]}).count());
+                return Meteor.users.find({$and: [{'identity.groupId': 2}, {'roles.DOM': selectedRoll}]}, {skip: rowIndex, limit: NUMBER_OF_ROWS});
             }
         }
         else {
-            return Meteor.users.find({'identity.userType': filterByUser}, {skip: rowIndex, limit: NUMBER_OF_ROWS});
+            numberOfRows.set(Meteor.users.find({'identity.groupId': filterByUser}).count());
+            return Meteor.users.find({'identity.groupId': filterByUser}, {skip: rowIndex, limit: NUMBER_OF_ROWS});
         }
+    },
+
+    getGroups(){
+        return Groups.find({});
+    },
+
+    getGroupOptions(group){
+       return {key: group.groupId, selected: false ? 'selected' : '', value: group.groupName};
     },
 
     getUserTypes() {
         return Meteor.users.find({});
     },
 
-    getAppRolesOptions(role){
-        return {key: role.name, selected: false ? 'selected' : '', value: role.description};
-    },
 
     userProfilePath(username) {
         let param = {adm: username};
@@ -77,55 +86,37 @@ Template.manageUsers.helpers({
         return Template.instance().responseMsg.get();
     },
 
-    //Revist this page: https://www.discovermeteor.com/blog/template-level-subscriptions/
+
     next() {
-        let numberOfRows = Template.instance().rowCount.get();
-        if(numberOfRows < NUMBER_OF_ROWS){
+        let resultSetSize = Number(Template.instance().rowCount.get());
+        let cursor = Number(Template.instance().pageCursor.get());
+        if(resultSetSize < NUMBER_OF_ROWS){
             $(".next").css('visibility', 'hidden');
             return '';
         }
-        else if(numberOfRows < ((Number(Template.instance().pageCursor.get()) + NUMBER_OF_ROWS * 2))){
-            console.log('a');
+        else if((cursor + NUMBER_OF_ROWS) < resultSetSize){
             $(".next").css('visibility', 'visible');
-            return "Next " + (Number(Template.instance().pageCursor.get()) + NUMBER_OF_ROWS) + " - "
-                + numberOfRows;
+            if((cursor + NUMBER_OF_ROWS * 2) > resultSetSize){
+                let remainder = resultSetSize % (cursor + NUMBER_OF_ROWS);
+                return "Next " + (cursor + NUMBER_OF_ROWS) + " - " + (cursor + NUMBER_OF_ROWS + remainder);
+            }
+            return "Next " + (cursor + NUMBER_OF_ROWS) + " - " + (cursor + NUMBER_OF_ROWS * 2);
         }
         else {
-            console.log('b');
-            console.log(numberOfRows);
-            $(".next").css('visibility', 'visible');
-            return "Next " + (Number(Template.instance().pageCursor.get()) +  NUMBER_OF_ROWS) + " - "
-                + (Number(Template.instance().pageCursor.get()) + NUMBER_OF_ROWS * 2);
+            $(".next").css('visibility', 'hidden');
+            return '';
         }
-        // else {
-        //     let numberOfUsers = Meteor.users.find({}).count();
-        //     if(numberOfUsers > NUMBER_OF_ROWS){
-        //         if((Number(Template.instance().pageCursor.get()) + NUMBER_OF_ROWS) <= numberOfUsers){
-        //             $(".next").css('visibility', 'visible');
-        //             return "Next " + (Number(Template.instance().pageCursor.get()) +  NUMBER_OF_ROWS) + " - "
-        //                 + (Number(Template.instance().pageCursor.get()) + NUMBER_OF_ROWS * 2);
-        //         }
-        //         else {
-        //             $(".next").css('visibility', 'hidden');
-        //             return '';
-        //         }
-        //     }
-        //     else {
-        //         $(".next").css('visibility', 'hidden');
-        //         return '';
-        //     }
-        // }
-    },
+     },
 
     prev() {
-        if(Number(Template.instance().pageCursor.get()) < NUMBER_OF_ROWS) {
+        let cursor = Number(Template.instance().pageCursor.get());
+        if(cursor < NUMBER_OF_ROWS) {
             $(".prev").css('visibility', 'hidden');
             return '';
         }
         else {
             $(".prev").css('visibility', 'visible');
-            return "Prev " + (Number(Template.instance().pageCursor.get()) - NUMBER_OF_ROWS) + " - "
-                + (Number(Template.instance().pageCursor.get()));
+            return "Prev " + (cursor - NUMBER_OF_ROWS) + " - " + cursor;
         }
     },
 
@@ -151,12 +142,13 @@ Template.manageUsers.events({
         event.preventDefault();
         let selected = $('#roleFilter').val();
         template.filterByUserType.set(selected);
+        template.advancedSearch.set(null);
         template.pageCursor.set(0);
     },
 
     "click .prev"(event, template) {
         event.preventDefault();
-        if(Number(template.pageCursor.get()) >  19)
+        if(Number(template.pageCursor.get()) >  (NUMBER_OF_ROWS -1))
         {
             let pageCursor = Number(template.pageCursor.get()) - NUMBER_OF_ROWS;
             template.pageCursor.set(pageCursor);
@@ -166,13 +158,7 @@ Template.manageUsers.events({
     "click .next"(event, template) {
         event.preventDefault();
         let index = template.pageCursor.get();
-        //if(template.rowCount.get() < (index + NUMBER_OF_ROWS * 2)){
             template.pageCursor.set((index + NUMBER_OF_ROWS));
-        // }
-        // else {
-        //     template.pageCursor.set(template.rowCount.get());
-        // }
-
     },
 
     'click #searchUserBttn'(event, template) {

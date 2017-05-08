@@ -11,21 +11,21 @@
  */
 
 publicFields = {
-    username: 1,
+    adm: 1,
     emails: 1,
     'identity.firstName': 1,
     'identity.lastName': 1,
-    'identity.userType': 1
+    'identity.groupId': 1
 }
 
 Meteor.users.privateFields = {
     _id: 1,
-    username: 1,
+    adm: 1,
     emails: 1,
     roles: 1,
     'identity.firstName': 1,
     'identity.lastName': 1,
-    'identity.userType': 1
+    'identity.groupId': 1
 }
 
 Meteor.publish('Identities', function() {
@@ -41,13 +41,49 @@ Meteor.publish('Identities', function() {
 
 
 Meteor.publish("UserTypes", function() {
-    return UserTypes.find({});
+    let cursor =  UserTypes.find({});
+    if(cursor){
+        return cursor;
+    }
+    return this.ready();
 });
 
 Meteor.publish("EnvironmentTypes", function() {
-    return EnvironmentTypes.find({}, {fields: {NAME:1}});
+    let cursor =  EnvironmentTypes.find({}, {fields: {NAME:1}});
+    if(cursor){
+        return cursor;
+    }
+    return this.ready();
 });
 
 Meteor.publish('ApplicationRoles', function() {
-    return ApplicationRoles.find({});
+    let cursor =  ApplicationRoles.find({});
+    if(cursor){
+        return cursor;
+    }
+    return this.ready();
 });
+
+Meteor.publish("groups", function() {
+    let cursor =  Groups.find({});
+    if(cursor){
+        return cursor;
+    }
+    return this.ready();
+});
+
+Meteor.publish("emaRoles", function() {
+    let cursor =  EmaRoles.find({});
+    if(cursor){
+        return cursor;
+    }
+    return this.ready();
+});
+
+// Meteor.publish("groupUser", function() {
+//     return GroupUser.find({});
+// });
+//
+// Meteor.publish("userRoleActions", function() {
+//     return UserRoleActions.find({});
+// });

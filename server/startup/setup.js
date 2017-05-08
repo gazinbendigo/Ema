@@ -33,6 +33,31 @@ Meteor.startup(function(){
     "use strict";
 
     ////////////////////////////////////////////////////////////////////
+    // Create Default Groups
+    //
+    Groups.remove({});
+    //if(Groups.find({}).count() === 0){
+        Groups.insert({groupId: 1, groupName: "Developer", groupDesc: "ICC HUB Application Developer"});
+        Groups.insert({groupId: 2, groupName: "Operator", groupDesc: "Non Development Environment user"});
+        Groups.insert({groupId: 3, groupName: "Administrator", groupDesc: "Manages Users and there accounts"});
+        Groups.insert({groupId: 4, groupName: "SuperUser", groupDesc: "Manages all application functions"});
+        Groups.rawCollection().createIndex({groupId:1}, {unique: true});
+        console.log(Groups.find({}).count());
+    //}
+
+    ////////////////////////////////////////////////////////////////////
+    // Create Default Roles
+    //
+    EmaRoles.remove({});
+    if(EmaRoles.find({}).count() === 0){
+        EmaRoles.insert({roleId: 1, roleName: "Installer", roleDesc: "Installs applications"});
+        EmaRoles.insert({roleId: 2, roleName: "Routing", roleDesc: "Routes Message Flows"});
+        EmaRoles.insert({roleId: 3, roleName: "Versioning", roleDesc: "Manages Service versions"});
+        EmaRoles.insert({roleId: 4, roleName: "UserManagement", roleDesc: "Manages Users and there accounts"});
+        EmaRoles.rawCollection().createIndex({roleId:1}, {unique: true});
+    }
+
+    ////////////////////////////////////////////////////////////////////
     // Create Default Users
     //
     if (Meteor.users.find().fetch().length === 0) {
@@ -40,11 +65,11 @@ Meteor.startup(function(){
         //const env = {dom: 'TEST', dev: 'DEV', dom: 'PROD'};
 
         console.log('Creating users: ');
-        let firstNames = ["James", "James","Joe","Prod","Prod","Fred","Barney","Stevie","LL","Harry","Elizabeth", "Mario","Kate",
+        let firstNames = ["James", "James","Joe","Emily","Kate","Fred","Barney","Stevie","LL","Harry","Elizabeth", "Mario","Kate",
             "Wheres","Allen","Callum","Jeremiah","Londyn","Amelie","Ally","Nathen","Isabel","Clarissa", "Cali", "Julianna","Byron",
             "Ali", "Natalee", "Heath","Zoie","Jaqueline", "Madden", "Cierra", "Drake", "Dominique", "Isaias", "Casey","Jamison","Cullen","Faith","Jessie","Simone","Melissa","Andy"];
 
-        let lastNames = ["Brown", "Henry", "Brown", "Admin", "Installer", "Flintstone", "Rubble","Wonder","Kool J","Potter",
+        let lastNames = ["Brown", "Henry", "Brown", "Jones", "Lowe", "Flintstone", "Rubble","Wonder","Kool J","Potter",
             "Turner","Wally","Oslow","Wally","Travis","Fry","Baxter","Bridges","Baker","Harding","Conway","Chapman","Zamora",
             "Townsend","Mcmahon","Guerra","Gilmore","Garza","Boone","Sloan","Villa","Gill","Boyd","Foster","Bryant","Mcguire","Hendricks","Kennedy","Duke","Jacobs","Fleming"];
 
@@ -67,14 +92,22 @@ Meteor.startup(function(){
         var users = [];
 
         for(let i = 0; i < email.length; i++){
+            let person = null;
+            if(i % 1 === 0){
+                person = {firstName: firstNames[i], lastName: lastNames[i], adm: userNames[i], password: "12345678", email: email[i], groupdId: 1};
+
+            }
             if(i % 2 === 0){
-                let dev = new Developer(firstNames[i], lastNames[i], userNames[i], "12345678", email[i]);
-                users.push(dev);
+                person = {firstName: firstNames[i], lastName: lastNames[i], adm: userNames[i], password: "12345678", email: email[i], groupdId: 2};
             }
-            else {
-                let domUser = new DomainUser(firstNames[i], lastNames[i], userNames[i], "12345678", email[i]);
-                users.push(domUser);
+            if(i % 3 === 0){
+                person = {firstName: firstNames[i], lastName: lastNames[i], adm: userNames[i], password: "12345678", email: email[i], groupdId: 3};
             }
+            if(i % 4 === 0){
+                person = {firstName: firstNames[i], lastName: lastNames[i], adm: userNames[i], password: "12345678", email: email[i], groupdId: 4};
+            }
+            console.log(person);
+            users.push(person);
         }
 
 
@@ -83,7 +116,7 @@ Meteor.startup(function(){
             let id;
 
             id = Accounts.createUser({
-                username: userData.username,
+                username: userData.adm,
                 password: userData.password,
                 email: userData.email
             });
@@ -91,17 +124,17 @@ Meteor.startup(function(){
             const identity = {
                 firstName: userData.firstName,
                 lastName: userData.lastName,
-                userType: userData.userType
+                groupId: userData.groupdId
             }
 
             Meteor.users.update({_id: id}, {$set:{identity: identity}});
 
             //console.log(userData.getGroups());
 
-            for (let [key, value] of userData.getGroups()) {
-                //console.log(key + ' = ' + value);
-                Roles.addUsersToRoles(id, value, key);
-            }
+            // for (let [key, value] of userData.getGroups()) {
+            //     //console.log(key + ' = ' + value);
+            //     Roles.addUsersToRoles(id, value, key);
+            // }
 
         });
 

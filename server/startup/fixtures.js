@@ -21,4 +21,6 @@ Meteor.startup(function() {
         ApplicationRoles.insert({name: ApplicationFunctions.manageApps, description: "Manage Applications"});
         ApplicationRoles.insert({name: ApplicationFunctions.superUser, description: "Administrator"});
     }
+
+
 });

@@ -45,6 +45,30 @@ Template.menu.helpers({
         return FlowRouter.path("addUserProfile");
     },
 
+    listGroups(){
+        return FlowRouter.path("listGroups")
+    },
+
+    manageGroup(){
+        return FlowRouter.path("manageGroup");
+    },
+
+    addGroup(){
+        return FlowRouter.path("addGroup")
+    },
+
+    listRoles(){
+        return FlowRouter.path("listRoles")
+    },
+
+    manageRole(){
+        return FlowRouter.path("manageRole")
+    },
+
+    addRole(){
+        return FlowRouter.path("addRole")
+    },
+
     isUserInRole() {
 
         return false;
