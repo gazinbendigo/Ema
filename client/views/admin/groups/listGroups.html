@@ -14,11 +14,17 @@
         <div class="component-spacer sm">
             <div class="row">
                 <div class="col-md-12 col-lg-12">
-                    <div class="list-group">
+                    <ul class="list-group">
                         {{#each getGroups}}
-                            <a href="{{groupUpadtePath groupId}}" class="list-group-item">{{groupName}}:&nbsp;&nbsp;&nbsp;&nbsp;{{groupDesc}}<span class="float-right"> <button type="button" class="btn btn-danger" id="bttn{{groupId}}">X</button></span></a>
+                            <li class="list-group-item clearfix">
+                                <a href="#" class="groupItem pull-left" id="{{groupId}}">{{groupName}}:&nbsp;&nbsp;&nbsp;&nbsp;{{groupDesc}}</a>
+                                <a href="#" id="{{_id}}" class="groupItemDelete pull-right text-danger">X</a>
+                            </li>
                         {{/each}}
-                    </div>
+                    </ul>
+
+
+
                 </div>
             </div>
         </div>
