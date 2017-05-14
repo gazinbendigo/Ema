@@ -10,7 +10,7 @@
                     <select id="hubEnvironments" class="form-control">
                         {{#if Template.subscriptionsReady}}
                         {{#each env}}
-                            {{> option environmentOptions ENVIRONMENT_NME}}
+                            {{> option environmentOptions ENV_CODE}}
                         {{/each}}
                         {{/if}}
                     </select>
@@ -46,24 +46,24 @@
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4"><label for="start">Start:&nbsp;</label>
                                             <div class="row">
-                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="number" placeholder="0" name="start" value="{{start}}" class="input-full-width" id="start"></div>
+                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="text" placeholder="0" name="start" value="{{start}}" class="input-full-width" id="start"></div>
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="rowsPerPage">Rows per Page:&nbsp;</label>
                                             <div class="row">
-                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="number" value="{{rowsPerPage}}" name="rowsPerPage" class="input-full-width" id="rowsPerPage"></div>
+                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="text" value="{{rowsPerPage}}" name="rowsPerPage" class="input-full-width" id="rowsPerPage"></div>
                                             </div>
                                         </div>
                                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="requestId">RequestId:&nbsp;</label>
                                             <div class="row">
-                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="number" value="{{requestId}}" name="requestId" class="input-full-width" id="requestId"></div>
+                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="text" value="{{requestId}}" name="requestId" class="input-full-width" id="requestId"></div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="serviceId">ServiceId:&nbsp;</label>
                                             <div class="row">
-                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="number" value="{{serviceId}}" name="serviceId" class="input-full-width" id="serviceId" maxlength="3"></div>
+                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="text" value="{{serviceId}}" name="serviceId" class="input-full-width" id="serviceId" maxlength="3"></div>
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="sourceName">SourceName:&nbsp;</label>
@@ -97,7 +97,7 @@
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="logCode">LogCode:&nbsp;</label>
                                             <div class="row">
-                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="number" value="{{logCode}}" name="logCode" class="input-full-width" id="logCode"></div>
+                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="text" value="{{logCode}}" name="logCode" class="input-full-width" id="logCode"></div>
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="requestMessage">Request Message:&nbsp;</label>
@@ -114,7 +114,7 @@
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="logMessage">No Records:&nbsp;</label>
                                             <div class="row">
-                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="number" name="noRecords" value="{{noRecords}}" class="input-full-width" id="noRecords"></div>
+                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="text" name="noRecords" value="{{noRecords}}" class="input-full-width" id="noRecords"></div>
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 "><div class="checkbox"><label><input type="checkbox" name="errorsOnly" id="errsOnly" {{errsOnly}}>Errors Only</label></div></div>
@@ -147,7 +147,6 @@
 
         </div>
     </div>
-    {{#if isEnvsLoaded}}
     {{#if areLogsLoaded}}
     <div class="container-fluid">
     <div class="component-spacer sm">
@@ -250,9 +249,6 @@
         </div>
     </div>
     </div>
-    {{else}}
-        {{> spinner}}
-    {{/if}}
     {{else}}
         {{> spinner}}
     {{/if}}

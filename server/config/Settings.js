@@ -4,3 +4,4 @@
 
 DefaultEnv = Meteor.settings.DEFAULT_ENV;
 BaseApiURI = Meteor.settings.API_URL;
+IsEnvVisible = Meteor.settings.ENVIRONMENT_IS_VISIBLE;

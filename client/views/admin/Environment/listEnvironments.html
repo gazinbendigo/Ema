@@ -1,0 +1,39 @@
+<template name="listEnvironments">
+    <div class="component-spacer sm">
+        <div class="page-container container">
+            <div class="row">
+                <div class="col-md-12, col-lg-12"><h2>Manage Environments</h2></div>
+            </div>
+        </div>
+    </div>
+    <div class="component-spacer sm"></div>
+    <div class="component-spacer sm">
+        <div class="row">
+            <div class="col-lg-6"><a href="" class="prev">{{prev}}</a></div>
+            <div class="col-lg-6"><a href="" class="next">{{next}}</a></div>
+        </div>
+    </div>
+
+    <div class="component-spacer sm">
+        <div class="row">
+            <div class="col-md-12 col-lg-12">
+                <ul class="list-group">
+                    {{#each getEnvironmentsList}}
+                        <li class="list-group-item clearfix">
+                            <a href="{{updateEnvPath ENV_ID}}" class="envItem pull-left" id="{{envId}}">{{ENV_CODE}}:&nbsp;&nbsp;{{TECHNICAL_NAME}}&nbsp;&nbsp;{{FUNCTIONAL_NAME}}</a>
+                            <a href="#" id="{{_id}}" class="groupItemDelete pull-right text-danger">X</a>
+                        </li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="component-spacer sm">
+        <div class="row">
+            <div class="col-lg-6"><a href="" class="prev">{{prev}}</a></div>
+            <div class="col-lg-6"><a href="" class="next">{{next}}</a></div>
+        </div>
+    </div>
+
+</template>

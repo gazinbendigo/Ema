@@ -51,6 +51,27 @@ FlowRouter.route('/landing', {
     }
 });
 
+FlowRouter.route('/manage/environment', {
+    name: 'addEnvironment',
+    action: function() {
+        BlazeLayout.render("baseLayout", {content: "addEnvironment", menu: 'menu'});
+    }
+});
+
+FlowRouter.route('/manage/environments', {
+    name: 'listEnvironments',
+    action: function() {
+        BlazeLayout.render("baseLayout", {content: "listEnvironments", menu: 'menu'});
+    }
+});
+
+FlowRouter.route('/manage/environment/:id', {
+    name: 'updateEnvironment',
+    action: function() {
+        BlazeLayout.render("baseLayout", {content: "updateEnvironment", menu: 'menu'});
+    }
+});
+
 FlowRouter.route('/manage/groups', {
     name: 'listGroups',
     action: function() {

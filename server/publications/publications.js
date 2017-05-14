@@ -48,8 +48,18 @@ Meteor.publish("UserTypes", function() {
     return this.ready();
 });
 
-Meteor.publish("EnvironmentTypes", function() {
-    let cursor =  EnvironmentTypes.find({}, {fields: {NAME:1}});
+/**
+ * Publishes the environments for the region specified in the Settings.js file
+ */
+Meteor.publish("environments", function() {
+    let cursor =  undefined;
+    //Development Setting: When set to 0 return everything.
+    if(IsEnvVisible === 0){
+        cursor = Environments.find({}, {sort: {ENV_ID: 1}});
+    }
+    else {
+        cursor = Environments.find({}, {fields: {IS_VISIBLE: IsEnvVisible}})
+    }
     if(cursor){
         return cursor;
     }

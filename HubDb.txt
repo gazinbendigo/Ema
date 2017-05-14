@@ -1,0 +1,16 @@
+{"HUBDatabase":[
+{"datasource": "L1","user": "HUBLOG_READONLY_USER_SL","password": "HuBl08RO!40","server": "BENHUBSYSD-DB.bbldtl.int","port": "1433","database": "BENHUBSYSD"},
+{"datasource": "A1","user": "HUBLOG_READONLY_USER_SL","password": "HuBl08RO!40","server": "BENHUBSYSA-DB.bbldtl.int","port": "1433","database": "BENHUBSYSA"},
+{"datasource": "A2","user": "HUBLOG_READONLY_USER_SL","password": "HuBl08RO!40","server": "BENHUBSYSZ-DB.bbldtl.int","port": "1433","database": "BENHUBSYSZ"},
+{"datasource": "B1","user": "HUBLOG_READONLY_USER_SL","password": "HuBl08RO!40","server": "BENHUBSYSB-DB.bbldtl.int","port": "1433","database": "BENHUBSYSB"},
+{"datasource": "B2","user": "HUBLOG_READONLY_USER_SL","password": "HuBl08RO!40","server": "BENHUBSYSY-DB.bbldtl.int","port": "1433","database": "BENHUBSYSY"},
+{"datasource": "C1","user": "HUBLOG_READONLY_USER_SL","password": "HuBl08RO!40","server": "BENHUBSYSC-DB.bbldtl.int","port": "1433","database": "BENHUBSYSC"},
+{"datasource": "C2","user": "HUBLOG_READONLY_USER_SL","password": "HuBl08RO!40","server": "BENHUBSYSX-DB.bbldtl.int","port": "1433","database": "BENHUBSYSX"},
+{"datasource": "D2","user": "HUBLOG_READONLY_USER_SL","password": "HuBl08RO!40","server": "BENHUBSYSW-DB.bbldtl.int","port": "1433","database": "BENHUBSYSW"},
+{"datasource": "F1","user": "HUBLOG_READONLY_USER_SL","password": "HuBl08RO!40","server": "BENHUBSYSF-DB.bbldtl.int","port": "1433","database": "BENHUBSYSF"},
+{"datasource": "G1","user": "HUBLOG_READONLY_USER_SL","password": "HuBl08RO!40","server": "BENHUBSYSG-DB.bbldtl.int","port": "1433","database": "BENHUBSYSG"},
+{"datasource": "G2","user": "HUBLOG_READONLY_USER_SL","password": "HuBl08RO!40","server": "BENHUBSYSU-DB.bbldtl.int","port": "1433","database": "BENHUBSYSU"},
+{"datasource": "H1","user": "HUBLOG_READONLY_USER_SL","password": "HuBl08RO!40","server": "BENHUBSYSH-DB.bbldtl.int","port": "1433","database": "BENHUBSYSH"},
+{"datasource": "I1","user": "HUBLOG_READONLY_USER_SL","password": "HuBl08RO!40","server": "BENHUBSYSI-DB.bbldtl.int","port": "1433","database": "BENHUBSYSI"},
+{"datasource": "J1","user": "HUBLOG_READONLY_USER_SL","password": "HuBl08RO!40","server": "BENHUBSYSJ-DB.bbldtl.int","port": "1433","database": "BENHUBSYSJ"},
+{"datasource": "D1","user": "HUBLOG_READONLY_USER_SL","password": "HuBl08RO!40","server": "BENHUBSYSV-DB.bbldtl.int","port": "1433","database": "BENHUBSYSV"}]}

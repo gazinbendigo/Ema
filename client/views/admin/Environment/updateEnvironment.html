@@ -1,0 +1,50 @@
+<template name="updateEnvironment">
+    <div class="component-spacer sm">
+        <div class="page-container container">
+            <div class="row">
+                <div class="col-md-12, col-lg-12"><h2>Update Environment</h2></div>
+            </div>
+        </div>
+    </div>
+    <div class="component-spacer sm"></div>
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label for="envCode" class="control-label col-xs-2">Code:</label>
+            <div class="col-xs-10">
+                <input type="text" class="form-control" id="envCode" placeholder="Code">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="funcName" class="control-label col-xs-2">Functional Name:</label>
+            <div class="col-xs-10">
+                <input type="text" class="form-control" id="funcName" placeholder="Functional Name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="techName" class="control-label col-xs-2">Technical Name:</label>
+            <div class="col-xs-10">
+                <input type="text" class="form-control" id="techName" placeholder="Technical Name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="visibility" class="control-label col-xs-2">Show Environment:</label>
+            <div class="col-xs-10">
+                <input type="text" class="form-control" id="visibility" placeholder="Show Environment">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="responseMsg"></label>
+            <div class="col-sm-5">
+                <span class="label label-danger">{{responseMsg}}</span>
+            </div>
+            <div class="col-xs-12 col-sm-5">
+                <div class="text-right">
+                    <button type="button" class="btn btn-default" id="updateProfile">Submit</button>
+                    <button type="button" class="btn btn-default" id="cancelProfile">Cancel</button>
+                    <button type="button" class="btn btn-default" id="deleteProfile">Delete</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</template>

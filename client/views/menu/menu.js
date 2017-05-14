@@ -41,6 +41,14 @@ Template.menu.helpers({
         return FlowRouter.path("login");
     },
 
+    addEnvironment() {
+        return FlowRouter.path("addEnvironment");
+    },
+
+    listEnvironments(){
+        return FlowRouter.path("listEnvironments")
+    },
+
     addUserProfile() {
         return FlowRouter.path("addUserProfile");
     },

@@ -2,44 +2,53 @@
  * Created by adm9360 on 5/09/2016.
  */
 
+
 Meteor.methods({
-    getEnvironments: function(){
-        return HTTPHelper.httpRequest("GET", BaseApiURI + "environments");
-    },
 
-    createHubEnvironment: function(params){
-        return HTTPHelper.httpRequest("POST", BaseApiURI + "createVMEnvironment", HTTPHelper.jsonHeaders(params)).data;
-    },
-
-    createVMVEnvironment: function(params){
-        return HTTPHelper.httpRequest("POST", BaseApiURI + "createVMEnvironment", HTTPHelper.jsonHeaders(params)).data;
-    },
-
-    createUberHubEnvironment: function(params){
-        return HTTPHelper.httpRequest("POST", BaseApiURI + "CreateHubEnvironment", HTTPHelper.jsonHeaders(params)).data;
+    updateEnvironment: function(environment){
+        check(environment, {
+            code: String,
+            functionalName: String,
+            technicalName: String,
+            visibility: Number
+        });
+        //TODO: Check if certain parameters like code already exists within the collection
+        let nextId = Environments.find({}).count() + 1;
+        Environments.update(environment._id, {$set: {ENV_ID: nextId, ENV_CODE: environment.code, FUNCTIONAL_NAME: environment.functionalName, TECHNICAL_NAME: environment.technicalName, IS_VISIBLE: environment.visibility}});
     },
 
     deleteEnvironment: function(id){
-        return HTTPHelper.httpRequest("DELETE", BaseApiURI + "environments/" + id).data;
+        Environments.remove(id);
     },
 
-    updateEnvironment: function(params){
-        console.log(JSON.stringify(params));
-        //return HTTPHelper.httpRequest("POST", BaseApiURI + "environments/" + env.ENVIRONMENT_ID, HTTPHelper.jsonHeaders(params)).data;
-        return {code: 200};
+    insertEnvironment: function(environment){
+        check(environment, {
+            code: String,
+            functionalName: String,
+            technicalName: String,
+            visibility: Number
+        });
+        let nextId = Environments.find({}).count() + 1;
+        Environments.insert({ENV_ID: nextId, ENV_CODE: environment.code, FUNCTIONAL_NAME: environment.functionalName, TECHNICAL_NAME: environment.technicalName, IS_VISIBLE: environment.visibility});
     },
-
-    updateUberHubEnvironment: function(params){
-        console.log(JSON.stringify(params));
-        //return HTTPHelper.httpRequest("POST", BaseApiURI + "environments/uberhub/" + env.ENVIRONMENT_ID, HTTPHelper.jsonHeaders(params)).data;
-        return {code: 200};
-    },
-
-    getDefaultEnvironment: function(){
-        return Meteor.settings.defaultRegion;
-    }
 
 });
+
+
+// deleteEnvironment: function(id){
+//     return HTTPHelper.httpRequest("DELETE", BaseApiURI + "environments/" + id).data;
+// },
+//
+// updateEnvironment: function(params){
+//     console.log(JSON.stringify(params));
+//     //return HTTPHelper.httpRequest("POST", BaseApiURI + "environments/" + env.ENVIRONMENT_ID, HTTPHelper.jsonHeaders(params)).data;
+//     return {code: 200};
+// },
+//
+//
+// getDefaultEnvironment: function(){
+//     return Meteor.settings.defaultRegion;
+// }
 
 // // Get list of all method names on Lists
 // const LISTS_METHODS = _.pluck([
