@@ -10,15 +10,26 @@ Template.hubLogsView.onCreated(function(){
 
     //?start=0&noRecords=80&requestId=null&serviceId=null&sourceName=null&severity=null&logCode=null&userId=null&latestDate=null&requestMessage=null&logMessage=null&errorsOnly=0&includeOlbPing=0&apps=null
 
-    this.selectedEnvironment = new ReactiveVar(null);
-    //Environments.getFromServer();
+    const handle = Meteor.subscribe("environments");
     let context = new Object();
-    this.autorun(() => {
-        this.subscribe("environments");
-        FlowRouter.watchPathChange();
-        context = FlowRouter.current();
-        this.selectedEnvironment.set(context.params);
+    context = FlowRouter.current();
+    if(context.path.startsWith('/')){
+        //Initial page load path
+        HubLogs.getFromServer(null, null);
+    }
+    else {
         HubLogs.getFromServer(context.params, context.queryParams);
+    }
+    this.selectedEnvironment = new ReactiveVar(null);
+    if(context.params.env){
+        this.selectedEnvironment.set({'env': context.params.env});
+    }
+
+    Tracker.autorun(() => {
+        const isReady = handle.ready();
+        if(isReady){
+            this.selectedEnvironment.set({'env': Environments.findOne().ENV_CODE});
+        }
     });
 
     Applications.getFromServer(this.selectedEnvironment.get());
@@ -122,17 +133,17 @@ Template.hubLogsView.helpers({
         return null;
     },
 
-    env: () => {
+    getEnvironments: () => {
         return Environments.find({});
     },
 
     environmentOptions: (envCode) =>{
         //Loops thru twice. TODO: Look into this.
-        let selectedVar = Template.instance().selectedEnvironment.get();
-        selectedVar = selectedVar.env;
-        let isSelected = selectedVar === envCode.toUpperCase();
-        return {key: envCode, selected: isSelected ? 'selected' : '', value: 'HUB' + envCode};
-        //return {key: 'l1', selected: isSelected ? 'selected' : '', value: 'l1'};
+        console.log(envCode);
+        let selectedEnv = Template.instance().selectedEnvironment.get();
+        let isSelected = selectedEnv.env === envCode.ENV_CODE;
+        return {key: envCode.ENV_CODE, selected: isSelected ? 'selected' : '', value: `HUB${envCode.ENV_CODE}`};
+
     },
 
     areLogsLoaded: () =>{
@@ -198,9 +209,9 @@ Template.hubLogsView.helpers({
         }
     },
 
-    performancePath: (requestId) => {
+    serviceStatsPath: (requestId) => {
         let params = {env: getEnvironment(), requestId: requestId};
-        return FlowRouter.path('requestServiceAveragesByRequestId', params);
+        return FlowRouter.path('serviceStatsByReqId', params);
     },
 
     getSourceNameUrl: (srcName) => {

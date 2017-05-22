@@ -1,0 +1,25 @@
+<template name="serviceStats">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h3>Service Performance</h3>
+                <div class="arrowLink">
+                    <a href="/">{{leftArrow}}Back</a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                {{#if isServiceRequestLoaded}}
+                    {{#if areServiceAveragesLoaded}}
+                        <div id="chart">{{createChart}}</div>
+                    {{else}}
+                        {{> spinner}}
+                    {{/if}}
+                {{else}}
+                    {{> spinner}}
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</template>

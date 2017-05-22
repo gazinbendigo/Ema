@@ -12,7 +12,19 @@ FlowRouter.route('/', {
 });
 
 
+FlowRouter.route('/searchHublogs/:env', {
+    name: 'searchHublogs',
+    action: function(params) {
+        BlazeLayout.render("hubLogsLayout", {content: "hubLogsView", menu: 'menu'})
+    }
+});
 
+FlowRouter.route('/:env/service/stats/:requestId', {
+    name: 'serviceStatsByReqId',
+    action: function(params) {
+        BlazeLayout.render("baseLayout", {content: "servicePerformanceView", menu: 'menu'});
+    }
+});
 
 
 FlowRouter.route('/signin',{

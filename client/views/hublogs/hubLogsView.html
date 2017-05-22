@@ -9,9 +9,11 @@
                 <div class="col-xs-12 col-sm-3">
                     <select id="hubEnvironments" class="form-control">
                         {{#if Template.subscriptionsReady}}
-                        {{#each env}}
-                            {{> option environmentOptions ENV_CODE}}
+                        {{#each env in getEnvironments}}
+                            {{> option environmentOptions env}}
                         {{/each}}
+                        {{else}}
+                            {{> spinner}}
                         {{/if}}
                     </select>
                 </div>
@@ -181,7 +183,7 @@
                     <!--<td><input type="hidden" text="{{RowNum}}"><a href="/ema/hublog/requestId/{{REQUEST_ID}}" class="req">{{REQUEST_ID}}</a></td>-->
                     <td><a href="{{getRequestIdUrl REQUEST_ID}}" class="reqId">{{REQUEST_ID}}</a></td>
                     <td>{{formatDateTime REQUEST_DTE}}</td>
-                    <td><a href="{{performancePath REQUEST_ID}}" id="serviceRequestPerf">Performance</a></td>
+                    <td><a href="{{serviceStatsPath REQUEST_ID}}" id="serviceRequestPerf">Performance</a></td>
                     <td>{{BRAND_NME}}</td>
                     <td><a href="{{getApplicationCodeUrl APPLICATION_CDE}}" class="appCode">{{APPLICATION_CDE}}</a></td>
                     <td>{{APPLICATION_NME}}</td>
