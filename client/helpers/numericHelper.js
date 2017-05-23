@@ -16,3 +16,4 @@ Template.registerHelper('extractIntFromString', function(value){
     }
     return 0;
 });
+

@@ -10,7 +10,7 @@ Template.hubLogsView.onCreated(function(){
 
     //?start=0&noRecords=80&requestId=null&serviceId=null&sourceName=null&severity=null&logCode=null&userId=null&latestDate=null&requestMessage=null&logMessage=null&errorsOnly=0&includeOlbPing=0&apps=null
 
-    const handle = Meteor.subscribe("environments");
+
     let context = new Object();
     context = FlowRouter.current();
     if(context.path.startsWith('/')){
@@ -25,10 +25,15 @@ Template.hubLogsView.onCreated(function(){
         this.selectedEnvironment.set({'env': context.params.env});
     }
 
-    Tracker.autorun(() => {
-        const isReady = handle.ready();
-        if(isReady){
-            this.selectedEnvironment.set({'env': Environments.findOne().ENV_CODE});
+    let instance = this;
+    instance.areEnvironmentsLoaded = new ReactiveVar(false);
+    instance.autorun(function() {
+        let subscription = Meteor.subscribe("environments");
+        if(subscription.ready()){
+            instance.areEnvironmentsLoaded.set(true);
+            if(!context.params.env){
+                instance.selectedEnvironment.set({'env': Environments.findOne().ENV_CODE});
+            }
         }
     });
 
@@ -64,6 +69,17 @@ Template.hubLogsView.onCreated(function(){
     let olbPingParam = FlowRouter.getQueryParam("includeOlbPing");
     this.olbPing = olbPingParam === 0 ? new ReactiveVar(true) : new ReactiveVar(false);
 
+    ////////////////////////////////////////////////////////////////////////////////////
+    // Error Messages
+    this.startError = new ReactiveVar(null);
+    this.rowsPerPageError = new ReactiveVar(null);
+    this.requestIdError = new ReactiveVar(null);
+    this.serviceIdError = new ReactiveVar(null);
+    this.severityError = new ReactiveVar(null);
+    this.earliestDateError = new ReactiveVar(null);
+    this.latestDateError = new ReactiveVar(null);
+    this.noRecordsError = new ReactiveVar(null);
+
     this.pageCursor = new ReactiveVar(0);
     this.page = new ReactiveVar(1);
     this.nextPage = new ReactiveVar(null);
@@ -78,16 +94,32 @@ Template.hubLogsView.helpers({
         return Template.instance().start.get();
     },
 
+    startError: () => {
+        return Template.instance().startError.get();
+    },
+
     rowsPerPage: () => {
         return Template.instance().rowsPerPage.get();
+    },
+
+    rowsPerPageError: () => {
+        return Template.instance().rowsPerPageError.get()
     },
 
     requestId: () => {
         return Template.instance().requestId.get();
     },
 
+    requestIdError: () => {
+        return Template.instance().get();
+    },
+
     serviceId: () => {
         return Template.instance().serviceId.get();
+    },
+
+    serviceIdError: () => {
+        return Template.instance().serviceIdError.get();
     },
 
     sourceName: () => {
@@ -102,12 +134,26 @@ Template.hubLogsView.helpers({
         return Template.instance().severity.get();
     },
 
+    severityError: () => {
+        return Template.instance().severityError.get();
+    },
+
     earliestDate: () => {
         return Template.instance().earliestDate.get();
     },
+
+    earliestDateError: () => {
+        return Template.instance().earliestDateError.get();
+    },
+
     latestDate: () => {
         return Template.instance().latestDate.get();
     },
+
+    latestDateError: () => {
+        return Template.instance().latestDateError.get();
+    },
+
     logCode: () => {
         return Template.instance().logCode.get();
     },
@@ -120,6 +166,11 @@ Template.hubLogsView.helpers({
     noRecords: function(){
         return Template.instance().noRecords.get();
     },
+
+    noRecordsError: () => {
+        return Template.instance().noRecordsError.get();
+    },
+
     errsOnly: () => {
         if(Template.instance().errsOnly.get() === true){
             return 'checked';
@@ -138,8 +189,6 @@ Template.hubLogsView.helpers({
     },
 
     environmentOptions: (envCode) =>{
-        //Loops thru twice. TODO: Look into this.
-        console.log(envCode);
         let selectedEnv = Template.instance().selectedEnvironment.get();
         let isSelected = selectedEnv.env === envCode.ENV_CODE;
         return {key: envCode.ENV_CODE, selected: isSelected ? 'selected' : '', value: `HUB${envCode.ENV_CODE}`};
@@ -148,6 +197,10 @@ Template.hubLogsView.helpers({
 
     areLogsLoaded: () =>{
         return HubLogs.isLoaded.get();
+    },
+
+    isEnvironmentsLoaded: () => {
+        return Template.instance().areEnvironmentsLoaded.get();
     },
 
     isApplicationsLoaded: () => {
@@ -244,130 +297,116 @@ Template.hubLogsView.helpers({
 Template.hubLogsView.events({
     "keyup #start": (event, template) => {
         event.preventDefault();
-        let start = Number($('#start').val());
-        start = setIntFromInput(start, DEFAULT_START);
-        template.start.set(start);
-        updateSearchParams("start", start);
+        let val = Number($('#start').val());
+        if(Number.isInteger(val) && val >= DEFAULT_START){
+            template.startError.set("");
+            template.start.set(val);
+        } else {
+            template.startError.set("Input not numeric");
+        }
     },
-    "click #start": (event, template) => {
-        event.preventDefault();
-        let start = Number($('#start').val());
-        start = setIntFromInput(start, DEFAULT_START);
-        template.start.set(start);
-        updateSearchParams('start', start)
-    },
+
     "keyup #rowsPerPage": (event, template) => {
         event.preventDefault();
         let rowsPerPage = Number($('#rowsPerPage').val());
-        rowsPerPage = setIntFromInput(rowsPerPage, DEFAULT_ROWS_PER_PAGE);
-        template.rowsPerPage.set(rowsPerPage);
-        updateSearchParams('rowsPerPage', rowsPerPage)
+        if(Number.isInteger(rowsPerPage) && rowsPerPage > 0){
+            template.rowsPerPageError.set("");
+            template.rowsPerPage.set(rowsPerPage);
+        } else {
+            template.rowsPerPageError.set("Input not numeric");
+        }
     },
-    "click #rowsPerPage": (event, template) => {
-        event.preventDefault();
-        let rowsPerPage = Number($('#rowsPerPage').val());
-        rowsPerPage = setIntFromInput(rowsPerPage, DEFAULT_ROWS_PER_PAGE);
-        template.rowsPerPage.set(rowsPerPage);
-        updateSearchParams('rowsPerPage', rowsPerPage)
-    },
+
     "keyup #requestId": (event, template) => {
         event.preventDefault();
-        let requestId = Number($('#requestId').val());
-        requestId = setIntFromInput(requestId, null);
-        template.requestId.set(requestId);
-        updateSearchParams("requestId", requestId);
+        let reqId = Number($('#requestId').val());
+        if(Number.isInteger(reqId) && reqId > 0){
+            template.requestIdError.set("");
+            template.requestId.set(Number(reqId));
+        }
+        else {
+            template.requestIdError.set("Input not numeric");
+        }
     },
-    "click #requestId": (event, template) => {
-        event.preventDefault();
-        let requestId = Number($('#requestId').val());
-        requestId = setIntFromInput(requestId, null);
-        template.requestId.set(requestId);
-        updateSearchParams("requestId", requestId);
-    },
+
     "keyup #serviceId": (event, template) => {
         event.preventDefault();
-        let serviceId = Number($('#serviceId').val());
-        serviceId = setIntFromInput(serviceId, null);
-        template.serviceId.set(serviceId);
-        updateSearchParams("serviceId", serviceId);
+        let serId = Number($('#serviceId').val());
+        if(Number.isInteger(serId) && serId > 0){
+            template.serviceIdError.set("");
+            template.serviceId.set(serId);
+        } else {
+            template.serviceIdError.set("Input not numeric");
+        }
     },
-    "click #serviceId": (event, template) => {
-        event.preventDefault();
-        let serviceId = Number($('#serviceId').val());
-        serviceId = setIntFromInput(serviceId, null);
-        template.serviceId.set(serviceId);
-        updateSearchParams("serviceId", serviceId);
-    },
+
     "keyup #sourceName": (event, template) => {
         event.preventDefault();
         let sourceName = $('#sourceName').val();
         template.sourceName.set(extractStringFromInput(sourceName));
-        updateSearchParams('sourceName', extractStringFromInput(sourceName));
     },
     "keyup #userId": (event, template) => {
         event.preventDefault();
         let userId = $('#userId').val();
         template.userId.set(extractStringFromInput(userId));
-        updateSearchParams('userId', extractStringFromInput(userId));
     },
     "keyup #severity": (event, template) => {
         event.preventDefault();
-        let severity = $('#severity').val();
-        template.severity.set(extractValidSeverity(severity));
-        updateSearchParams('serverity', extractValidSeverity(severity));
+        let sev = $('#severity').val().toUpperCase();
+        let val = extractValidSeverity(sev);
+        if(val.length == 1){
+            template.severityError.set("");
+            template.severity.set(sev);
+        } else {
+            if(sev === '') {
+                template.severityError.set("");
+            } else {
+                template.severityError.set("Valid Chars: E,I,C,W");
+            }
+        }
+
     },
     "keyup #earliestDate": (event, template) => {
         event.preventDefault();
         let earliestDate = $('#earliestDate').val();
         template.earliestDate.set(extractStringFromInput(earliestDate));
-        updateSearchParams('earliestDate', earliestDate);
     },
     "keyup #latestDate": (event, template) => {
         event.preventDefault();
         let latestDate = $('#latestDate').val();
         template.latestDate.set(extractStringFromInput(latestDate));
-        updateSearchParams('latestDate', latestDate);
+
     },
     "keyup #logCode": (event, template) => {
         event.preventDefault();
-        let logCode = Number($('#logCode').val());
+        let logCode = $('#logCode').val();
         logCode = setIntFromInput(logCode, null);
         template.logCode.set(logCode);
-        updateSearchParams('logCode', logCode);
     },
-    "click #logCode": (event, template) => {
-        event.preventDefault();
-        let logCode = Number($('#logCode').val());
-        logCode = setIntFromInput(logCode, null);
-        template.logCode.set(logCode);
-        updateSearchParams('logCode', logCode);
-    },
+
     "keyup #requestMessage": (event, template) => {
         event.preventDefault();
         let message = $('#requestMessage').val();
         template.requestMessage.set(extractStringFromInput(message));
-        updateSearchParams('requestMessage', message);
     },
+
     "keyup #logMessage": (event, template) => {
         event.preventDefault();
         let message = $('#logMessage').val();
         template.logMessage.set(extractStringFromInput(message));
-        updateSearchParams('logMessage', message);
     },
+
     "keyup #noRecords": (event, template) => {
         event.preventDefault();
         let recordSize = Number($('#noRecords').val());
-        recordSize = setIntFromInput(recordSize, DEFAULT_NO_RECORDS);
-        template.noRecords.set(recordSize);
-        updateSearchParams('noRecords', recordSize);
+        if(Number.isInteger(recordSize) && recordSize > 0){
+            template.noRecordsError.set("");
+            template.noRecords.set(recordSize);
+        } else {
+            template.noRecordsError.set("Input not numeric");
+        }
     },
-    "click #noRecords": (event, template) => {
-        event.preventDefault();
-        let recordSize = Number($('#noRecords').val());
-        recordSize = setIntFromInput(recordSize, DEFAULT_NO_RECORDS);
-        template.noRecords.set(recordSize);
-        updateSearchParams('noRecords', recordSize);
-    },
+
     "click #errsOnly": (event, template) => {
         event.preventDefault();
         let isChecked = $('#errsOnly').is(":checked");
@@ -476,6 +515,22 @@ Template.hubLogsView.events({
 
 function searchHubLogs(template){
     let params = {"env": getEnvironment()};
+    updateSearchParams("start", template.start.get());
+    updateSearchParams('rowsPerPage', template.rowsPerPage.get());
+    updateSearchParams("requestId", template.requestId.get());
+    updateSearchParams("serviceId", template.serviceId.get());
+    updateSearchParams('sourceName', template.sourceName.get());
+    updateSearchParams('userId', template.userId.get());
+    updateSearchParams('serverity', template.severity.get());
+    updateSearchParams('earliestDate', template.earliestDate.get());
+    updateSearchParams('latestDate', template.latestDate.get());
+    updateSearchParams('logCode', template.logCode.get());
+    updateSearchParams('requestMessage', template.requestMessage.get());
+    updateSearchParams('logMessage', template.logMessage.get());
+    updateSearchParams('noRecords', template.noRecords.get());
+    template.errsOnly.get();
+    template.olbPing.get();
+
     HubLogs.getFromServer(params, template.searchParams.get());
     updateSearchUrl(params, template.searchParams.get());
 }

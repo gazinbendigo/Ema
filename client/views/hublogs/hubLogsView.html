@@ -1,5 +1,6 @@
 
 <template name="hubLogsView">
+    {{#if isEnvironmentsLoaded}}
     <div id="SeachHubLogsForm">
         <div class="container">
             <div class="row">
@@ -8,13 +9,11 @@
             <div class="row">
                 <div class="col-xs-12 col-sm-3">
                     <select id="hubEnvironments" class="form-control">
-                        {{#if Template.subscriptionsReady}}
+
                         {{#each env in getEnvironments}}
                             {{> option environmentOptions env}}
                         {{/each}}
-                        {{else}}
-                            {{> spinner}}
-                        {{/if}}
+
                     </select>
                 </div>
             </div>
@@ -46,24 +45,24 @@
                                 <div class="panel-body">
                                     <h3>Application Filters</h3>
                                     <div class="row">
-                                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4"><label for="start">Start:&nbsp;</label>
+                                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4"><label for="start">Start:&nbsp;</label><span class="errorMsg">{{startError}}</span>
                                             <div class="row">
                                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="text" placeholder="0" name="start" value="{{start}}" class="input-full-width" id="start"></div>
                                             </div>
                                         </div>
-                                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="rowsPerPage">Rows per Page:&nbsp;</label>
+                                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="rowsPerPage">Rows per Page:&nbsp;</label><span class="errorMsg">{{rowsPerPageError}}</span>
                                             <div class="row">
                                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="text" value="{{rowsPerPage}}" name="rowsPerPage" class="input-full-width" id="rowsPerPage"></div>
                                             </div>
                                         </div>
-                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="requestId">RequestId:&nbsp;</label>
+                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="requestId">RequestId:&nbsp;</label><span class="errorMsg"></span>
                                             <div class="row">
                                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="text" value="{{requestId}}" name="requestId" class="input-full-width" id="requestId"></div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="serviceId">ServiceId:&nbsp;</label>
+                                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="serviceId">ServiceId:&nbsp;</label><span class="errorMsg"></span>
                                             <div class="row">
                                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="text" value="{{serviceId}}" name="serviceId" class="input-full-width" id="serviceId" maxlength="3"></div>
                                             </div>
@@ -80,17 +79,17 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="severity">Severity:&nbsp;</label>
+                                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="severity">Severity:&nbsp;</label><span class="errorMsg">{{severityError}}</span>
                                             <div class="row">
-                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="text" name="severity" value="{{severity}}" class="input-full-width" id="severity" maxlength="1"></div>
+                                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="text" name="severity" value="{{severity}}" class="input-full-width" id="severity" maxlength="1" placeholder="E,I,C,W"></div>
                                             </div>
                                         </div>
-                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="earliestDate">EarliestDate:&nbsp;</label>
+                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="earliestDate">EarliestDate:&nbsp;</label><span class="errorMsg"></span>
                                             <div class="row">
                                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="datetime" name="earliestDate" value="{{earliestDate}}" placeholder="YYYY-MM-DD hh:mm:ss.sss" class="input-full-width" id="earliestDate"></div>
                                             </div>
                                         </div>
-                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="latestDate">LatestDate:&nbsp;</label>
+                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="latestDate">LatestDate:&nbsp;</label><span class="errorMsg"></span>
                                             <div class="row">
                                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="datetime" name="latestDate" value="{{latestDate}}" placeholder="YYYY-MM-DD hh:mm:ss.sss" class="input-full-width" id="latestDate"></div>
                                             </div>
@@ -114,7 +113,7 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="logMessage">No Records:&nbsp;</label>
+                                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 filter-input"><label for="noRecords">No Records:&nbsp;</label><span class="errorMsg"></span>
                                             <div class="row">
                                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><input type="text" name="noRecords" value="{{noRecords}}" class="input-full-width" id="noRecords"></div>
                                             </div>
@@ -251,6 +250,10 @@
         </div>
     </div>
     </div>
+    {{else}}
+        {{> spinner}}
+    {{/if}}
+
     {{else}}
         {{> spinner}}
     {{/if}}
