@@ -88,23 +88,25 @@ Meteor.startup(function(){
             "User34@hotmail.com", "User35@hotmail.com", "User36@hotmail.com", "User37@hotmail.com", "aUser38@hotmail.com",
             "User39@hotmail.com", "User40@hotmail.com", "User41@hotmail.com", "User42@hotmail.com"];
 
+        let userTypes = ["Developer","Domain"];
+
         //Meteor requires the user must have a username field.
         var users = [];
 
         for(let i = 0; i < email.length; i++){
             let person = null;
             if(i % 1 === 0){
-                person = {firstName: firstNames[i], lastName: lastNames[i], adm: userNames[i], password: "12345678", email: email[i], groupdId: 1};
+                person = {firstName: firstNames[i], lastName: lastNames[i], adm: userNames[i], password: "12345678", email: email[i], groupds: [1,2], userType: userTypes[0]};
 
             }
             if(i % 2 === 0){
-                person = {firstName: firstNames[i], lastName: lastNames[i], adm: userNames[i], password: "12345678", email: email[i], groupdId: 2};
+                person = {firstName: firstNames[i], lastName: lastNames[i], adm: userNames[i], password: "12345678", email: email[i], groupds: [2,3], userType: userTypes[1]};
             }
             if(i % 3 === 0){
-                person = {firstName: firstNames[i], lastName: lastNames[i], adm: userNames[i], password: "12345678", email: email[i], groupdId: 3};
+                person = {firstName: firstNames[i], lastName: lastNames[i], adm: userNames[i], password: "12345678", email: email[i], groupds: [3,4], userType: userTypes[0]};
             }
             if(i % 4 === 0){
-                person = {firstName: firstNames[i], lastName: lastNames[i], adm: userNames[i], password: "12345678", email: email[i], groupdId: 4};
+                person = {firstName: firstNames[i], lastName: lastNames[i], adm: userNames[i], password: "12345678", email: email[i], groupds: [4,1], userType: userTypes[1]};
             }
             console.log(person);
             users.push(person);
@@ -124,10 +126,11 @@ Meteor.startup(function(){
             const identity = {
                 firstName: userData.firstName,
                 lastName: userData.lastName,
-                groupId: userData.groupdId
+                groups: userData.groupds,
+                userType: userData.userType
             }
 
-            Meteor.users.update({_id: id}, {$set:{identity: identity}});
+            Meteor.users.update({_id: id}, {$set:{profile: identity}});
 
             //console.log(userData.getGroups());
 

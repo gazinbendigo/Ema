@@ -1,0 +1,20 @@
+<template name="listConsumerProperties">
+    <div class="component-spacer sm">
+        <div class="page-container container">
+            <div class="row">
+                <div class="col-md-12, col-lg-12"><h2>Consumer Properties</h2></div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-3">
+                    <select id="hubEnvironments" class="form-control">
+
+                        {{#each env in getEnvironments}}
+                            {{> option environmentOptions env}}
+                        {{/each}}
+
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

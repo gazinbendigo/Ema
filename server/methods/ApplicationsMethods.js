@@ -3,8 +3,9 @@
  */
 
 Meteor.methods({
-    getApplications: function(env) {
-        let environment = ValidationHelper.isEnvironmentBlank(env) ? DefaultEnv : env.region;
+    getApplications: function(param) {
+        let environment = ValidationHelper.isEnvironmentBlank(param) ? DefaultEnv : param.env;
+        console.log(environment);
         let path = BaseApiURI + "applications/" + environment;
         return HTTPHelper.httpRequest("GET", path);
     }

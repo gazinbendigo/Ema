@@ -8,7 +8,7 @@
 const NUMBER_OF_ROWS = 20;
 const DEFAULT = 'default'
 
-Template.manageUsers.onCreated(function(){
+Template.listUserAccounts.onCreated(function(){
     Meteor.subscribe('Identities');//Template.instance().subscribe("identities");
     Meteor.subscribe("ApplicationRoles");
     Meteor.subscribe("groups");
@@ -21,7 +21,7 @@ Template.manageUsers.onCreated(function(){
 
 });
 
-Template.manageUsers.helpers({
+Template.listUserAccounts.helpers({
 
     getApplicationRoles() {
         return ApplicationRoles.find({});
@@ -122,14 +122,14 @@ Template.manageUsers.helpers({
 
 });
 
-Template.manageUsers.onRendered(function() {
+Template.listUserAccounts.onRendered(function() {
     $(".prev").css('visibility', 'hidden');
 });
 
 /**
  *
  */
-Template.manageUsers.events({
+Template.listUserAccounts.events({
     'change #RoleSelector'(event, template) {
         event.preventDefault();
         let selected = $('#RoleSelector').val();

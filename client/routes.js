@@ -12,7 +12,7 @@ FlowRouter.route('/', {
 });
 
 
-FlowRouter.route('/searchHublogs/:env', {
+FlowRouter.route('/hublogs/environment/:env', {
     name: 'searchHublogs',
     action: function(params) {
         BlazeLayout.render("hubLogsLayout", {content: "hubLogsView", menu: 'menu'})
@@ -34,10 +34,10 @@ FlowRouter.route('/signin',{
     }
 });
 
-FlowRouter.route( '/userprofiles', {
-    name: 'userprofiles',
+FlowRouter.route( '/accounts', {
+    name: 'listAccounts',
     action: () => {
-        BlazeLayout.render("baseLayout", {content: "manageUsers", menu: "menu"});
+        BlazeLayout.render("baseLayout", {content: "listUserAccounts", menu: "menu"});
     }
 });
 
@@ -126,6 +126,12 @@ FlowRouter.route('/manage/role', {
     }
 });
 
+FlowRouter.route('/consumer/properties/:env', {
+    name: 'consumerProperties',
+    action: function() {
+        BlazeLayout.render("baseLayout", {content: "listConsumerProperties", menu: 'menu'})
+    }
+})
 
 
 FlowRouter.notFound = {

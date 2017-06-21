@@ -7,7 +7,7 @@ ValidationHelper = new Object();
 
 ValidationHelper.isEnvironmentBlank = function (value){
     if(_.isObject(value)){
-        if(_.isString(value.region)){
+        if(_.isString(value.env)){
             return false;
         }
         return true;

@@ -39,6 +39,9 @@ Meteor.publish('Identities', function() {
     // }
 });
 
+Meteor.publish('UserData', function() {
+   return Meteor.users.find({}, {fields: {profile: 1}});
+});
 
 Meteor.publish("UserTypes", function() {
     let cursor =  UserTypes.find({});

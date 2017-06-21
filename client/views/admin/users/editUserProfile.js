@@ -137,7 +137,7 @@ Template.editUserProfile.events({
 
     "click #cancelProfile": function(event, template){
         event.preventDefault();
-        FlowRouter.go("userprofiles");
+        FlowRouter.go("listAccounts");
     },
 
     "click #deleteProfile": function(event, template){
@@ -151,7 +151,7 @@ Template.editUserProfile.events({
            }
            else {
                console.log(res);
-               FlowRouter.go("userprofiles");
+               FlowRouter.go("listAccounts");
            }
         });
     },

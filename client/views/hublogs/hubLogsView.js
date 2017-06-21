@@ -420,10 +420,15 @@ Template.hubLogsView.events({
         updateCheckboxSearchParam('includeOlbPing', isChecked)
     },
 
-    "click .reqId": (event, template) => {
+    "click .reqId": function(event, template) {
         event.preventDefault();
+        console.log("reqId " + this.REQUEST_ID);
         updateSearchParams("requestId", this.REQUEST_ID);
-        searchHubLogs(template);
+        //searchHubLogs(template);
+        //#### Temp on Linux
+        HubLogs.find({"REQUEST_ID": this.REQUEST_ID});
+        updateSearchUrl(template.selectedEnvironment.get(), {"requestId": this.REQUEST_ID});
+
     },
 
     "change #hubEnvironments": (event, template) => {
@@ -435,19 +440,19 @@ Template.hubLogsView.events({
         searchHubLogs(template, null, null);
     },
 
-    "click .appCode": (event, template) => {
+    "click .appCode": function(event, template) {
         event.preventDefault();
         updateSearchParams("apps", this.APPLICATION_CDE);
         searchHubLogs(template);
     },
 
-    "click .srvcId": (event, template) => {
+    "click .srvcId": function(event, template) {
         event.preventDefault();
         updateSearchParams("serviceId", this.SERVICE_ID);
         searchHubLogs(template);
     },
 
-    "click .srcName": (event, template) => {
+    "click .srcName": function(event, template) {
         event.preventDefault();
         updateSearchParams("sourceName", this.SOURCE_NME);
         searchHubLogs(template);
@@ -455,8 +460,8 @@ Template.hubLogsView.events({
 
     "click #btnSearch": (event, template) => {
         event.preventDefault();
-        let params = {"env": $('#hubEnvironments').val()};
-        template.selectedEnvironment.set(params);
+        let env = {"env": $('#hubEnvironments').val()};
+        template.selectedEnvironment.set(env);
 
         //Add all Applications that are ticked
         let checkeddApps = template.findAll("input[type=checkbox]:checked");
@@ -479,8 +484,7 @@ Template.hubLogsView.events({
                 updateSearchParams("apps", apps);
             }
         }
-        HubLogs.getFromServer(params, template.searchParams.get());
-        updateSearchUrl(params, template.searchParams.get());
+        searchHubLogs(template);
     },
 
     "click #clearFilter": (event, template) => {
@@ -521,7 +525,7 @@ function searchHubLogs(template){
     updateSearchParams("serviceId", template.serviceId.get());
     updateSearchParams('sourceName', template.sourceName.get());
     updateSearchParams('userId', template.userId.get());
-    updateSearchParams('serverity', template.severity.get());
+    updateSearchParams('severity', template.severity.get());
     updateSearchParams('earliestDate', template.earliestDate.get());
     updateSearchParams('latestDate', template.latestDate.get());
     updateSearchParams('logCode', template.logCode.get());

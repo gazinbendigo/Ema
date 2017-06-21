@@ -33,8 +33,8 @@ Template.menu.helpers({
         return FlowRouter.path('performance');
     },
 
-    manageUsers() {
-        return FlowRouter.path("userprofiles");
+    listAccounts() {
+        return FlowRouter.path("listAccounts");
     },
 
     loginPath() {
