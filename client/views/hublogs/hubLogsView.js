@@ -375,9 +375,10 @@ Template.hubLogsView.events({
         updateCheckboxSearchParam('includeOlbPing', isChecked)
     },
 
-    "click .reqId": (event, template) => {
+    "click #reqId": (event, template) => {
         event.preventDefault();
-        updateSearchParams("requestId", this.REQUEST_ID);
+        clearFilter(template);
+        updateSearchParams("requestId", event.target.text);
         searchHubLogs(template);
     },
 
@@ -398,7 +399,8 @@ Template.hubLogsView.events({
 
     "click .srvcId": (event, template) => {
         event.preventDefault();
-        updateSearchParams("serviceId", this.SERVICE_ID);
+        clearFilter(template);
+        updateSearchParams("serviceId", event.target.text);
         searchHubLogs(template);
     },
 
