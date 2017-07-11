@@ -2,8 +2,8 @@
  * Created by adm9360 on 11/12/2015.
  */
 const DEFAULT_START = 0;
-const DEFAULT_ROWS_PER_PAGE = 20;
-const DEFAULT_NO_RECORDS = 20;
+const DEFAULT_ROWS_PER_PAGE = 40;
+const DEFAULT_NO_RECORDS = 40;
 let queryParams = {};
 
 Template.hubLogsView.onCreated(function(){
@@ -422,10 +422,8 @@ Template.hubLogsView.events({
 
     "click .reqId": function(event, template) {
         event.preventDefault();
-        console.log("reqId " + this.REQUEST_ID);
+        clearFilter(template);
         updateSearchParams("requestId", this.REQUEST_ID);
-        //searchHubLogs(template);
-        //#### Temp on Linux
         HubLogs.find({"REQUEST_ID": this.REQUEST_ID});
         updateSearchUrl(template.selectedEnvironment.get(), {"requestId": this.REQUEST_ID});
 
@@ -442,18 +440,21 @@ Template.hubLogsView.events({
 
     "click .appCode": function(event, template) {
         event.preventDefault();
+        clearFilter(template);
         updateSearchParams("apps", this.APPLICATION_CDE);
         searchHubLogs(template);
     },
 
     "click .srvcId": function(event, template) {
         event.preventDefault();
+        clearFilter(template);
         updateSearchParams("serviceId", this.SERVICE_ID);
         searchHubLogs(template);
     },
 
     "click .srcName": function(event, template) {
         event.preventDefault();
+        clearFilter(template);
         updateSearchParams("sourceName", this.SOURCE_NME);
         searchHubLogs(template);
     },
@@ -519,7 +520,7 @@ Template.hubLogsView.events({
 
 function searchHubLogs(template){
     let params = {"env": getEnvironment()};
-    updateSearchParams("start", template.start.get());
+    updateSearchParams('start', template.start.get());
     updateSearchParams('rowsPerPage', template.rowsPerPage.get());
     updateSearchParams("requestId", template.requestId.get());
     updateSearchParams("serviceId", template.serviceId.get());
