@@ -1,0 +1,19 @@
+applications:
+- disk_quota: 1G
+  host: ema
+  name: ema
+  path: .
+  stack: cflinuxfs2
+  domain: ben.mybluemix.net
+  instances: 1
+  memory: 512M
+  buildpack: https://github.com/AdmitHub/meteor-buildpack-horse.git
+  #https://github.com/bendigoadelaide/cf-meteor-buildpack.git
+  #https://github.com/cloudfoundry-community/cf-meteor-buildpack.git
+env:
+  APPSWITCH: false
+  ROOT_URL: https://ema.ben.mybluemix.net
+  METEOR_SETTINGS: '{ "BASE_URL": "https://ema.ben.mybluemix.net", "API_URL": "https://ema-api.ben.mybluemix.net/", "NODE_TLS_REJECT_UNAUTHORIZED": "0", "DEFAULT_ENV": "HUBLD",
+                  "adfsDevUser": {"samaccountname": "adm9360", "displayname": "UAT Tester", "email": "bluemixTeam@bendigoadelaide.com.au"}}'
+services:
+  - mongodb-ema
