@@ -7,7 +7,13 @@ var Future = Npm.require('fibers/future');
 Meteor.methods({
     getHubLogs: function(obj, params) {
         let environment = ValidationHelper.isEnvironmentBlank(obj) ? DefaultEnv : obj.env;
-        let path = BaseApiURI + "hublogs/" + environment + "?";
+        let path;
+        if(params){
+            path = BaseApiURI + "hublogs/" + environment + "?";
+        }
+        else {
+            path = BaseApiURI + "hublogs/" + environment;
+        }
         return HTTPHelper.httpRequest("GET", path, {params});
     }
 
